@@ -28,5 +28,6 @@ module.exports = {
     'max-classes-per-file': ['off'],
     'react/forbid-prop-types': 0,
     'react/require-default-props': 0,
+    'no-console': ['off'],
   },
 };

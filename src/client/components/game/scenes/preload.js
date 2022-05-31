@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import Packet from '../../../../shared/Packet';
 
 class Preload extends Phaser.Scene {
   constructor() {
@@ -10,14 +11,14 @@ class Preload extends Phaser.Scene {
   }
 
   create() {
-    const exampleSocket = new WebSocket('ws://localhost:3001');
+    const exampleSocket = new WebSocket('ws://localhost:3000');
     console.log(exampleSocket);
     exampleSocket.onopen = function (event) {
-      exampleSocket.send('Hello Server!');
+      exampleSocket.send(new Packet(Packet.Type.PLAYER_STATE, 'join'));
     };
     exampleSocket.onerror = function (event) {
       console.log(event);
-    }
+    };
   }
 }
 

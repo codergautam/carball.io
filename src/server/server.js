@@ -1,37 +1,37 @@
-const bodyParser = require('body-parser');
 const path = require('path');
-const { createServer } = require('http');
 const uws = require('uWebSockets.js');
 const fs = require('fs');
-
 require('isomorphic-fetch');
 
 uws.App().ws('/*', {
-
-  /* There are many common helper features */
   idleTimeout: 32,
   maxBackpressure: 1024,
   maxPayloadLength: 512,
-
-  /* For brevity we skip the other events (upgrade, open, ping, pong, close) */
-  message: (ws, message, isBinary) => {
-    /* You can do app.publish('sensors/home/temperature', '22C') kind of pub/sub as well */
-
-    /* Here we echo the message back, using compression if available */
-    //    const ok = ws.send(message, isBinary, true);
-    console.log(message);
+  /* other events (upgrade, open, ping, pong, close) */
+  open: (ws) => {
+    console.log(ws);
   },
-
+  message: (ws, message) => {
+  },
 }).get('/*', (res, req) => {
   // send file
-  res.writeHeader('Content-Type', 'text/html');
   try {
     const url = req.getUrl();
     const p = `../../dist${url === '/' ? '/index.html' : url}`;
     res.end(fs.readFileSync(path.resolve(__dirname, p)));
   } catch (e) {
-    res.writeStatus();
-    res.end();
+    try {
+      const url = req.getUrl();
+      const p = `../../public${url}`;
+      res.end(fs.readFileSync(path.resolve(__dirname, p)));
+    } catch {
+      res.writeStatus('404');
+      res.writeHeader('Content-Type', 'text/html');
+      res.end(JSON.stringify({
+        status: 404,
+        message: 'Error',
+      }));
+    }
   }
 }).listen(3000, (e) => {
   if (e) {
