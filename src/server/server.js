@@ -12,6 +12,7 @@ uws.App().ws('/*', {
     console.log(ws);
   },
   message: (ws, message) => {
+    console.log(ws, message);
   },
 }).get('/*', (res, req) => {
   // send file
