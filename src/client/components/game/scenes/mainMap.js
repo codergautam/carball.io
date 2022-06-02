@@ -7,9 +7,9 @@ export default class MainMap extends Phaser.Scene {
     super('mainMap');
   }
 
-  preload() {}
+  // preload() {}
 
-  create() {}
+  // create() {}
 
-  update() {}
+  // update() {}
 }

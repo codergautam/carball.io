@@ -11,13 +11,14 @@ class Preload extends Phaser.Scene {
   }
 
   create() {
+    this.add.text(400, 20, 'in create');
     const exampleSocket = new WebSocket('ws://localhost:3000');
     console.log(exampleSocket);
-    exampleSocket.onopen = function (event) {
+    exampleSocket.onopen = () => {
       exampleSocket.send(new Packet(Packet.Type.JOIN, 'gautam').toBlob());
     };
-    exampleSocket.onerror = function (event) {
-      console.log(event);
+    exampleSocket.onerror = (e) => {
+      console.log(e);
     };
   }
 }

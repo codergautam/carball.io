@@ -2,12 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // TODO: Why do we have to import this?
-import regeneratorRuntime from 'regenerator-runtime';
 
 import Game from './components/game/index';
 
 function App() {
-
   return (
     <Router>
       <Routes>
