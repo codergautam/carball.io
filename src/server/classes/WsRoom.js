@@ -1,15 +1,12 @@
-const find = (cb) => {
+const find = (set, cb) => {
   // eslint-disable-next-line no-restricted-syntax
-  for (const e of this) {
+  for (const e of set) {
     if (cb(e)) {
       return e;
     }
   }
   return undefined;
 };
-
-// eslint-disable-next-line no-extend-native
-Set.prototype.find = find;
 
 module.exports = class WsRoom {
   constructor(id) {
@@ -22,14 +19,14 @@ module.exports = class WsRoom {
   }
 
   removeClient(clientId) {
-    const client = this.clients.find((c) => c.id === clientId);
+    const client = find(this.clients, ((c) => c.id === clientId));
     if (client) {
       this.clients.delete(client);
     }
   }
 
   send(message, clientId) {
-    const client = this.clients.find((c) => c.id === clientId);
+    const client = find(this.clients, ((c) => c.id === clientId));
     if (client) {
       client.send(message);
     }

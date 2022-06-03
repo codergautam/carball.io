@@ -1,27 +1,24 @@
-export default class Packet {
+const Blob1 = require('cross-blob');
+
+module.exports = class Packet {
   constructor(type, data) {
     this.type = type;
     this.data = data;
   }
 
-  toBlob() {
-    return new Blob([JSON.stringify(this)], { type: 'application/json' });
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  fromBlob(blob) {
-    return JSON.parse(blob);
+  toJson() {
+    return JSON.stringify({ type: this.type, data: this.data });
   }
 
   static get Type() {
     return {
       MOVE: 0,
       ATTACK: 1,
-      PLAYER_STATE: 2,
+      PLAYER_ID: 2,
       JOIN: 3,
       LEAVE: 4,
       LEADERBOARD: 5,
       OTHER: 6,
     };
   }
-}
+};

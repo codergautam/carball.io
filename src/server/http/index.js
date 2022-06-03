@@ -4,12 +4,12 @@ const fs = require('fs');
 module.exports = (res, req) => {
   try {
     const url = req.getUrl();
-    const p = `../../dist${url === '/' ? '/index.html' : url}`;
+    const p = `../../../dist${url === '/' ? '/index.html' : url}`;
     res.end(fs.readFileSync(path.resolve(__dirname, p)));
   } catch (e) {
     try {
       const url = req.getUrl();
-      const p = `../../public${url}`;
+      const p = `../../../public${url}`;
       res.end(fs.readFileSync(path.resolve(__dirname, p)));
     } catch {
       res.writeStatus('404');
