@@ -8,11 +8,50 @@ const io = socketIo(server);
 
 app.use(express.static('dist'));  // Assuming you're serving client files from "dist"
 
+class GameWorld {
+    constructor(width = 1600, height =1600) {
+        this.width = width;
+        this.height = height;
+    }
+
+    isOutOfBoundsX(x, halfSize) {
+        return x - halfSize < 0 || x + halfSize > this.width;
+    }
+
+    isOutOfBoundsY(y, halfSize) {
+        return y - halfSize < 0 || y + halfSize > this.height;
+    }
+}
+
+const gameWorld = new GameWorld();
+
+
 class Player {
-    constructor(id, x, y) {
+    constructor(id) {
         this.id = id;
-        this.x = x;
-        this.y = y;
+        this.x = 0;
+        this.y = 0;
+        this.angle = 0;
+        this.velocityX = 0;
+        this.velocityY = 0;
+    }
+    updatePosition(x, y) {
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+        // Apply friction
+        this.velocityX *= 0.8;
+        this.velocityY *= 0.8;
+
+        if (gameWorld.isOutOfBoundsX(this.x, 25)) {
+            this.velocityX = -this.velocityX;
+            this.x = this.x < 25 ? 25 : gameWorld.width - 25;
+        }
+        if (gameWorld.isOutOfBoundsY(this.y, 25)) {
+            this.velocityY = -this.velocityY;
+            this.y = this.y < 25 ? 25 : gameWorld.height - 25;
+        }
+
+        handleBallCollision(this);
     }
 }
 
@@ -30,8 +69,18 @@ class SoccerBall {
         this.x += this.velocityX;
         this.y += this.velocityY;
         // Apply friction
-        this.velocityX *= 0.98;
-        this.velocityY *= 0.98;
+        this.velocityX *= 0.96;
+        this.velocityY *= 0.96;
+        if (gameWorld.isOutOfBoundsX(this.x, 25)) {
+            this.velocityX = -this.velocityX;
+            this.x = this.x < 25 ? 25 : gameWorld.width - 25;
+        }
+        if (gameWorld.isOutOfBoundsY(this.y, 25)) {
+            this.velocityY = -this.velocityY;
+            this.y = this.y < 25 ? 25 : gameWorld.height - 25;
+        }
+
+        allPlayersBallCollision();
     }
 }
 
@@ -55,77 +104,65 @@ io.on('connection', (socket) => {
         directions.forEach(direction => {
             switch(direction) {
                 case 'left':
-                    player.x -= speed;
+                    player.velocityX -= speed;
                     break;
                 case 'up':
-                    player.y -= speed;
+                    player.velocityY -= speed;
                     break;
                 case 'right':
-                    player.x += speed;
+                    player.velocityX += speed;
                     break;
                 case 'down':
-                    player.y += speed;
+                    player.velocityY += speed;
                     break;
             }
+            // Limit speed
+            if (player.velocityX > 20) player.velocityX = 20;
+            if (player.velocityX < -20) player.velocityX = -20;
+            if (player.velocityY > 20) player.velocityY = 20;
+            if (player.velocityY < -20) player.velocityY = -20;
         });
 
-        handleCollisions(player);
     });
 });
 
-function handleCollisions(player) {
-    const halfSize = 25;  // Assuming each square has a size of 50
-
-    // Check collision with other players
-    for (let otherId in players) {
-        if (otherId !== player.id) {
-            const other = players[otherId];
-            const collisionX = player.x + halfSize > other.x - halfSize && player.x - halfSize < other.x + halfSize;
-            const collisionY = player.y + halfSize > other.y - halfSize && player.y - halfSize < other.y + halfSize;
-
-            if (collisionX && collisionY) {
-                const overlapX = (halfSize * 2) - Math.abs(player.x - other.x);
-                const overlapY = (halfSize * 2) - Math.abs(player.y - other.y);
-
-                if (overlapX < overlapY) {
-                    if (player.x < other.x) {
-                        other.x += overlapX;
-                    } else {
-                        other.x -= overlapX;
-                    }
-                } else {
-                    if (player.y < other.y) {
-                        other.y += overlapY;
-                    } else {
-                        other.y -= overlapY;
-                    }
-                }
-            }
-        }
-    }
-
-    // Check collision with soccer ball
+function handleBallCollision(player) {
     const ballSize = 25;
-    const collisionX = player.x + halfSize > soccerBall.x - ballSize && player.x - halfSize < soccerBall.x + ballSize;
-    const collisionY = player.y + halfSize > soccerBall.y - ballSize && player.y - halfSize < soccerBall.y + ballSize;
+    const halfSize = 25;  // Assuming each player square has a size of 50
+    const distance = Math.sqrt((player.x - soccerBall.x) ** 2 + (player.y - soccerBall.y) ** 2);
 
-    if (collisionX && collisionY) {
-        const dx = soccerBall.x - player.x;
-        const dy = soccerBall.y - player.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const force = 5;
+    if (distance < halfSize + ballSize) {
+        // Use trigonometry to "kick" the ball
+        const angle = Math.atan2(soccerBall.y - player.y, soccerBall.x - player.x);
+        const overlap = halfSize + ballSize - distance;
 
-        soccerBall.velocityX = (dx / distance) * force;
-        soccerBall.velocityY = (dy / distance) * force;
+        // Separate the colliding entities to ensure they don't overlap
+        soccerBall.x += overlap * Math.cos(angle);
+        soccerBall.y += overlap * Math.sin(angle);
+
+        // Apply velocity on ball based on cube velocity with dampening
+        const kickPower = 20;
+        soccerBall.velocityX += Math.cos(angle) * kickPower;
+        soccerBall.velocityY += Math.sin(angle) * kickPower;
     }
-
-    soccerBall.updatePosition();
 }
+
+function allPlayersBallCollision() {
+    for (let id in players) {
+        handleBallCollision(players[id]);
+    }
+}
+
 
 // Send periodic updates to all clients
 setInterval(() => {
+  soccerBall.updatePosition();
+    for (let id in players) {
+        players[id].updatePosition();
+    }
+
     io.emit('players', {updatedPlayers: players, ball: soccerBall});
-}, 1000/20);
+}, 1000/30);
 
 server.listen(3000, () => {
     console.log('listening on *:3000');
