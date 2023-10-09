@@ -99,7 +99,7 @@ const app = new PIXI.Application({
 
 const players = {};
 
-const socket = io('http://localhost:3000');
+const socket = io();
 // Define world dimensions
 const WORLD_WIDTH = 1600;
 const WORLD_HEIGHT = 1600;
