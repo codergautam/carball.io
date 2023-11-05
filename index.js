@@ -9,7 +9,7 @@ const io = socketIo(server);
 const Matter = require("matter-js");
 
 app.use(express.static('dist'));  // Assuming you're serving client files from "dist"
-
+app.use(express.static('assets'));
 class GameWorld {
   constructor(width = 1600, height = 1600) {
     this.width = width;
