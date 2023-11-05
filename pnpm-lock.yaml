@@ -11,6 +11,9 @@ dependencies:
   html-webpack-plugin:
     specifier: ^5.5.3
     version: 5.5.3(webpack@5.88.2)
+  matter-js:
+    specifier: ^0.19.0
+    version: 0.19.0
   pixi.js:
     specifier: ^7.3.1
     version: 7.3.1(@pixi/utils@7.3.1)
@@ -1321,6 +1324,10 @@ packages:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
     dependencies:
       tslib: 2.6.2
+    dev: false
+
+  /matter-js@0.19.0:
+    resolution: {integrity: sha512-v2huwvQGOHTGOkMqtHd2hercCG3f6QAObTisPPHg8TZqq2lz7eIY/5i/5YUV8Ibf3mEioFEmwibcPUF2/fnKKQ==}
     dev: false
 
   /media-typer@0.3.0:

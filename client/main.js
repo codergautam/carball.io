@@ -1,38 +1,100 @@
 class Player {
   constructor(id, x, y, app) {
-      this.id = id;
-      this.x = x;
-      this.y = y;
-      this.app = app;
-      this.targetX = x;
-      this.targetY = y;
-      this.graphics = new PIXI.Graphics();
-        this.angle = 0;
-      this.draw();
+    this.id = id;
+    this.x = x;
+    this.y = y;
+    this.app = app;
+    this.targetX = x;
+    this.targetY = y;
+    this.sprite = PIXI.Sprite.from("./car.png");  // Using Sprite with your image
+    this.angle = 0;
+    this.targetAngle = 0;
+    this.setupSprite();
+    this.draw();
+    this.trailGraphics = new PIXI.Graphics();   // Create a new graphics object for the trail
+    this.app.stage.addChild(this.trailGraphics); // Add the trail graphics to the stage
+    this.history = [];  // Store historical positions and angles
+    const maxHistory = 20;  // Number of historical points to keep track of
+  }
+
+  setupSprite() {
+    // Assuming you want the sprite to be the same size as the rectangle you previously drew
+    this.sprite.anchor.set(0.5);  // Center the anchor point
+    this.sprite.width = 90;
+    this.sprite.height = 160;
+
+    this.app.stage.addChild(this.sprite);
   }
 
   draw() {
-      this.graphics.clear();
-      this.graphics.beginFill(this.id === socket.id ? 0xFF0000 : 0x0000FF);  // Current player in red, others in blue
-      this.graphics.drawRect(0, 0, 50, 50);
-      this.graphics.endFill();
-      this.graphics.rotation = this.angle;
-      this.graphics.x = this.x;
-      this.graphics.y = this.y;
-      this.app.stage.addChild(this.graphics);
+    if (this.id === socket.id) {
+      this.sprite.tint = 0xFF0000;  // Current player in red
+    } else {
+      this.sprite.tint = 0x0000FF;  // Others in blue
+    }
+    this.sprite.rotation = this.targetAngle - Math.PI / 2;
+    this.sprite.x = interpolateEntityX(this, Date.now(), client.lastUpdate);
+    this.sprite.y = interpolateEntityY(this, Date.now(), client.lastUpdate);
+
+    // this.drawTrail();  // Call the drawTrail method to update the trail graphics
   }
+
+  drawTrail() {
+    const trailColor = 0xFFFFFF;
+    const trailWidth = 4;
+    const wheelDistanceFromCenter = 40;
+
+    if(!this.trailGraphics || this.history.length === 0) return;
+
+    this.trailGraphics.clear(); // Clear the previous trail
+
+    // Loop through the history to draw the trail from previous positions
+    for (let i = 0; i < this.history.length - 1; i++) {
+      const current = this.history[i];
+      const next = this.history[i + 1];
+      console.log(next.angle)
+
+
+      // Calculate rear wheel positions for both the current and next points
+      const [currLeftX, currLeftY] = this.getRearWheelPos(current.x, current.y, current.angle, wheelDistanceFromCenter);
+      const [currRightX, currRightY] = this.getRearWheelPos(current.x, current.y, current.angle, -wheelDistanceFromCenter);
+
+      const [nextLeftX, nextLeftY] = this.getRearWheelPos(next.x, next.y, next.angle, wheelDistanceFromCenter);
+      const [nextRightX, nextRightY] = this.getRearWheelPos(next.x, next.y, next.angle, -wheelDistanceFromCenter);
+
+      // Draw the trail between the current and next points
+      this.trailGraphics.lineStyle(trailWidth, trailColor, 1);
+      this.trailGraphics.moveTo(currLeftX, currLeftY);
+      this.trailGraphics.lineTo(nextLeftX, nextLeftY);
+      this.trailGraphics.moveTo(currRightX, currRightY);
+      this.trailGraphics.lineTo(nextRightX, nextRightY);
+    }
+  }
+
+  getRearWheelPos(x, y, angle, distance) {
+    // Normilize angle to be between 0 and 2PI
+
+    const rearX = x + distance * Math.cos(angle);
+    const rearY = y + distance * Math.sin(angle);
+    return [rearX, rearY];
+  } 
+
 
   updatePosition(x, y, angle) {
-    console.log('updatePosition', x, y);
-      this.targetX = x;
-      this.targetY = y;
-        this.angle = angle;
+    this.x = interpolateEntityX(this, Date.now(), client.lastUpdate);
+    this.y = interpolateEntityY(this, Date.now(), client.lastUpdate);
+    this.angle = interpolateEntityAngle(this, Date.now(), client.lastUpdate);
+    this.targetX = x;
+    this.targetY = y;
+    this.targetAngle = angle;
 
+    this.history.unshift({ x: this.x, y: this.y, angle: this.angle });
+    if (this.history.length > this.maxHistory) {
+      this.history.pop();  // Remove the oldest position and angle
+    }
   }
+
   interpolatePosition() {
-    const lerpSpeed = 0.2;  // Adjust this value for faster/slower interpolation
-    this.x += (this.targetX - this.x) * lerpSpeed;
-    this.y += (this.targetY - this.y) * lerpSpeed;
     this.draw();
 
     // Center the camera on the current player
@@ -40,47 +102,50 @@ class Player {
       const halfScreenWidth = window.innerWidth / 2;
       const halfScreenHeight = window.innerHeight / 2;
 
-      app.stage.pivot.x = this.x + 25;  // Adjust for half of the player width (50/2)
-      app.stage.pivot.y = this.y + 25;  // Adjust for half of the player height (50/2)
+      app.stage.pivot.x = interpolateEntityX(this, Date.now(), client.lastUpdate);
+      app.stage.pivot.y = interpolateEntityY(this, Date.now(), client.lastUpdate);
 
       app.stage.position.x = halfScreenWidth;
       app.stage.position.y = halfScreenHeight;
     }
+  }
 }
-}
+
 
 class SoccerBall {
-    constructor(x, y, app) {
-        this.x = x;
-        this.y = y;
-        this.app = app;
-        this.targetX = x;
-        this.targetY = y;
-        this.graphics = new PIXI.Graphics();
-        this.draw();
-    }
+  constructor(x, y, app) {
+    this.x = x;
+    this.y = y;
+    this.app = app;
+    this.targetX = x;
+    this.targetY = y;
+    this.graphics = new PIXI.Graphics();
+    this.draw();
+  }
 
-    draw() {
-        this.graphics.clear();
-        this.graphics.beginFill(0x000000);  // Black color for the ball
-        this.graphics.drawCircle(25, 25, 25);
-        this.graphics.endFill();
-        this.graphics.x = this.x;
-        this.graphics.y = this.y;
-        this.app.stage.addChild(this.graphics);
-    }
+  draw() {
+    this.graphics.clear();
+    this.graphics.beginFill(0x000000);  // Black color for the ball
+    this.graphics.drawCircle(0, 0, 50);
+    this.graphics.endFill();
+    this.graphics.x = interpolateEntityX(this, Date.now(), client.lastUpdate);
+    this.graphics.y = interpolateEntityY(this, Date.now(), client.lastUpdate);
+    this.app.stage.addChild(this.graphics);
+  }
 
-    updatePosition(x, y) {
-        this.targetX = x;
-        this.targetY = y;
-    }
+  updatePosition(x, y) {
+    this.x = interpolateEntityX(this, Date.now(), client.lastUpdate);
+    this.y = interpolateEntityY(this, Date.now(), client.lastUpdate);
+    this.targetX = x;
+    this.targetY = y;
+  }
 
-    interpolatePosition() {
-        const lerpSpeed = 0.2;  // Adjust this value for faster/slower interpolation
-        this.x += (this.targetX - this.x) * lerpSpeed;
-        this.y += (this.targetY - this.y) * lerpSpeed;
-        this.draw();
-    }
+  interpolatePosition() {
+    // const lerpSpeed = 0.2;  // Adjust this value for faster/slower interpolation
+    // this.x = this.targetX; //+= (this.targetX - this.x) * lerpSpeed;
+    // this.y = this.targetY; // (this.targetY - this.y) * lerpSpeed;
+    this.draw();
+  }
 }
 
 
@@ -88,14 +153,14 @@ import io from 'socket.io-client';
 import * as PIXI from 'pixi.js';
 
 const app = new PIXI.Application({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    backgroundColor: 0xAAAAAA
-  });
-  document.body.appendChild(app.view);
-  document.body.style.margin = "0"; // remove default margins
-  app.renderer.view.style.position = "absolute";
-  app.renderer.view.style.display = "block";
+  width: window.innerWidth,
+  height: window.innerHeight,
+  backgroundColor: 0xAAAAAA
+});
+document.body.appendChild(app.view);
+document.body.style.margin = "0"; // remove default margins
+app.renderer.view.style.position = "absolute";
+app.renderer.view.style.display = "block";
 
 const players = {};
 
@@ -104,8 +169,14 @@ const socket = io();
 const WORLD_WIDTH = 1600;
 const WORLD_HEIGHT = 1600;
 
+//throw all global variables in here
+const client = {
+  lastUpdate: Date.now()
+}
+
 // Create world boundary
 const worldBoundary = new PIXI.Graphics();
+
 worldBoundary.lineStyle(10, 0xFF0000); // Red line as the boundary
 worldBoundary.drawRect(20, 20, WORLD_WIDTH, WORLD_HEIGHT);
 app.stage.addChild(worldBoundary);
@@ -117,74 +188,77 @@ socket.on('connect', () => {
 const activeKeys = {};
 
 document.addEventListener('keydown', (event) => {
-  switch(event.keyCode) {
-      case 37: // Left
-          activeKeys['left'] = true;
-          break;
-      case 38: // Up
-          activeKeys['up'] = true;
-          break;
-      case 39: // Right
-          activeKeys['right'] = true;
-          break;
-      case 40: // Down
-          activeKeys['down'] = true;
-          break;
+  switch (event.keyCode) {
+    case 37: // Left
+      activeKeys['left'] = true;
+      break;
+    case 38: // Up
+      activeKeys['up'] = true;
+      break;
+    case 39: // Right
+      activeKeys['right'] = true;
+      break;
+    case 40: // Down
+      activeKeys['down'] = true;
+      break;
   }
   emitPlayerMovement();
 });
 
 document.addEventListener('keyup', (event) => {
-  switch(event.keyCode) {
-      case 37: // Left
-          activeKeys['left'] = false;
-          break;
-      case 38: // Up
-          activeKeys['up'] = false;
-          break;
-      case 39: // Right
-          activeKeys['right'] = false;
-          break;
-      case 40: // Down
-          activeKeys['down'] = false;
-          break;
+  switch (event.keyCode) {
+    case 37: // Left
+      activeKeys['left'] = false;
+      break;
+    case 38: // Up
+      activeKeys['up'] = false;
+      break;
+    case 39: // Right
+      activeKeys['right'] = false;
+      break;
+    case 40: // Down
+      activeKeys['down'] = false;
+      break;
   }
   emitPlayerMovement();
 });
 
 function emitPlayerMovement() {
-  const directions = [];
-  for (let key in activeKeys) {
-      if (activeKeys[key]) directions.push(key);
-  }
-  if (directions.length > 0) {
-      socket.emit('move', directions);
-  }
+  socket.emit('move', activeKeys)
+  // const directions = [];
+  // for (let key in activeKeys) {
+  //     if (activeKeys[key]) directions.push(key);
+  // }
+  // if (directions.length > 0) {
+  //     socket.emit('move', directions);
+  // }
 }
 
-socket.on('players', ({updatedPlayers, ball}) => {
+socket.on('players', ({ updatedPlayers, ball }) => {
   // Clear previous player graphics
-  for (let id in players) {
-      players[id].graphics.clear();
-  }
+  // for (let id in players) {
+  //   players[id].graphics.clear();
+  // }
 
   // Update or create new players based on data from server
   for (let id in updatedPlayers) {
-      if (players[id]) {
-          players[id].updatePosition(updatedPlayers[id].x, updatedPlayers[id].y, updatedPlayers[id].angle);
-      } else {
-          players[id] = new Player(id, updatedPlayers[id].x, updatedPlayers[id].y, app);
-      }
+    if (players[id]) {
+      players[id].updatePosition(updatedPlayers[id].x, updatedPlayers[id].y, updatedPlayers[id].angle);
+    } else {
+      players[id] = new Player(id, updatedPlayers[id].x, updatedPlayers[id].y, app);
+    }
   }
 
   handleSoccerBall(ball);
+
+  client.lastUpdate = Date.now();
 });
 
 let soccerBall = new SoccerBall(375, 275, app);  // You can initialize it with your own starting x, y
 
 
 function handleSoccerBall(ballData) {
-    soccerBall.updatePosition(ballData.x, ballData.y);
+  soccerBall.updatePosition(ballData.x, ballData.y);
 }
 
 
@@ -192,14 +266,38 @@ function handleSoccerBall(ballData) {
 app.ticker.add(() => {
   // Interpolate player positions
   for (let id in players) {
-      players[id].interpolatePosition();
+    players[id].interpolatePosition();
   }
 
   // Check active keys and send movement
-  emitPlayerMovement();
+  //emitPlayerMovement();
   soccerBall.interpolatePosition();
 });
 
 window.addEventListener('resize', function() {
-    app.renderer.resize(window.innerWidth, window.innerHeight);
-  });
+  app.renderer.resize(window.innerWidth, window.innerHeight);
+});
+
+function interpolateEntityX(entity, time = Date.now(), timeStart) {
+  let r = (time - timeStart) / (1000/30);
+  if (r > 1.5) r = 1.5;
+  return (r * (entity.targetX - entity.x) + entity.x);
+}
+function interpolateEntityY(entity, time = Date.now(), timeStart) {
+  let r = (time - timeStart) / (1000/30);
+  if (r > 1.5) r = 1.5;
+  return (r * (entity.targetY - entity.y) + entity.y);
+}
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+function shortAngle(angle, angle2) {
+  let max = 360;
+  let deltaAngle = (angle2 - angle) % max;
+  return 2 * deltaAngle % max - deltaAngle;
+}
+function interpolateEntityAngle(entity, time = Date.now(), timeStart) {
+  let r = (Date.now() - timeStart) / (1000/30);
+  if (r > 1.5) r = 1.5;
+  return mod(r * shortAngle(entity.angle, entity.targetAngle) + entity.angle, 360);
+}
