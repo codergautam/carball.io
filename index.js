@@ -56,13 +56,16 @@ io.on('connection', (socket) => {
 //30 tps sent, 60 tps server
 let sendUpdate = false;
 // Send periodic updates to all clients
+let lastUpdate = Date.now();
 setInterval(() => {
   soccerBall.updatePosition();
   for (let id in players) {
     players[id].updatePosition();
   }
 
-  Matter.Engine.update(gameWorld.engine, 1000 / 60);
+  console.log(Date.now() - lastUpdate);
+  Matter.Engine.update(gameWorld.engine, Date.now() - lastUpdate);
+  lastUpdate = Date.now();
 
   //send packet every other tick
   sendUpdate = !sendUpdate;

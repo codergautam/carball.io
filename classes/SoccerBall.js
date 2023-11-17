@@ -24,7 +24,6 @@ module.exports = class SoccerBall {
   }
 
   exportJSON() {
-    console.log(this.body.angle/Math.PI*18 )
     return { x: this.body.position.x, y: this.body.position.y, angle: this.body.angle }
   };
 }
