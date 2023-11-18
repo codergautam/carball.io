@@ -7,7 +7,7 @@ module.exports = class SoccerBall {
       restitution: 1.0,
       // friction: 0.5,
       frictionAir: 0.015,
-      inertia: 100
+      inertia: 80
       // frictionStatic: 0.5
     });
   }

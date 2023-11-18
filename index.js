@@ -63,7 +63,6 @@ setInterval(() => {
     players[id].updatePosition();
   }
 
-  console.log(Date.now() - lastUpdate);
   Matter.Engine.update(gameWorld.engine, Date.now() - lastUpdate);
   lastUpdate = Date.now();
 
