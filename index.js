@@ -1,31 +1,30 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const Matter = require("matter-js");
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const Matter = require("matter-js");
-
 // Import classes
 const GameWorld = require('./classes/GameWorld');
 const Player = require('./classes/Player');
 const SoccerBall = require('./classes/SoccerBall');
+const GoalPost = require('./classes/GoalPost'); // Import GoalPost class
 
 app.use(express.static('dist'));
 app.use(express.static('assets'));
 
-
 const gameWorld = new GameWorld();
 
 const players = {};
-
-
-
 const soccerBall = new SoccerBall(400, 300);
-Matter.Composite.add(gameWorld.engine.world, [soccerBall.body]);
+const leftGoal = new GoalPost(100, 100, 200, 100); // Create left goal post
+// const rightGoal = new GoalPost(750, 300, 20, 100); // Create right goal post
 
+// Add objects to the Matter.js world
+Matter.Composite.add(gameWorld.engine.world, [soccerBall.body, leftGoal.body]);
 
 
 io.on('connection', (socket) => {
@@ -34,6 +33,13 @@ io.on('connection', (socket) => {
   // Create a new player and add to the players object
   players[socket.id] = new Player(socket.id, 400, 300);
   Matter.Composite.add(gameWorld.engine.world, [players[socket.id].body]);
+
+
+  // Send goal post data to the client
+  socket.emit('goalPosts', {
+    leftGoal: leftGoal.exportJSON(),
+    // rightGoal: rightGoal.exportJSON()
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected:', socket.id);
@@ -52,29 +58,37 @@ io.on('connection', (socket) => {
   });
 });
 
-
-//30 tps sent, 60 tps server
-let sendUpdate = false;
-// Send periodic updates to all clients
 let lastUpdate = Date.now();
+// Update and game logic
 setInterval(() => {
   soccerBall.updatePosition();
   for (let id in players) {
     players[id].updatePosition();
   }
 
+  // Check for goals
+  // if (leftGoal.checkGoal(soccerBall)) {
+  //   console.log('Goal scored on left side!');
+  // } else if (rightGoal.checkGoal(soccerBall)) {
+  //   console.log('Goal scored on right side!');
+  // }
+
+  // Update the physics engine
   Matter.Engine.update(gameWorld.engine, Date.now() - lastUpdate);
   lastUpdate = Date.now();
 
-  //send packet every other tick
-  sendUpdate = !sendUpdate;
-  if (!sendUpdate) return;
-
-  let pack = { updatedPlayers: {}, ball: soccerBall.exportJSON() };
+  // Prepare the data packet
+  let pack = {
+    updatedPlayers: {},
+    ball: soccerBall.exportJSON(),
+  };
   for (let i in players) {
     pack.updatedPlayers[i] = players[i].exportJSON();
   }
-  io.emit('players', pack);
+  io.emit('goalPosts', {
+    leftGoal: leftGoal.exportJSON(),
+  });
+  io.emit('update', pack);
 }, 1000 / 60);
 
 server.listen(3000, () => {

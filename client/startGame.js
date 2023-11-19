@@ -3,6 +3,8 @@ import io from 'socket.io-client';
 import * as PIXI from 'pixi.js';
 import SoccerBallObject from './components/SoccerBallObject';
 import PlayerObject from './components/PlayerObject';
+import createTiles from './components/Tiles';
+import GoalPostClient from './components/GoalPostObject';
 
 export default function startGame() {
 const app = new PIXI.Application({
@@ -18,21 +20,13 @@ app.renderer.view.style.display = "block";
 const players = {};
 
 const socket = io();
-// Define world dimensions
-const WORLD_WIDTH = 1600;
-const WORLD_HEIGHT = 1600;
 
 //throw all global variables in here
 const client = {
   lastUpdate: Date.now()
 }
 
-// Create world boundary
-const worldBoundary = new PIXI.Graphics();
-
-worldBoundary.lineStyle(10, 0xFF0000); // Red line as the boundary
-worldBoundary.drawRect(20, 20, WORLD_WIDTH, WORLD_HEIGHT);
-app.stage.addChild(worldBoundary);
+createTiles(app);
 
 socket.on('connect', () => {
   console.log('Connected to server!');
@@ -80,7 +74,30 @@ function emitPlayerMovement() {
   socket.emit('move', activeKeys)
 }
 
-socket.on('players', ({ updatedPlayers, ball }) => {
+
+let goalPosts = {};
+
+socket.on('goalPosts', ({ leftGoal, rightGoal }) => {
+  console.log('Received goal posts from server', leftGoal, rightGoal);
+  if(goalPosts.leftGoal) {
+    goalPosts.leftGoal.clear();
+  }
+  if(goalPosts.rightGoal) {
+    goalPosts.rightGoal.clear();
+  }
+  // Create goal posts
+  if(leftGoal) {
+  goalPosts.leftGoal = new GoalPostClient(app, leftGoal);
+  goalPosts.leftGoal.draw();
+  }
+  if(rightGoal) {
+  goalPosts.rightGoal = new GoalPostClient(app, rightGoal);
+  goalPosts.rightGoal.draw();
+  }
+});
+
+socket.on('update', ({ updatedPlayers, ball, leftGoal, rightGoal  }) => {
+  console.log('Received update from server', leftGoal, rightGoal);
   for (let id in updatedPlayers) {
     // Minus 90 degrees because the sprite is facing up
 

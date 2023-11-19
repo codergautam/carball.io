@@ -1,7 +1,7 @@
 const Matter = require("matter-js");
 
 module.exports = class GameWorld {
-  constructor(width = 1600, height = 1600) {
+  constructor(width = 2500, height = 1500) {
     this.width = width;
     this.height = height;
     this.engine = Matter.Engine.create();
