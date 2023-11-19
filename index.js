@@ -20,11 +20,11 @@ const gameWorld = new GameWorld();
 
 const players = {};
 const soccerBall = new SoccerBall(400, 300);
-const leftGoal = new GoalPost(100, 100, 200, 100); // Create left goal post
-// const rightGoal = new GoalPost(750, 300, 20, 100); // Create right goal post
+const leftGoal = new GoalPost(100, gameWorld.height/2, 500, 300); // Create left goal post
+const rightGoal = new GoalPost(gameWorld.width - 100, gameWorld.height/2, 500, 300, true); // Create right goal post
 
 // Add objects to the Matter.js world
-Matter.Composite.add(gameWorld.engine.world, [soccerBall.body, leftGoal.body]);
+Matter.Composite.add(gameWorld.engine.world, [soccerBall.body, leftGoal.body, rightGoal.body]);
 
 
 io.on('connection', (socket) => {
@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
   // Send goal post data to the client
   socket.emit('goalPosts', {
     leftGoal: leftGoal.exportJSON(),
-    // rightGoal: rightGoal.exportJSON()
+    rightGoal: rightGoal.exportJSON()
   });
 
   socket.on('disconnect', () => {
@@ -85,9 +85,6 @@ setInterval(() => {
   for (let i in players) {
     pack.updatedPlayers[i] = players[i].exportJSON();
   }
-  io.emit('goalPosts', {
-    leftGoal: leftGoal.exportJSON(),
-  });
   io.emit('update', pack);
 }, 1000 / 60);
 

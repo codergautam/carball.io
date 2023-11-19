@@ -1,11 +1,14 @@
 const Matter = require("matter-js");
 
 module.exports = class GoalPost {
-  constructor(x, y, width, height) {
+  constructor(x, y, width, height, flip = false) {
     // Define the dimensions and positions of the goal post lines
     this.base = Matter.Bodies.rectangle(x, y, width, 10, { isStatic: true });
 
     // Adjust the vertical lines to be straight up without any angle
+    if(flip) {
+      height = -height;
+    }
     this.leftSlant = Matter.Bodies.rectangle(x - width / 2, y - height / 2, 10, height, {
       isStatic: true
     });

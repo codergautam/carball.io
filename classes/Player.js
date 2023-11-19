@@ -5,14 +5,14 @@ module.exports = class Player {
     this.id = id;
     this.movement = { "up": false, "down": false, "left": false, "right": false };
     this.body = Matter.Bodies.rectangle(100, 100, 160, 90, {
-      mass: 10,
+      mass: 5,
       restitution: 1.0,
-      //friction: 0.1,  THIS is friction with other objects 
+      //friction: 0.1,  THIS is friction with other objects
       frictionAir: 0.07,
-      //frictionStatic: 0.5  THIS is friction with other objects 
+      //frictionStatic: 0.5  THIS is friction with other objects
     });
     //Matter.Body.setInertia(this.body, 500000);
-    this.speed = 0.5;
+    this.speed = 0.25;
   }
 
   updatePosition() {
