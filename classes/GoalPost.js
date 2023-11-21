@@ -28,8 +28,9 @@ module.exports = class GoalPost {
 
 
   checkGoal(ball) {
-    // Calculate if the ball is inside the goal area.
-    return false;
+    const ballData = { x: ball.body.position.x, y: ball.body.position.y, radius: ball.body.circleRadius };
+
+    return Matter.Vertices.contains(this.body.vertices, ballData);
   }
 
   exportJSON() {

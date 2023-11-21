@@ -67,11 +67,11 @@ setInterval(() => {
   }
 
   // Check for goals
-  // if (leftGoal.checkGoal(soccerBall)) {
-  //   console.log('Goal scored on left side!');
-  // } else if (rightGoal.checkGoal(soccerBall)) {
-  //   console.log('Goal scored on right side!');
-  // }
+  if (leftGoal.checkGoal(soccerBall)) {
+    console.log('Goal scored on left side!');
+  } else if (rightGoal.checkGoal(soccerBall)) {
+    console.log('Goal scored on right side!');
+  }
 
   // Update the physics engine
   Matter.Engine.update(gameWorld.engine, Date.now() - lastUpdate);
