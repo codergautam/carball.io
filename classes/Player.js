@@ -33,7 +33,7 @@ module.exports = class Player {
       Matter.Body.applyForce(body, body.position, vector);
     }
 
-    let torque = 250;
+    let torque = 450;
     if (this.movement.left) {
       body.torque = -torque * Math.PI / 180;
     }
