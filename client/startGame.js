@@ -32,7 +32,7 @@ socket.on('connect', () => {
   console.log('Connected to server!');
 });
 
-const activeKeys = {};
+let activeKeys = {};
 
 document.addEventListener('keydown', (event) => {
   switch (event.keyCode) {
@@ -70,6 +70,79 @@ document.addEventListener('keyup', (event) => {
   emitPlayerMovement();
 });
 
+  // Variables to store the position of the pointer
+  let mouseX = 0;
+  let mouseY = 0;
+  let angleDegrees;
+
+  document.addEventListener('mousemove', (event) => {
+    // Update the position of the pointer
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+
+    // Calculate the angle using atan2
+    const angle = Math.atan2(mouseY - window.innerHeight / 2, mouseX - window.innerWidth / 2);
+
+    // Convert the angle to degrees
+    angleDegrees = angle * 180 / Math.PI;
+
+  });
+
+  app.ticker.add(() => {
+    // Update the position of the player based on the active keys
+    updatePlayerMovement(angleDegrees);
+  });
+
+  function updatePlayerMovement(angleDegrees) {
+    // Reset the activeKeys object
+    activeKeys = {
+      'left': false,
+      'up': false,
+      'right': false,
+      'down': false
+    };
+
+
+    let carAngle = players[socket?.id]?.angle;
+    if(typeof carAngle !== "undefined") {
+    let carAngleDegrees = carAngle * 180 / Math.PI;
+    carAngleDegrees += 90;
+    
+
+    // Calculate the diff bretween the angles
+    let diff = Math.abs(carAngleDegrees - angleDegrees);
+    // Normalize the diff
+    diff = (diff) % 360;
+      console.log("ah", carAngleDegrees, angleDegrees, diff)
+    if(diff < 30) {
+      activeKeys = {
+        'left': false,
+        'up': false,
+        'right': false,
+        'down': false
+      };
+    } else {
+  // Check if we should rotate left or right for shortest rotation
+   diff = (carAngleDegrees - angleDegrees + 360) % 360;
+  if (diff > 180) {
+    // Rotate right
+    activeKeys['left'] = false;
+    activeKeys['right'] = true;
+  } else {
+    // Rotate left
+    activeKeys['left'] = true;
+    activeKeys['right'] = false;
+  }
+  // Move forward while rotating
+}
+
+      activeKeys['up'] = true;
+
+    
+    emitPlayerMovement();
+  }
+  }
+
 function emitPlayerMovement() {
   socket.emit('move', activeKeys)
 }
@@ -78,7 +151,6 @@ function emitPlayerMovement() {
 let goalPosts = {};
 
 socket.on('goalPosts', ({ leftGoal, rightGoal }) => {
-  console.log('Received goal posts from server', leftGoal, rightGoal);
   if(goalPosts.leftGoal) {
     goalPosts.leftGoal.clear();
   }
@@ -97,7 +169,6 @@ socket.on('goalPosts', ({ leftGoal, rightGoal }) => {
 });
 
 socket.on('update', ({ updatedPlayers, ball, leftGoal, rightGoal  }) => {
-  console.log('Received update from server', leftGoal, rightGoal);
   for (let id in updatedPlayers) {
     // Minus 90 degrees because the sprite is facing up
 
