@@ -49,12 +49,22 @@ io.on('connection', (socket) => {
 
   // Handle player movement
   socket.on('move', (directions) => {
+    console.log('directionse', directions);
+
     if (!(socket.id in players)) return;
     const player = players[socket.id];
+    console.log('directions', directions);
 
-    for (let i in directions)
+    if(typeof directions.angle === 'number') {  
+      console.log('angle', directions.angle);
+      player.movement.angle = directions.angle;
+    } else {
+    const validDirections = ['up', 'down', 'left', 'right'];
+    for (let i in directions) {
+      if (!validDirections.includes(i)) return socket.disconnect() // prob a modified client
       player.movement[i] = directions[i];
-
+    }
+    }
   });
 });
 
