@@ -1,11 +1,11 @@
 # carball.io
 
-# how to run
+## how to run on a server
 1. pnpm i
 2. npm run build
 3. node .
 
-# development
+## development
 
 running client in dev mode:
 1. pnpm i
