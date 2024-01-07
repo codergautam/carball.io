@@ -33,6 +33,7 @@ socket.on('connect', () => {
 });
 
 let activeKeys = {};
+let movementMode = 'mouse';
 
 document.addEventListener('keydown', (event) => {
   switch (event.keyCode) {
@@ -49,7 +50,7 @@ document.addEventListener('keydown', (event) => {
       activeKeys['down'] = true;
       break;
   }
-  emitPlayerMovement();
+  if(movementMode === 'keys') emitPlayerMovement();
 });
 
 document.addEventListener('keyup', (event) => {
@@ -67,7 +68,7 @@ document.addEventListener('keyup', (event) => {
       activeKeys['down'] = false;
       break;
   }
-  emitPlayerMovement();
+  if(movementMode === 'keys') emitPlayerMovement();
 });
 
   // Variables to store the position of the pointer
@@ -85,63 +86,18 @@ document.addEventListener('keyup', (event) => {
 
     // Convert the angle to degrees
     angleDegrees = angle * 180 / Math.PI;
+    angleDegrees += 180;
+
+    // normalize to -180 to 180
+    angleDegrees = (angleDegrees) % 360 - 180;
+    // angleDegrees *= -1;
+
+    if(movementMode === 'mouse') {
+      activeKeys['angle'] = angleDegrees;
+      emitPlayerMovement();
+    }
 
   });
-
-  app.ticker.add(() => {
-    // Update the position of the player based on the active keys
-    updatePlayerMovement(angleDegrees);
-  });
-
-  function updatePlayerMovement(angleDegrees) {
-    // Reset the activeKeys object
-    activeKeys = {
-      'left': false,
-      'up': false,
-      'right': false,
-      'down': false
-    };
-
-
-    let carAngle = players[socket?.id]?.angle;
-    if(typeof carAngle !== "undefined") {
-    let carAngleDegrees = carAngle * 180 / Math.PI;
-    carAngleDegrees += 90;
-    
-
-    // Calculate the diff bretween the angles
-    let diff = Math.abs(carAngleDegrees - angleDegrees);
-    // Normalize the diff
-    diff = (diff) % 360;
-      console.log("ah", carAngleDegrees, angleDegrees, diff)
-    if(diff < 30) {
-      activeKeys = {
-        'left': false,
-        'up': false,
-        'right': false,
-        'down': false
-      };
-    } else {
-  // Check if we should rotate left or right for shortest rotation
-   diff = (carAngleDegrees - angleDegrees + 360) % 360;
-  if (diff > 180) {
-    // Rotate right
-    activeKeys['left'] = false;
-    activeKeys['right'] = true;
-  } else {
-    // Rotate left
-    activeKeys['left'] = true;
-    activeKeys['right'] = false;
-  }
-  // Move forward while rotating
-}
-
-      activeKeys['up'] = true;
-
-    
-    emitPlayerMovement();
-  }
-  }
 
 function emitPlayerMovement() {
   socket.emit('move', activeKeys)
