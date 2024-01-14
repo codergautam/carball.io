@@ -19,7 +19,9 @@
     "pixi.js": "^7.3.1",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
+    "uuid": "^9.0.1",
     "webpack": "^5.88.2",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "ws": "^8.16.0"
   }
 }
