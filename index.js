@@ -73,11 +73,20 @@ io.on("connection", (socket) => {
 
 
 let lastMatchMade = Date.now();
+
+Games.lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
+
 function matchMaker(lobby) {
     for (let i in Games) { //kill empty games
         if (Games[i].count == 0 && i !== "lobby") {
             delete Games[i];
         }
+    }
+
+    //reset timer lol
+    if (Date.now() > lastMatchMade + config.MIN_MATCH_WAITTIME * 1000) {
+        lastMatchMade = Date.now();
+        lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
     }
 
     if (Object.keys(sockets).length < 2) return;
@@ -90,6 +99,7 @@ function matchMaker(lobby) {
 
     console.log("creating game");
     lastMatchMade = Date.now();
+    lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME*1000);
 
     let count = 0;
     for (let i in sockets) {

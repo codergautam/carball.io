@@ -200,6 +200,7 @@ export default function startGame() {
 
         // Calculate the angle using atan2
         const angle = Math.atan2(mouseY - window.innerHeight / 2, mouseX - window.innerWidth / 2);
+        const dist = Math.hypot(mouseY - window.innerHeight / 2, mouseX - window.innerWidth / 2);
 
         // Convert the angle to degrees
         angleDegrees = angle * 180 / Math.PI;
@@ -210,7 +211,8 @@ export default function startGame() {
         // angleDegrees *= -1;
 
         if (movementMode === 'mouse') {
-            activeKeys['angle'] = angleDegrees;
+            activeKeys['angle'] = Math.round(angleDegrees);
+            activeKeys['forward'] = (dist > 100);
             emitPlayerMovement();
         }
 
@@ -311,6 +313,11 @@ export default function startGame() {
         document.getElementById("blue").innerHTML = client.score.blue;
         document.getElementById("red").innerHTML = client.score.red;
 
+        if (client.serverType == "lobby") {
+            document.getElementById("blue").innerHTML = "";
+            document.getElementById("red").innerHTML = "";
+        }
+
         //make it so dont pan at start
         if (score.red == 0 && score.blue == 0) return;
         
@@ -402,7 +409,7 @@ export default function startGame() {
         $("boostBarPercent").style.width = (100 - Math.round(100 * boost / 240)) + "%";
 
         if (client.serverType == "lobby") {
-            document.getElementById("time").innerHTML = "Waiting for match...";
+            document.getElementById("time").innerHTML = "Waiting for match... " + formatTime(client.gameEnds - Date.now());
         } else {
             document.getElementById("time").innerHTML = formatTime(client.gameEnds - Date.now());
         }

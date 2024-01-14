@@ -21,9 +21,10 @@ module.exports = class Player {
         this.name = "VROOM";
         this.speed = 0.25;
         this.team = team;
-
         this.boostFuel = 240;
         this.boosting = false;
+
+        this.autoDrive = false;
     }
     boost() {
         this.boosting = true;
@@ -37,11 +38,12 @@ module.exports = class Player {
         let dir = mod(this.body.angle * 180 / Math.PI, 360);
 
         //if close just snap
-        //if (Math.abs(mod((dirTo - dir + 180), 360) - 180) < 2.5) {
-        //    this.body.angle = dirTo * Math.PI / 180;
-        //    this.torque = 0;
-        //    return;
-        //}
+        if (Math.abs(mod((dirTo - dir + 180), 360) - 180) < 2.5) {
+            let angle = dirTo * Math.PI / 180;
+            Matter.Body.setAngle(this.body, angle);
+            this.torque = 0;
+            return;
+        }
 
         if (dir != dirTo) {
             let neg = 1;
@@ -73,7 +75,7 @@ module.exports = class Player {
                 this.boostFuel += 1;
         }
 
-        if (this.movement.up) {
+        if (this.movement.up || this.autoDrive) {
             let vector = {
                 x: speed / 10 * Math.cos(body.angle),
                 y: speed / 10 * Math.sin(body.angle)
