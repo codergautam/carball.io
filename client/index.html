@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,57 @@
         <h1>Carball.io<sub style="font-size: 10px; color: blue;">beta!</sub></h1>
         <input type="text" id="nameInput" placeholder="Enter Your Name">
         <button id="playButton">Play</button>
+        <br />
+        <p><b>Controls:</b></p>
+        <input type="radio" name="controls" id="controls" value="keys" checked/>
+        <label for="controls">Keyboard</label>
+        <input type="radio" name="controls" id="controls2" value="mouse"/>
+        <label for="controls2">Mouse</label>
     </div>
+
+    <div id="gameGUI">
+        <p id="score"><z id="blue">0</z> - <z id="red">0</z></p>
+        <p id="time">0:00</p>
+
+        <p id="speedometer">0mph</p>
+        <p id="goal">AAAA</p>
+        <p id="countdown">3</p>
+
+        <div class="boostBar">
+            <div id="boostBarPercent"></div>
+        </div>
+
+        <div id="mobile" style="visibility: hidden;">
+            <div>
+                <div class="mobilebig" style="background: rgba(0, 0, 0, 0); border: none;"></div>
+                <div class="mobilebig mobileControlUp" z="up">up</div>
+                <!--<div class="mobilesmall" z="stealth">stealth</div>
+    <div class="mobilesmall" z="freeze">freeze</div>-->
+            </div>
+            <div style="justify-content: flex-end;">
+                <div class="mobilesmall mobileControlAttack" z="chat">chat</div>
+            </div>
+            <div>
+                <div class="mobilebig mobileControlLeft" z="left">left</div>
+                <div class="mobilebig mobileControlDown" z="down">down</div>
+                <div class="mobilebig mobileControlRight" z="right">right</div>
+            </div>
+            <div style="justify-content: flex-end;">
+                <div class="mobilesmall mobileControlDash" z="boost">boost</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="matchInfo">
+        <h1 id="winlose">You lost - [] team wins! </h1>
+        <hr />
+        <p>Blue Team Goals: <z id="blueFinal">0</z> </p>
+        <p>Red Team Goals: <z id="redFinal">0</z></p>
+       
+        <button onclick="exit()">Main Menu</button>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

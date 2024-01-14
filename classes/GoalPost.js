@@ -28,7 +28,7 @@ module.exports = class GoalPost {
 
 
   checkGoal(ball) {
-    const ballData = { x: ball.body.position.x, y: ball.body.position.y, radius: ball.body.circleRadius };
+    const ballData = { x: ball.x, y: ball.y, radius: ball.radius };
 
     return Matter.Vertices.contains(this.body.vertices, ballData);
   }

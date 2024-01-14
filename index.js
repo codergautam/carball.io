@@ -1,103 +1,125 @@
+
+function UncaughtExceptionHandler(err) {
+    console.log("Uncaught Exception Encountered!!");
+    console.log("err: ", err);
+    console.log("Stack trace: ", err.stack);
+    setInterval(function () { }, 1000);
+}
+
 const express = require('express');
 const http = require('http');
+const WebSocket = require("./ws");
 const socketIo = require('socket.io');
 const Matter = require("matter-js");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = new WebSocket(server, { strictCORS: false });
 
 // Import classes
-const GameWorld = require('./classes/GameWorld');
-const Player = require('./classes/Player');
-const SoccerBall = require('./classes/SoccerBall');
-const GoalPost = require('./classes/GoalPost'); // Import GoalPost class
+const Game = require('./classes/Game');
 
 app.use(express.static('dist'));
 app.use(express.static('assets'));
 
-const gameWorld = new GameWorld();
+const config = require("./config");
 
-const players = {};
-const soccerBall = new SoccerBall(400, 300);
-const leftGoal = new GoalPost(100, gameWorld.height/2, 500, 300); // Create left goal post
-const rightGoal = new GoalPost(gameWorld.width - 100, gameWorld.height/2, 500, 300, true); // Create right goal post
+process.on('uncaughtException', UncaughtExceptionHandler);
 
-// Add objects to the Matter.js world
-Matter.Composite.add(gameWorld.engine.world, [soccerBall.body, leftGoal.body, rightGoal.body]);
+//craete games here
+const Games = {
+    "lobby": new Game("lobby", "lobby")
+}
 
+//ez pz no more ball
+Games.lobby.ball.x = -1000;
+Games.lobby.ball.y = -1000;
 
-io.on('connection', (socket) => {
-  console.log('a user connected:', socket.id);
+//THIS IS THE WAITLIST
+const sockets = {};
 
-  // Create a new player and add to the players object
-  players[socket.id] = new Player(socket.id, 400, 300);
-  Matter.Composite.add(gameWorld.engine.world, [players[socket.id].body]);
+io.on("connection", (socket) => {
 
+    socket._carballserver = "lobby";
+    sockets[socket.id] = socket;
+    socket.emit("id", socket.id);
 
-  // Send goal post data to the client
-  socket.emit('goalPosts', {
-    leftGoal: leftGoal.exportJSON(),
-    rightGoal: rightGoal.exportJSON()
-  });
+    console.log('a user connected:', socket.id);
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected:', socket.id);
-    Matter.Composite.remove(gameWorld.engine.world, [players[socket.id].body]);
-    delete players[socket.id];
-  });
+    socket.on("join", (name) => {
+        //todo: add check to see if player is already in a game so they cant join twice by modifying client
+        Games[socket._carballserver].join(socket, name);
+    });
 
-  // Handle player movement
-  socket.on('move', (directions) => {
-    console.log('directionse', directions);
+    socket.on('close', () => {
+        Games[socket._carballserver].removePlayer(socket);
+        delete sockets[socket.id];
+        console.log("leftgame");
+    });
 
-    if (!(socket.id in players)) return;
-    const player = players[socket.id];
-    console.log('directions', directions);
+    socket.on("chat", (chat) => {
+        Games[socket._carballserver].handleChat(socket, chat);
+    });
 
-    if(typeof directions.angle === 'number') {  
-      console.log('angle', directions.angle);
-      player.movement.angle = directions.angle;
-    } else {
-    const validDirections = ['up', 'down', 'left', 'right'];
-    for (let i in directions) {
-      if (!validDirections.includes(i)) return socket.disconnect() // prob a modified client
-      player.movement[i] = directions[i];
-    }
-    }
-  });
+    socket.on('boost', () => {
+        Games[socket._carballserver].handleBoost(socket);
+    });
+
+    // Handle player movement
+    socket.on('move', (directions) => {
+        Games[socket._carballserver].handleMovement(socket, directions);
+    });
 });
+
+
+let lastMatchMade = Date.now();
+function matchMaker(lobby) {
+    for (let i in Games) { //kill empty games
+        if (Games[i].count == 0 && i !== "lobby") {
+            delete Games[i];
+        }
+    }
+
+    if (Object.keys(sockets).length < 2) return;
+    //                                            1 minute until match is forced
+    if (!(Object.keys(sockets).length >= 6 || Date.now() - lastMatchMade > config.MIN_MATCH_WAITTIME * 1000)) return;
+    if (Games.length > config.MAX_MATCHES) return; //max game limit
+
+    let id = Math.random() * 123 + "idk what to do for id lol";
+    Games[id] = new Game(id);
+
+    console.log("creating game");
+    lastMatchMade = Date.now();
+
+    let count = 0;
+    for (let i in sockets) {
+        if (count >= 6) break;
+
+        let playerInfo = lobby.players[sockets[i].id];
+        lobby.removePlayer(sockets[i]);
+        sockets[i]._carballserver = id;
+        Games[id].join(sockets[i], playerInfo.name);
+        delete sockets[i]; //out of da waitlist
+
+        count++;
+    }
+}
+
+setInterval(() => {
+    matchMaker(Games.lobby);
+}, 5000);
 
 let lastUpdate = Date.now();
 // Update and game logic
 setInterval(() => {
-  soccerBall.updatePosition();
-  for (let id in players) {
-    players[id].updatePosition();
-  }
+    for (let i in Games)
+        Games[i].update(lastUpdate);
 
-  // Check for goals
-  if (leftGoal.checkGoal(soccerBall)) {
-    console.log('Goal scored on left side!');
-  } else if (rightGoal.checkGoal(soccerBall)) {
-    console.log('Goal scored on right side!');
-  }
-
-  // Update the physics engine
-  Matter.Engine.update(gameWorld.engine, Date.now() - lastUpdate);
-  lastUpdate = Date.now();
-
-  // Prepare the data packet
-  let pack = {
-    updatedPlayers: {},
-    ball: soccerBall.exportJSON(),
-  };
-  for (let i in players) {
-    pack.updatedPlayers[i] = players[i].exportJSON();
-  }
-  io.emit('update', pack);
+    lastUpdate = Date.now();
 }, 1000 / 60);
 
 server.listen(3000, () => {
-  console.log('listening on *:3000');
+    console.log('listening on *:3000');
 });
+
+

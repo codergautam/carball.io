@@ -1,50 +1,226 @@
 body, html {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
-  font-family: Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
 .container {
-  text-align: center;
-  animation: fadeIn 1s ease-in-out;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 h1 {
-  color: #333;
-  margin-bottom: 20px;
+    color: #333;
+    margin-bottom: 20px;
 }
 
 #nameInput {
-  margin-bottom: 20px;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
 }
 
 #playButton {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #28a745;
-  color: white;
-  cursor: pointer;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
 }
 
-#playButton:hover {
-  background-color: #218838;
-}
+    #playButton:hover {
+        background-color: #218838;
+    }
 
 @media screen and (max-width: 600px) {
-  body, html {
-      flex-direction: column;
-  }
+    body, html {
+        flex-direction: column;
+    }
+}
+
+#gameGUI {
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    visibility: hidden;
+}
+
+#score {
+    text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+    margin: 4px;
+    border-bottom: solid;
+    border-right: solid 4px rgba(0, 0, 0, 0);
+    border-left: solid 4px rgba(0, 0, 0, 0);
+    width: max-content;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.3);
+}
+
+#time {
+    font-weight: bold;
+    color: #333;
+    text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+#red {
+    color: crimson;
+}
+
+#blue {
+    color: blue;
+}
+
+#redFinal {
+    color: crimson;
+}
+
+#blueFinal {
+    color: blue;
+}
+
+#matchInfo {
+    position: absolute;
+    left: 0;
+    left: 25%;
+    height: 50%;
+    background-color: aliceblue;
+    width: 50%;
+    top: 25%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    z-index: 30;
+    flex-direction: column;
+    align-items: center;
+    visibility: hidden;
+}
+
+    #matchInfo hr {
+        width: 50%;
+    }
+
+#speedometer {
+    font-weight: bold;
+    font-size: 1.4em;
+    bottom: 5px;
+    left: 5px;
+    margin: 0;
+    position: absolute;
+}
+
+#countdown {
+    visibility: hidden;
+    position: absolute;
+    margin: auto;
+    font-size: 3em;
+    top: 25%;
+    transition: all 0.6s;
+    text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    font-weight: bold;
+}
+
+#goal {
+    position: absolute;
+    bottom: 15%;
+    font-size: 3em;
+    transition: all 0.5s ease-in-out;
+    width: 100%;
+    text-align: center;
+    left: -100%;
+}
+
+
+
+#mobile {
+    position: absolute;
+    z-index: 290;
+    left: 1vw;
+    width: 98%;
+    height: 40vh;
+    /* visibility: hidden; */
+    pointer-events: none;
+    gap: 5px 5px;
+    color: white;
+    bottom: 9.5vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    user-select: none;
+}
+
+    #mobile div {
+        display: flex;
+        gap: 4px;
+    }
+
+        #mobile div div {
+            pointer-events: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            aspect-ratio: 1/1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: solid 1px #787878;
+        }
+
+.mobilesmall {
+    height: 70%;
+    align-self: flex-end;
+}
+
+.mobilebig {
+    height: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.boostBar {
+    width: 15%;
+    height: 20px;
+    border: 1px solid black;
+    position: absolute;
+    border-radius: 5px;
+    left: 5px;
+    bottom: 10%;
+    background: linear-gradient(90deg, #FF0000, #FFFF00, #00FF00);
+}
+
+#boostBarPercent{
+    width: 50%;
+    float: right;
+    height: 100%;
+    transition: width 300ms linear;
+    background: black;
 }
