@@ -92,6 +92,10 @@ module.exports = class Game {
     handleChat(socket, text) {
         this.emit("player", socket.id, "chat", text);
     }
+    setEnd(time) {
+        this.gameEnds = time;
+        this.emit("time", this.remaining);
+    }
     join(socket, name) {
         //everyone joins at same time cuz server is on same process so we can start game as soon as first player joins;
         this.startGame();
@@ -137,6 +141,7 @@ module.exports = class Game {
         const player = this.players[socket.id];
 
         if (typeof directions.angle === 'number') {
+            player.autoDrive = directions.forward;
             player.movement.angle = directions.angle;
         } else {
             const validDirections = ['up', 'down', 'left', 'right'];
