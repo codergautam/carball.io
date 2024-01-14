@@ -83,13 +83,16 @@ function matchMaker(lobby) {
         }
     }
 
-    //reset timer lol
-    if (Date.now() > lastMatchMade + config.MIN_MATCH_WAITTIME * 1000) {
-        lastMatchMade = Date.now();
-        lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
-    }
+   
 
-    if (Object.keys(sockets).length < 2) return;
+    if (Object.keys(sockets).length < 2) {
+        //reset timer lol
+        if (Date.now() > lastMatchMade + config.MIN_MATCH_WAITTIME * 1000) {
+            lastMatchMade = Date.now();
+            lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
+        }
+        return;
+    }
     //                                            1 minute until match is forced
     if (!(Object.keys(sockets).length >= 6 || Date.now() - lastMatchMade > config.MIN_MATCH_WAITTIME * 1000)) return;
     if (Games.length > config.MAX_MATCHES) return; //max game limit
