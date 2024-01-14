@@ -27,6 +27,7 @@ module.exports = class SoccerBall {
 
     set x(v) {
         Matter.Body.setPosition(this.body, { x: v, y: this.y });
+        Matter.Body.setVelocity(this.body, { x: 0, y: 0 });
     }
 
     get y() {
@@ -35,6 +36,7 @@ module.exports = class SoccerBall {
 
     set y(v) {
         Matter.Body.setPosition(this.body, { x: this.x, y: v });
+        Matter.Body.setVelocity(this.body, { x: 0, y: 0 });
     }
 
     get radius() {

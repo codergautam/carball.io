@@ -106,38 +106,33 @@ export default function startGame() {
             return;
         }
 
-        switch (event.keyCode) {
-            case 37: // Left
-                activeKeys['left'] = true;
-                break;
-            case 38: // Up
-                activeKeys['up'] = true;
-                break;
-            case 39: // Right
-                activeKeys['right'] = true;
-                break;
-            case 40: // Down
-                activeKeys['down'] = true;
-                break;
-        }
+        if (e.keyCode == 37 || e.keyCode == 65)
+            activeKeys['left'] = true;
+        if (e.keyCode == 39 || e.keyCode == 68)
+            activeKeys['right'] = true;
+        if (e.keyCode == 38 || e.keyCode == 87)
+            activeKeys['up'] = true;
+        if (e.keyCode == 40 || e.keyCode == 83)
+            activeKeys['down'] = true;
+
         if (movementMode === 'keys') emitPlayerMovement();
     });
 
+    document.addEventListener("click", () => {
+        socket.emit("boost");
+    });
+
     document.addEventListener('keyup', (event) => {
-        switch (event.keyCode) {
-            case 37: // Left
-                activeKeys['left'] = false;
-                break;
-            case 38: // Up
-                activeKeys['up'] = false;
-                break;
-            case 39: // Right
-                activeKeys['right'] = false;
-                break;
-            case 40: // Down
-                activeKeys['down'] = false;
-                break;
-        }
+        let e = event;
+        if (e.keyCode == 37 || e.keyCode == 65)
+            activeKeys['left'] = false;
+        if (e.keyCode == 39 || e.keyCode == 68)
+            activeKeys['right'] = false;
+        if (e.keyCode == 38 || e.keyCode == 87)
+            activeKeys['up'] = false;
+        if (e.keyCode == 40 || e.keyCode == 83)
+            activeKeys['down'] = false;
+
         if (movementMode === 'keys') emitPlayerMovement();
     });
 
@@ -314,8 +309,9 @@ export default function startGame() {
         document.getElementById("red").innerHTML = client.score.red;
 
         if (client.serverType == "lobby") {
-            document.getElementById("blue").innerHTML = "";
-            document.getElementById("red").innerHTML = "";
+            $("score").style.visibility = "hidden";
+        } else {
+            $("score").style.visibility = "visible";
         }
 
         //make it so dont pan at start
@@ -409,7 +405,11 @@ export default function startGame() {
         $("boostBarPercent").style.width = (100 - Math.round(100 * boost / 240)) + "%";
 
         if (client.serverType == "lobby") {
-            document.getElementById("time").innerHTML = "Waiting for match... " + formatTime(client.gameEnds - Date.now());
+            if (Object.keys(players).length > 1) {
+                document.getElementById("time").innerHTML = "Waiting for match... " + formatTime(client.gameEnds - Date.now());
+            } else {
+                document.getElementById("time").innerHTML = "Waiting for players...";
+            }
         } else {
             document.getElementById("time").innerHTML = formatTime(client.gameEnds - Date.now());
         }

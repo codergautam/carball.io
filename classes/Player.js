@@ -32,6 +32,7 @@ module.exports = class Player {
     setPos(x, y, angle) {
         Matter.Body.setPosition(this.body, { x: x, y: y });
         Matter.Body.setAngle(this.body, angle);
+        Matter.Body.setVelocity(this.body, { x: 0, y: 0 });
     }
     updateRotation(torque) {
         let dirTo = mod(this.movement.angle, 360);
