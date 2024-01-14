@@ -38,6 +38,8 @@ Games.lobby.ball.y = -1000;
 //THIS IS THE WAITLIST
 const sockets = {};
 
+let lastMatchMade = Date.now();
+
 io.on("connection", (socket) => {
 
     socket._carballserver = "lobby";
@@ -49,32 +51,29 @@ io.on("connection", (socket) => {
     socket.on("join", (name) => {
         //todo: add check to see if player is already in a game so they cant join twice by modifying client
         Games[socket._carballserver].join(socket, name);
-    });
 
+        if (socket._carballserver == "lobby" && Games.lobby.count == 2) {
+            lastMatchMade = Date.now();
+            Games.lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
+        }
+    });
     socket.on('close', () => {
         Games[socket._carballserver].removePlayer(socket);
         delete sockets[socket.id];
         console.log("leftgame");
     });
-
     socket.on("chat", (chat) => {
         Games[socket._carballserver].handleChat(socket, chat);
     });
-
     socket.on('boost', () => {
         Games[socket._carballserver].handleBoost(socket);
     });
-
     // Handle player movement
     socket.on('move', (directions) => {
         Games[socket._carballserver].handleMovement(socket, directions);
     });
 });
 
-
-let lastMatchMade = Date.now();
-
-Games.lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
 
 function matchMaker(lobby) {
     for (let i in Games) { //kill empty games
@@ -83,19 +82,17 @@ function matchMaker(lobby) {
         }
     }
 
-   
-
-    if (Object.keys(sockets).length < 2) {
+    if (Games.lobby.count < 2) {
         //reset timer lol
-        if (Date.now() > lastMatchMade + config.MIN_MATCH_WAITTIME * 1000) {
-            lastMatchMade = Date.now();
-            lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
-        }
+        //if (Date.now() > lastMatchMade + config.MIN_MATCH_WAITTIME * 1000) {
+        //    lastMatchMade = Date.now();
+        //    lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
+        //}
         return;
     }
     //                                            1 minute until match is forced
-    if (!(Object.keys(sockets).length >= 6 || Date.now() - lastMatchMade > config.MIN_MATCH_WAITTIME * 1000)) return;
-    if (Games.length > config.MAX_MATCHES) return; //max game limit
+    if (!(Games.lobby.count >= 6 || (Date.now() - lastMatchMade) > config.MIN_MATCH_WAITTIME * 1000)) return;
+    if (Object.keys(Games).length > config.MAX_MATCHES) return; //max game limit
 
     let id = Math.random() * 123 + "idk what to do for id lol";
     Games[id] = new Game(id);
@@ -105,7 +102,7 @@ function matchMaker(lobby) {
     lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME*1000);
 
     let count = 0;
-    for (let i in sockets) {
+    for (let i in Games.lobby.sockets) {
         if (count >= 6) break;
 
         let playerInfo = lobby.players[sockets[i].id];
@@ -120,7 +117,7 @@ function matchMaker(lobby) {
 
 setInterval(() => {
     matchMaker(Games.lobby);
-}, 5000);
+}, 2000);
 
 let lastUpdate = Date.now();
 // Update and game logic
