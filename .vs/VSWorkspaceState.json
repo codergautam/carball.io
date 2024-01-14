@@ -4,8 +4,7 @@
     "\\assets",
     "\\assets\\css",
     "\\classes",
-    "\\client",
-    "\\client\\components"
+    "\\client"
   ],
   "SelectedNode": "\\index.js",
   "PreviewInSolutionExplorer": false
