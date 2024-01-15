@@ -132,13 +132,15 @@ export default function startGame() {
         if (movementMode === 'keys') emitPlayerMovement();
     }
     function handleClick() {
+      console.log('click')
         if(!client.mobile)
             socket.emit("boost");
     }
 
     document.addEventListener('keydown', handleKeyDown);
 
-    document.addEventListener("click", handleClick);
+    // document.addEventListener("click", handleClick);
+  document.addEventListener('mousedown', handleClick);
 
     document.addEventListener('keyup', handleKeyUp);
 
