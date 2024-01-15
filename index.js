@@ -128,8 +128,9 @@ setInterval(() => {
     lastUpdate = Date.now();
 }, 1000 / 60);
 
-server.listen(config.PORT, () => {
-    console.log('listening on *:'+config.PORT)
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+    console.log('listening on *:'+port)
 });
 
 
