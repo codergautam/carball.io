@@ -75,7 +75,8 @@ export default function startGame() {
         socket.emit("chat", text);
     }
 
-    document.addEventListener('keydown', (event) => {
+    function handleKeyDown(event) {
+        if (client.mobile) return;
         let e = event;
 
         if (e.key == "Enter") {
@@ -116,13 +117,8 @@ export default function startGame() {
             activeKeys['down'] = true;
 
         if (movementMode === 'keys') emitPlayerMovement();
-    });
-
-    document.addEventListener("click", () => {
-        socket.emit("boost");
-    });
-
-    document.addEventListener('keyup', (event) => {
+    }
+    function handleKeyUp(event){
         let e = event;
         if (e.keyCode == 37 || e.keyCode == 65)
             activeKeys['left'] = false;
@@ -134,51 +130,82 @@ export default function startGame() {
             activeKeys['down'] = false;
 
         if (movementMode === 'keys') emitPlayerMovement();
-    });
+    }
+    function handleClick() {
+        if(!client.mobile)
+            socket.emit("boost");
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    document.addEventListener("click", handleClick);
+
+    document.addEventListener('keyup', handleKeyUp);
+
+    window.openMobileChat = function() {
+        document.getElementById("mobileChat").focus();
+    }
+
+    function handleMobileChatOpen(e) {
+        client.chat = e.target.value;
+        client.chatDisplay.text = client.chat;
+    }
+    function handleMobileChatClose(event){
+        sendChat(client.chat);
+        client.chat = "";
+        client.chatDisplay.text = client.chat;
+        document.body.focus();
+    }
+    function handleMobileTouchStart(e){
+        let type = e.target.getAttribute("z");
+        switch (type) {
+            case "left":
+                activeKeys['left'] = true;
+                break;
+            case "right":
+                activeKeys['right'] = true;
+                break;
+            case "up":
+                activeKeys['up'] = true;
+                break;
+            case "down":
+                activeKeys['down'] = true;
+                break;
+            case "boost":
+                socket.emit("boost");
+                break;
+        }
+        emitPlayerMovement();
+    }
+    function handleMobileTouchEnd(e){
+        let type = e.target.getAttribute("z");
+        switch (type) {
+            case "left":
+                activeKeys['left'] = false;
+                break;
+            case "right":
+                activeKeys['right'] = false;
+                break;
+            case "up":
+                activeKeys['up'] = false;
+                break;
+            case "down":
+                activeKeys['down'] = false;
+                break;
+        }
+        emitPlayerMovement();
+    }
 
     window.enableMobileControls = function () {
+        //chat
+        document.getElementById("mobileChat").addEventListener("input", handleMobileChatOpen);
+        document.getElementById("mobileChat").addEventListener("blur", handleMobileChatClose);
+
         $("mobile").style.visibility = "visible";
         client.mobile = true;
         let controls = document.getElementById("mobile");
-        controls.addEventListener("touchstart", (e) => {
-            let type = e.target.getAttribute("z");
-            switch (type) {
-                case "left":
-                    activeKeys['left'] = true;
-                    break;
-                case "right":
-                    activeKeys['right'] = true;
-                    break;
-                case "up":
-                    activeKeys['up'] = true;
-                    break;
-                case "down":
-                    activeKeys['down'] = true;
-                    break;
-                case "boost":
-                    socket.emit("boost");
-                    break;
-            }
-            emitPlayerMovement();
-        });
-        controls.addEventListener("touchend", (e) => {
-            let type = e.target.getAttribute("z");
-            switch (type) {
-                case "left":
-                    activeKeys['left'] = false;
-                    break;
-                case "right":
-                    activeKeys['right'] = false;
-                    break;
-                case "up":
-                    activeKeys['up'] = false;
-                    break;
-                case "down":
-                    activeKeys['down'] = false;
-                    break;
-            }
-            emitPlayerMovement();
-        });
+        controls.addEventListener("touchstart", handleMobileTouchStart);
+        controls.addEventListener("touchend", handleMobileTouchEnd);
     }
     if(window.matchMedia("(pointer: coarse)").matches)
         enableMobileControls();
@@ -188,7 +215,7 @@ export default function startGame() {
     let mouseY = 0;
     let angleDegrees;
 
-    document.addEventListener('mousemove', (event) => {
+    function handleMouseMove(event){
         // Update the position of the pointer
         mouseX = event.clientX;
         mouseY = event.clientY;
@@ -211,7 +238,9 @@ export default function startGame() {
             emitPlayerMovement();
         }
 
-    });
+    }
+
+    document.addEventListener('mousemove', handleMouseMove);
 
     function emitPlayerMovement() {
         socket.emit('move', activeKeys)
@@ -422,6 +451,17 @@ export default function startGame() {
 
     window.addEventListener('resize', function () {
         app.renderer.resize(window.innerWidth, window.innerHeight);
+        document.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener('keyup', handleKeyUp);
+        document.removeEventListener('click', handleClick);
+        document.removeEventListener('mousemove', handleMouseMove);
+        if (client.mobile) {
+            $("mobileChat").removeEventListener("input", handleMobileChatOpen);
+            $("mobileChat").removeEventListener("blur", handleMobileChatClose);
+            $("mobile").removeEventListener("touchstart", handleMobileTouchStart);
+            $("mobile").removeEventListener("touchend", handleMobileTouchEnd);
+        }
+        
     });
 
 
