@@ -62,6 +62,9 @@ io.on("connection", (socket) => {
         delete sockets[socket.id];
         console.log("leftgame");
     });
+    socket.on('ping', () => {
+        socket.emit("pong");
+    });
     socket.on("chat", (chat) => {
         Games[socket._carballserver].handleChat(socket, chat);
     });
@@ -147,7 +150,7 @@ app.get('/api/serverInfo', (req, res) => {
       playersCount: playersCount
   });
 });
-  
+
 
 const port = process.env.PORT || 3000;
 server.listen(port, () => {

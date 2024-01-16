@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <span id="playerCount">... playing</span>
+  <span id="playerCountTotal" class="toprightcount">... players online</span>
+  <span id="playerCount" class="toprightcount" style="display: none;">... players</span>
     <div class="container">
         <h1>Carball.io<sub style="font-size: 10px; color: blue;">beta!</sub></h1>
         <input type="text" id="nameInput" placeholder="Enter Your Name">
@@ -60,7 +61,7 @@
         <hr />
         <p>Blue Team Goals: <z id="blueFinal">0</z> </p>
         <p>Red Team Goals: <z id="redFinal">0</z></p>
-       
+
         <button onclick="exit()">Main Menu</button>
     </div>
 
