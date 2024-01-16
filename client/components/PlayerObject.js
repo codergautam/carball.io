@@ -17,7 +17,7 @@ export default class PlayerObject {
         this.targetAngle = 0;
         this.boost = 0;
         this.speed = 0;
-        
+
         this.trailGraphics = new PIXI.Graphics();   // Create a new graphics object for the trail
         this.app.stage.addChild(this.trailGraphics); // Add the trail graphics to the stage
         this.self = self;
@@ -29,7 +29,7 @@ export default class PlayerObject {
 
         this.chat = new PIXI.Text("", { font: "10px Arial", fill: "black" });
         this.chat.anchor.set(0.5, 4.0);
-        
+
 
         this.carSprite = PIXI.Sprite.from("./car.png");
         this.carSprite.anchor.set(0.5, 0.5);
@@ -150,8 +150,8 @@ export default class PlayerObject {
             //SPEEDOMTER STUFF HERE!!!!!!!!!!!!!!!!!
             let ds = Math.hypot(this.targetX - this.x, this.targetY - this.y);
             this.speed = Math.round(ds);
-          
-            
+
+
 
             let to = 700;
 
@@ -170,6 +170,7 @@ export default class PlayerObject {
 
             this.app.stage.position.x = halfScreenWidth;
             this.app.stage.position.y = halfScreenHeight;
+
 
             client.chatDisplay.position.x = px;
             client.chatDisplay.position.y = py - 150;

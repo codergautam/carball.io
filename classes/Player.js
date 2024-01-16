@@ -19,7 +19,7 @@ module.exports = class Player {
         });
         //Matter.Body.setInertia(this.body, 500000);
         this.name = "VROOM";
-        this.speed = 0.25;
+        this.speed = 0.2;
         this.team = team;
         this.boostFuel = 240;
         this.boosting = false;
