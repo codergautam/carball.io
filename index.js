@@ -118,6 +118,15 @@ function matchMaker(lobby) {
 setInterval(() => {
     matchMaker(Games.lobby);
 }, 2000);
+function getTotalPlayerCount() {
+    let totalPlayers = 0;
+    for (let gameId in Games) {
+        if (Games.hasOwnProperty(gameId)) {
+            totalPlayers += Games[gameId].count; // Assuming 'count' is the number of players in the game
+        }
+    }
+    return totalPlayers;
+}
 
 let lastUpdate = Date.now();
 // Update and game logic
@@ -127,6 +136,18 @@ setInterval(() => {
 
     lastUpdate = Date.now();
 }, 1000 / 60);
+
+app.get('/api/serverInfo', (req, res) => {
+  const gamesCount = Object.keys(Games).length;
+  const playersCount = getTotalPlayerCount(); // Get total player count
+
+  // Return the information as JSON
+  res.json({
+      gamesCount: gamesCount,
+      playersCount: playersCount
+  });
+});
+  
 
 const port = process.env.PORT || 3000;
 server.listen(port, () => {

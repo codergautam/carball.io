@@ -13,12 +13,15 @@ document.getElementById("playButton").addEventListener("click", () => {
     state = "game";
 
     $("gameGUI").style.visibility = "visible";
+  $("playerCount").style.display = "none";
     stateObject = startGame();
 });
 
 window.exit = function () {
     $("matchInfo").style.visibility = "hidden";
     $("gameGUI").style.visibility = "hidden";
+  $("playerCount").style.display = "";
+
     state = "home";
 
     if (stateObject == null) return;
@@ -31,3 +34,13 @@ window.exit = function () {
 
     stateObject = null;
 }
+function updatePlayerCnt() {
+  const element = document.getElementById("playerCount");
+  fetch("/api/serverInfo").then(res => res.json()).then(data => {
+    if(!data || !data.hasOwnProperty("playersCount")) return;
+    element.innerHTML = data.playersCount+" playing"
+  });
+  
+};
+setInterval(updatePlayerCnt, 10000);
+updatePlayerCnt();
