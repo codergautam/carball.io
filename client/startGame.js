@@ -21,8 +21,6 @@ export default function startGame() {
     app.renderer.view.style.display = "block";
 
    
-
-
     const players = {};
 
     const socket = new SocketWrapper();
@@ -157,8 +155,9 @@ export default function startGame() {
         client.chat = "";
         client.chatDisplay.text = client.chat;
         document.body.focus();
+        $("mobileChat").value = "";
     }
-    function handleMobileTouchStart(e){
+    function handleMobileTouchStart(e) {
         let type = e.target.getAttribute("z");
         switch (type) {
             case "left":
@@ -449,10 +448,6 @@ export default function startGame() {
     //clean up the game cuz u made it set everything when u start a function
     function cleanup() {
         clearInterval(guiTick);
-    }
-
-    window.addEventListener('resize', function () {
-        app.renderer.resize(window.innerWidth, window.innerHeight);
         document.removeEventListener('keydown', handleKeyDown);
         document.removeEventListener('keyup', handleKeyUp);
         document.removeEventListener('click', handleClick);
@@ -463,7 +458,10 @@ export default function startGame() {
             $("mobile").removeEventListener("touchstart", handleMobileTouchStart);
             $("mobile").removeEventListener("touchend", handleMobileTouchEnd);
         }
-        
+    }
+
+    window.addEventListener('resize', function () {
+        app.renderer.resize(window.innerWidth, window.innerHeight);
     });
 
 
