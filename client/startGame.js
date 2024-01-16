@@ -352,7 +352,7 @@ export default function startGame() {
         setTimeout(() => {
             client.viewTarget = "self";
             client.lastViewChange = Date.now();
-        }, 1900);
+        }, 5000);
 
         if (scorer == null) return; //this means someone got the goal to change the score
         console.log(scorer + team);
@@ -361,7 +361,7 @@ export default function startGame() {
 
         setTimeout(() => {
             $("goal").style.left = "100%";
-        }, 3000)
+        }, 5000)
     });
 
     socket.on("time", (remaining) => {
@@ -432,7 +432,7 @@ export default function startGame() {
         $("speedometer").innerHTML = Math.round(client.you.speed * 1) / 1 + "mph";
         let boost = client.you.boost;
         if (boost < 0) boost = 0;
-        $("boostBarPercent").style.width = (100 - Math.round(100 * boost / 240)) + "%";
+        $("boostBarPercent").style.width = (100 - Math.round(100 * boost / 200)) + "%";
 
         if (client.serverType == "lobby") {
             if (Object.keys(players).length > 1) {

@@ -21,7 +21,7 @@ module.exports = class Player {
         this.name = "VROOM";
         this.speed = 0.15;
         this.team = team;
-        this.boostFuel = 240;
+        this.boostFuel = 200;
         this.boosting = false;
 
         this.autoDrive = false;
@@ -72,7 +72,7 @@ module.exports = class Player {
             speed *= config.BOOST_STRENGTH;
             this.boostFuel -= 4;
         } else {
-            if (this.boostFuel < 240)
+            if (this.boostFuel < 200)
                 this.boostFuel += 1;
         }
 
