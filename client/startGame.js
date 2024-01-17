@@ -8,7 +8,10 @@ import createTiles from './components/Tiles';
 import GoalPostClient from './components/GoalPostObject';
 import { formatTime } from './components/utils';
 import Pinger from './Pinger';
-function fit(center, stage, screenWidth, screenHeight, virtualWidth, virtualHeight) {
+const vW = 1280;
+const vH = 720;
+const initZoom = 1.2;
+function fit(center, stage, screenWidth, screenHeight, virtualWidth, virtualHeight, appliedZoom = 1) {
     stage.scale.x = screenWidth / virtualWidth
     stage.scale.y = screenHeight / virtualHeight
 
@@ -17,6 +20,9 @@ function fit(center, stage, screenWidth, screenHeight, virtualWidth, virtualHeig
     } else {
         stage.scale.x = stage.scale.y
     }
+
+    stage.scale.x *= appliedZoom
+    stage.scale.y *= appliedZoom
 
     const virtualWidthInScreenPixels = virtualWidth * stage.scale.x
     const virtualHeightInScreenPixels = virtualHeight * stage.scale.y
@@ -66,7 +72,10 @@ export default function startGame() {
         boost: 0,
         chat: "",
         chatOpen: false,
-        you: null
+        you: null,
+        speed: 0,
+        targetZoom: initZoom,
+        zoom: initZoom
     }
 
     createTiles(app);
@@ -456,6 +465,21 @@ export default function startGame() {
         //emitPlayerMovement();
         soccerBall.interpolatePosition(client);
 
+        if(client.you != null) {
+                client.speed = Math.round(client.you.speed * 1);
+
+        const newTargetZoom = Math.max(0.1, initZoom - (Math.floor(client.speed / 10)*10)/200);
+        client.targetZoom = newTargetZoom;
+
+        $("speedometer").innerHTML =  client.speed + "mph";
+        }
+
+        const lerpSpeed = 0.05;
+        if(Math.abs(client.targetZoom - client.zoom) > 0.0001) {
+            client.zoom = client.zoom + (client.targetZoom - client.zoom) * lerpSpeed;
+            fit(true, app.stage, window.innerWidth, window.innerHeight, vW, vH, client.zoom);
+        }
+
         pinger.update();
 
     });
@@ -464,7 +488,7 @@ export default function startGame() {
     let guiTick = setInterval(() => {
         if (client.you == null) return;
 
-        $("speedometer").innerHTML = Math.round(client.you.speed * 1) / 1 + "mph";
+
         let boost = client.you.boost;
         if (boost < 0) boost = 0;
         $("boostBarPercent").style.width = (100 - Math.round(100 * boost / 200)) + "%";
@@ -478,7 +502,7 @@ export default function startGame() {
         } else {
             document.getElementById("time").innerHTML = formatTime(client.gameEnds - Date.now());
         }
-    }, 300);
+    }, 100);
 
     //clean up the game cuz u made it set everything when u start a function
     function cleanup() {
@@ -497,10 +521,10 @@ export default function startGame() {
 
     window.addEventListener('resize', function () {
         app.renderer.resize(window.innerWidth, window.innerHeight);
-        fit(true, app.stage, window.innerWidth, window.innerHeight, 1280, 720);
+        fit(true, app.stage, window.innerWidth, window.innerHeight, vW, vH, client.zoom);
     });
 
-    fit(true, app.stage, window.innerWidth, window.innerHeight, 1280, 720);
+    fit(true, app.stage, window.innerWidth, window.innerHeight, vW, vH, client.zoom);
 
 
 
