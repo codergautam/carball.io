@@ -23,7 +23,7 @@ module.exports = class GoalPost {
       isStatic: true
     });
     // Rotate everything by 45 degrees
-    Matter.Body.rotate(this.body, Math.PI /2);
+    Matter.Body.rotate(this.body, Math.PI /2, { x: this.base.position.x, y: this.base.position.y });
   }
 
 
