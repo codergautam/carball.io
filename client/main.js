@@ -44,5 +44,7 @@ function updatePlayerCnt() {
   });
 
 };
+
+
 setInterval(updatePlayerCnt, 10000);
 updatePlayerCnt();

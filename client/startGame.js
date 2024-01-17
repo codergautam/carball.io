@@ -8,6 +8,29 @@ import createTiles from './components/Tiles';
 import GoalPostClient from './components/GoalPostObject';
 import { formatTime } from './components/utils';
 import Pinger from './Pinger';
+function fit(center, stage, screenWidth, screenHeight, virtualWidth, virtualHeight) {
+    stage.scale.x = screenWidth / virtualWidth
+    stage.scale.y = screenHeight / virtualHeight
+
+    if (stage.scale.x < stage.scale.y) {
+        stage.scale.y = stage.scale.x
+    } else {
+        stage.scale.x = stage.scale.y
+    }
+
+    const virtualWidthInScreenPixels = virtualWidth * stage.scale.x
+    const virtualHeightInScreenPixels = virtualHeight * stage.scale.y
+    const centerXInScreenPixels = screenWidth * 0.5;
+    const centerYInScreenPixels = screenHeight * 0.5;
+
+    if (center) {
+        stage.position.x = centerXInScreenPixels;
+        stage.position.y = centerYInScreenPixels;
+    } else {
+        stage.position.x = centerXInScreenPixels - virtualWidthInScreenPixels * 0.5;
+        stage.position.y = centerYInScreenPixels - virtualHeightInScreenPixels * 0.5;
+    }
+  }
 
 export default function startGame() {
 
@@ -474,7 +497,10 @@ export default function startGame() {
 
     window.addEventListener('resize', function () {
         app.renderer.resize(window.innerWidth, window.innerHeight);
+        fit(true, app.stage, window.innerWidth, window.innerHeight, 1280, 720);
     });
+
+    fit(true, app.stage, window.innerWidth, window.innerHeight, 1280, 720);
 
 
 
