@@ -25,7 +25,7 @@ app.use(express.static('assets'));
 
 if(maintenance)   {
   app.get('/*', (req, res) => {
-    res.sendFile(__dirname + '/dist/maintenance.html');  
+    res.sendFile(__dirname + '/maintenance.html');  
   });
 } else {
 app.use(express.static('dist'));
