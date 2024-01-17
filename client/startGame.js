@@ -7,6 +7,7 @@ import PlayerObject from './components/PlayerObject';
 import createTiles from './components/Tiles';
 import GoalPostClient from './components/GoalPostObject';
 import { formatTime } from './components/utils';
+import Pinger from './Pinger';
 
 export default function startGame() {
 
@@ -20,10 +21,11 @@ export default function startGame() {
     app.renderer.view.style.position = "absolute";
     app.renderer.view.style.display = "block";
 
-   
+
     const players = {};
 
     const socket = new SocketWrapper();
+    const pinger = new Pinger(socket);
 
     //throw all global variables in here
     const client = {
@@ -99,7 +101,7 @@ export default function startGame() {
             return;
         }
 
-        //e.keyCode SUCKS 
+        //e.keyCode SUCKS
         if (e.key == " ") {
             socket.emit("boost");
             return;
@@ -263,7 +265,7 @@ export default function startGame() {
         client.serverType = serverId;
         console.log("Entered server: " + serverId);
         client.team = team;
-        //reset this 
+        //reset this
         for (let i in players) {
             deletePlayer(i);
         }
@@ -295,11 +297,11 @@ export default function startGame() {
     //set player property
     socket.on("player", (id, prop, data) => {
         if (prop == "chat") {
-            players[id].setChat(data); 
+            players[id].setChat(data);
             return;
         }
         players[id][prop] = data;
-    }); 
+    });
 
     socket.on("end", () => {
         console.log("gameend");
@@ -332,7 +334,7 @@ export default function startGame() {
 
         $("winlose").innerHTML = text;
     });
-    
+
     socket.on("score", (score, scorer, team) => {
         client.score = score;
         document.getElementById("blue").innerHTML = client.score.blue;
@@ -346,7 +348,7 @@ export default function startGame() {
 
         //make it so dont pan at start
         if (score.red == 0 && score.blue == 0) return;
-        
+
         client.viewTarget = "ball";
         client.lastViewChange = Date.now();
         setTimeout(() => {
@@ -386,10 +388,14 @@ export default function startGame() {
         }
     });
 
+    socket.on('pong', () => {
+        pinger.onPong();
+    });
+
     socket.on('update', ({ updatedPlayers, ball, leftGoal, rightGoal }) => {
         for (let id in updatedPlayers) {
             // Minus 90 degrees because the sprite is facing up
-            
+
 
             updatedPlayers[id].angle -= Math.PI / 2;
             if (players[id]) {
@@ -419,10 +425,16 @@ export default function startGame() {
             players[id].interpolatePosition(client);
         }
 
+        const fps = Math.round(app.ticker.FPS);
+
+        $("playerCount").innerHTML = `${Object.keys(players).length} Players<br>${fps} FPS<br>${pinger.ping > 1000000 ? "..." : pinger.ping}ms Ping`;
+
         // Check active keys and send movement
         //emitPlayerMovement();
         soccerBall.interpolatePosition(client);
-       
+
+        pinger.update();
+
     });
 
     //update timers and stuff not every render tick to make it super fast

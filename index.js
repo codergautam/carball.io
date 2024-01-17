@@ -71,6 +71,9 @@ io.on("connection", (socket) => {
         delete sockets[socket.id];
         console.log("leftgame");
     });
+    socket.on('ping', () => {
+        socket.emit("pong");
+    });
     socket.on("chat", (chat) => {
         Games[socket._carballserver].handleChat(socket, chat);
     });
