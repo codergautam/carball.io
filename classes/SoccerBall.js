@@ -5,17 +5,15 @@ module.exports = class SoccerBall {
         this.body = Matter.Bodies.circle(x, y, 50, {
             mass: 6,
             restitution: 1.0,
-            // friction: 0.5,
             frictionAir: 0.015,
-            inertia: Infinity
-            // frictionStatic: 0.5
+            inertia: 1500
         });
 
         this.scored = false;
     }
 
     score() {
-        
+
     }
 
     reset() {

@@ -25,7 +25,7 @@ app.use(express.static('assets'));
 
 if(maintenance)   {
   app.get('/*', (req, res) => {
-    res.sendFile(__dirname + '/maintenance.html');  
+    res.sendFile(__dirname + '/maintenance.html');
   });
 } else {
 app.use(express.static('dist'));
@@ -41,8 +41,8 @@ const Games = {
 }
 
 //ez pz no more ball
-Games.lobby.ball.x = -1000;
-Games.lobby.ball.y = -1000;
+// Games.lobby.ball.x = -1000;
+// Games.lobby.ball.y = -1000;
 
 //THIS IS THE WAITLIST
 const sockets = {};
@@ -159,7 +159,7 @@ app.get('/api/serverInfo', (req, res) => {
       playersCount: playersCount
   });
 });
-  
+
   }
 
 const port = process.env.PORT || 3000;

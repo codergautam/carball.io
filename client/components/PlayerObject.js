@@ -63,11 +63,16 @@ export default class PlayerObject {
     }
 
     draw(client) {
-        if (this.team == "red") {
-            this.carSprite.tint = 0xFF0000;  // Current player in red
+        if(client.serverType == "lobby") {
+            // gray
+            this.carSprite.tint = 0x808080;
         } else {
-            this.carSprite.tint = 0x0000FF;  // Others in blue
+        if (this.team == "red") {
+            this.carSprite.tint = 0xFF0000;
+        } else {
+            this.carSprite.tint = 0x0000FF;
         }
+    }
         this.carSprite.rotation = interpolateEntityAngle(this, Date.now(), client.lastUpdate);
         this.angle = interpolateEntityAngle(this, Date.now(), client.lastUpdate);
         this.sprite.x = interpolateEntityX(this, Date.now(), client.lastUpdate);

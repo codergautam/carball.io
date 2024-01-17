@@ -76,7 +76,7 @@ module.exports = class Player {
                 this.boostFuel += 1;
         }
 
-        if (this.movement.up || this.autoDrive) {
+        if (this.movement.up || this.autoDrive || this.boosting) {
             let vector = {
                 x: speed / 10 * Math.cos(body.angle),
                 y: speed / 10 * Math.sin(body.angle)
