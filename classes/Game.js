@@ -192,7 +192,7 @@ module.exports = class Game {
         }
 
         // Check for goals
-        if (!this.ball.scored) {
+        if (!this.ball.scored && this.type !== "lobby") {
             let team = "";
 
             if (this.leftGoal.checkGoal(this.ball)) {
