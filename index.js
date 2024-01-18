@@ -61,6 +61,7 @@ io.on("connection", (socket) => {
         //todo: add check to see if player is already in a game so they cant join twice by modifying client
         Games[socket._carballserver].join(socket, name);
 
+        console.log("joinedgame");
         if (socket._carballserver == "lobby" && Games.lobby.count == 2) {
             lastMatchMade = Date.now();
             Games.lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
@@ -77,8 +78,8 @@ io.on("connection", (socket) => {
     socket.on("chat", (chat) => {
         Games[socket._carballserver].handleChat(socket, chat);
     });
-    socket.on('boost', () => {
-        Games[socket._carballserver].handleBoost(socket);
+    socket.on('boost', (value=true) => {
+        Games[socket._carballserver].handleBoost(socket, value);
     });
     // Handle player movement
     socket.on('move', (directions) => {
@@ -143,17 +144,25 @@ function getTotalPlayerCount() {
 let lastUpdate = Date.now();
 let tpsCounter = 0;
 let lastTpsReport = Date.now();
+let avgTimePerUpdate = 0;
 let tps = 0;
-// Update and game logic
-setInterval(() => {
+
+function gameLoop() {
+    let now = Date.now();
+    let delta = now - lastUpdate;
+    if (delta < 1000 / 60) { // Ensure we don't update more than 60 times per second
+        setImmediate(gameLoop);
+        return;
+    }
+
     for (let i in Games)
         Games[i].update(lastUpdate);
 
     tpsCounter++;
+    avgTimePerUpdate = (avgTimePerUpdate + (Date.now() - now)) / 2;
     if (Date.now() - lastTpsReport >= 1000) {
         tps = tpsCounter;
         tpsCounter = 0;
-        console.clear();
         console.log("tps: " + tps);
         console.log("games: " + Object.keys(Games).length);
         console.log("players: " + getTotalPlayerCount());
@@ -161,7 +170,11 @@ setInterval(() => {
     }
 
     lastUpdate = Date.now();
-}, 1000 / 60);
+    setImmediate(gameLoop);
+}
+
+// Start the game loop
+gameLoop();
 
 app.get('/api/serverInfo', (req, res) => {
   const gamesCount = Object.keys(Games).length;
