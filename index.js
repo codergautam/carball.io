@@ -141,10 +141,24 @@ function getTotalPlayerCount() {
 }
 
 let lastUpdate = Date.now();
+let tpsCounter = 0;
+let lastTpsReport = Date.now();
+let tps = 0;
 // Update and game logic
 setInterval(() => {
     for (let i in Games)
         Games[i].update(lastUpdate);
+
+    tpsCounter++;
+    if (Date.now() - lastTpsReport >= 1000) {
+        tps = tpsCounter;
+        tpsCounter = 0;
+        console.clear();
+        console.log("tps: " + tps);
+        console.log("games: " + Object.keys(Games).length);
+        console.log("players: " + getTotalPlayerCount());
+        lastTpsReport = Date.now();
+    }
 
     lastUpdate = Date.now();
 }, 1000 / 60);
