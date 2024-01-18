@@ -16,7 +16,7 @@ module.exports = class Game {
         this.ball = new SoccerBall(400, 300);
         this.leftGoal = new GoalPost(300, this.gameWorld.height / 2, 500, 300); // Create left goal post
         this.rightGoal = new GoalPost(this.gameWorld.width - 300, this.gameWorld.height / 2, 500, 300, true); // Create right goal post
-
+        this.gameCreationTime = Date.now();
         this.sockets = {};
 
         // Add objects to the Matter.js world
@@ -96,9 +96,8 @@ module.exports = class Game {
         this.gameEnds = time;
         this.emit("time", this.remaining);
     }
-    join(socket, name) {
-        //everyone joins at same time cuz server is on same process so we can start game as soon as first player joins;
-        this.startGame();
+    join(socket, name, alreadyStarted = false) {
+        if(!alreadyStarted) this.startGame();
 
         this.sockets[socket.id] = socket;
 
@@ -120,7 +119,7 @@ module.exports = class Game {
 
         this.movePlayerToTeamSide(this.players[socket.id]);
 
-        socket.emit("info", this.id, this.type, team);
+        socket.emit("info", this.id, this.type, team, alreadyStarted);
         socket.emit("score", this.score);
         socket.emit("time", this.remaining);
         socket.emit('goalPosts', {

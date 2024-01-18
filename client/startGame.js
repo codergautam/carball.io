@@ -292,7 +292,7 @@ export default function startGame() {
     let goalPosts = {};
 
     //info when join a match (includes lobby)
-    socket.on("info", (serverId, serverType, team) => {
+    socket.on("info", (serverId, serverType, team, alreadyStarted) => {
         client.serverType = serverId;
         console.log("Entered server: " + serverId);
         client.team = team;
@@ -301,7 +301,7 @@ export default function startGame() {
             deletePlayer(i);
         }
 
-        if (serverType == "lobby") return;
+        if (serverType == "lobby" || alreadyStarted) return;
         //start countdown
         $("countdown").style.visibility = "visible";
         countdown(3);

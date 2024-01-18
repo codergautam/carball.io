@@ -93,6 +93,28 @@ function matchMaker(lobby) {
         }
     }
 
+
+    console.log(Games.lobby.count)
+    if(Games.lobby.count <= 3 && Games.lobby.count > 0) {
+        console.log("trying to add player to existing game");
+        const nextSocket = Object.keys(Games.lobby.sockets)[0];
+        const playerInfo = lobby.players[nextSocket];
+        // try to find a game with space that started less than 1 minute ago
+        for(let i in Games) {
+            if(i !== "lobby" && Games[i].count < 6 && (Date.now() - Games[i].gameCreationTime) < 60 * 1000) {
+                console.log("adding player to existing game", nextSocket);
+                // remove player from lobby
+                lobby.removePlayer(sockets[nextSocket]);
+                // add player to game
+                sockets[nextSocket]._carballserver = i;
+                Games[i].join(sockets[nextSocket], playerInfo.name, true);
+                delete sockets[nextSocket]; //out of da waitlist
+                break;
+            } else {
+                console.log('time since game creation: ', Date.now() - Games[i].gameCreationTime, 'game users: ', Games[i].count);
+            }
+        }
+    }
     if (Games.lobby.count < 2) {
         //reset timer lol
         //if (Date.now() > lastMatchMade + config.MIN_MATCH_WAITTIME * 1000) {
@@ -161,9 +183,9 @@ function gameLoop() {
     if (Date.now() - lastTpsReport >= 1000) {
         tps = tpsCounter;
         tpsCounter = 0;
-        console.log("tps: " + tps);
-        console.log("games: " + Object.keys(Games).length);
-        console.log("players: " + getTotalPlayerCount());
+        // console.log("tps: " + tps);
+        // console.log("games: " + Object.keys(Games).length);
+        // console.log("players: " + getTotalPlayerCount());
         lastTpsReport = Date.now();
     }
 
