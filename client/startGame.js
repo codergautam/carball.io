@@ -285,6 +285,7 @@ export default function startGame() {
     });
 
     function deletePlayer(id) {
+        players[id].trailGraphics?.clear();
         app.stage.removeChild(players[id].sprite);
         delete players[id];
     }
@@ -365,7 +366,7 @@ export default function startGame() {
         $("winlose").innerHTML = text;
     });
 
-    socket.on("score", (score, scorer, team) => {
+    socket.on("score", (score, scorer, team, justJoined=false) => {
         client.score = score;
         document.getElementById("blue").innerHTML = client.score.blue;
         document.getElementById("red").innerHTML = client.score.red;
@@ -377,7 +378,7 @@ export default function startGame() {
         }
 
         //make it so dont pan at start
-        if (score.red == 0 && score.blue == 0) return;
+        if (justJoined) return;
 
         client.viewTarget = "ball";
         client.lastViewChange = Date.now();

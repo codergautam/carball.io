@@ -120,7 +120,7 @@ module.exports = class Game {
         this.movePlayerToTeamSide(this.players[socket.id]);
 
         socket.emit("info", this.id, this.type, team, alreadyStarted);
-        socket.emit("score", this.score);
+        socket.emit("score", this.score, undefined, undefined, true);
         socket.emit("time", this.remaining);
         socket.emit('goalPosts', {
             leftGoal: this.leftGoal.exportJSON(),

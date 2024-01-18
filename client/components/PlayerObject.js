@@ -1,7 +1,7 @@
 import { interpolateEntityAngle, interpolateEntityX, interpolateEntityY } from "./utils";
 
 import * as PIXI from 'pixi.js';
-
+const trailSpeedTresh = 40;
 export default class PlayerObject {
     constructor(id, x, y, self, app, client, name, team) {
         this.id = id;
@@ -18,6 +18,7 @@ export default class PlayerObject {
         this.boost = 0;
         this.boosting = false;
         this.speed = 0;
+        this.lastTrailUpdate = Date.now();
 
         this.trailGraphics = new PIXI.Graphics();   // Create a new graphics object for the trail
         this.app.stage.addChild(this.trailGraphics); // Add the trail graphics to the stage
@@ -66,12 +67,13 @@ export default class PlayerObject {
     draw(client) {
         if(client.serverType == "lobby") {
             // gray
-            this.carSprite.tint = 0x808080;
+            this.carSprite.tint = 0xd3d3d3;
+
         } else {
         if (this.team == "red") {
-            this.carSprite.tint = 0xFF0000;
+            this.carSprite.tint = 0xFF6961;
         } else {
-            this.carSprite.tint = 0x0000FF;
+            this.carSprite.tint = 0x2A9DF4;
         }
     }
         this.carSprite.rotation = interpolateEntityAngle(this, Date.now(), client.lastUpdate);
@@ -79,13 +81,21 @@ export default class PlayerObject {
         this.sprite.x = interpolateEntityX(this, Date.now(), client.lastUpdate);
         this.sprite.y = interpolateEntityY(this, Date.now(), client.lastUpdate);
 
+    if((this.speed > trailSpeedTresh )|| this.boosting) {
+        this.drawTrail();
+    }
 
+    if(Date.now() - this.lastTrailUpdate > 500) {
+        this.trailGraphics.clear();
+
+    }
         //this.drawTrail();  // Call the drawTrail method to update the trail graphics
     }
 
+
     drawTrail() {
-        const trailColor = 0xFFFFFF;
-        const trailWidth = 4;
+        const trailColor = this.carSprite.tint;
+        const trailWidth = 8;
         const wheelDistanceFromCenter = 40;
 
         if (!this.trailGraphics || this.history.length === 0) return;
@@ -112,6 +122,7 @@ export default class PlayerObject {
             this.trailGraphics.moveTo(currRightX, currRightY);
             this.trailGraphics.lineTo(nextRightX, nextRightY);
         }
+        this.lastTrailUpdate = Date.now();
     }
 
     getRearWheelPos(x, y, angle, distance) {
@@ -132,6 +143,10 @@ export default class PlayerObject {
         this.targetY = y;
         this.targetAngle = angle;
 
+        if((this.speed < trailSpeedTresh) || !this.boosting) {
+           this.history = [];
+           return;
+        }
         this.history.unshift({ x: this.x, y: this.y, angle: this.angle });
         if (this.history.length > this.maxHistory) {
             this.history.pop();  // Remove the oldest position and angle

@@ -94,9 +94,7 @@ function matchMaker(lobby) {
     }
 
 
-    console.log(Games.lobby.count)
     if(Games.lobby.count <= 3 && Games.lobby.count > 0) {
-        console.log("trying to add player to existing game");
         const nextSocket = Object.keys(Games.lobby.sockets)[0];
         const playerInfo = lobby.players[nextSocket];
         // try to find a game with space that started less than 1 minute ago
@@ -127,7 +125,7 @@ function matchMaker(lobby) {
     if (!(Games.lobby.count >= 6 || (Date.now() - lastMatchMade) > config.MIN_MATCH_WAITTIME * 1000)) return;
     if (Object.keys(Games).length > config.MAX_MATCHES) return; //max game limit
 
-    let id = Math.random() * 123 + "idk what to do for id lol";
+    let id = Math.random() * 123 + "server";
     Games[id] = new Game(id);
 
     console.log("creating game");
@@ -183,9 +181,11 @@ function gameLoop() {
     if (Date.now() - lastTpsReport >= 1000) {
         tps = tpsCounter;
         tpsCounter = 0;
-        // console.log("tps: " + tps);
-        // console.log("games: " + Object.keys(Games).length);
-        // console.log("players: " + getTotalPlayerCount());
+        console.clear();
+        console.log('carball.io :)')
+        console.log("tps: " + tps);
+        console.log("games: " + Object.keys(Games).length);
+        console.log("players: " + getTotalPlayerCount());
         lastTpsReport = Date.now();
     }
 
