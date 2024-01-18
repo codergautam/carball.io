@@ -468,7 +468,7 @@ export default function startGame() {
         if(client.you != null) {
                 client.speed = Math.round(client.you.speed * 1);
 
-        const newTargetZoom = Math.max(0.1, initZoom - (client.speed > 50 ? 0.3 : client.speed > 5 ? 0.1 : 0));
+        const newTargetZoom = Math.max(0.1, initZoom - (client.speed > 50 ? 0.35 : client.speed > 0 ? 0.1 : 0));
             console.log(newTargetZoom);
         client.targetZoom = newTargetZoom;
 
