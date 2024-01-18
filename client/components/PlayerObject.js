@@ -94,7 +94,6 @@ export default class PlayerObject {
         for (let i = 0; i < this.history.length - 1; i++) {
             const current = this.history[i];
             const next = this.history[i + 1];
-            console.log(next.angle)
 
 
             // Calculate rear wheel positions for both the current and next points

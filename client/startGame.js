@@ -164,7 +164,6 @@ export default function startGame() {
         if (movementMode === 'keys') emitPlayerMovement();
     }
     function handleClick() {
-      console.log('click')
         if(!client.mobile)
             socket.emit("boost");
     }
@@ -336,7 +335,6 @@ export default function startGame() {
     });
 
     socket.on("end", () => {
-        console.log("gameend");
         $("blueFinal").innerHTML = client.score.blue;
         $("redFinal").innerHTML = client.score.red;
         document.getElementById("matchInfo").style.visibility = "visible";
@@ -389,7 +387,6 @@ export default function startGame() {
         }, 5000);
 
         if (scorer == null) return; //this means someone got the goal to change the score
-        console.log(scorer + team);
         $("goal").innerHTML = scorer + " scored!";
         $("goal").style.left = "0%";
 
@@ -467,9 +464,13 @@ export default function startGame() {
 
         if(client.you != null) {
                 client.speed = Math.round(client.you.speed * 1);
-
-        const newTargetZoom = Math.max(0.1, initZoom - (client.speed > 50 ? 0.35 : client.speed > 1 ? 0.1 : 0));
-            console.log(newTargetZoom);
+            let moving = false;
+            if(activeKeys['angle'] && activeKeys['forward']) {
+                moving = true;
+            } else if(activeKeys['up'] || activeKeys['down'] || activeKeys['left'] || activeKeys['right']) {
+                moving = true;
+            }
+        const newTargetZoom = Math.max(0.1, initZoom - (client.speed > 50 ? 0.35 : moving ? 0.1 : 0));
         client.targetZoom = newTargetZoom;
 
         }

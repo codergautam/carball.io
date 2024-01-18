@@ -61,7 +61,6 @@ io.on("connection", (socket) => {
         //todo: add check to see if player is already in a game so they cant join twice by modifying client
         Games[socket._carballserver].join(socket, name);
 
-        console.log("joinedgame");
         if (socket._carballserver == "lobby" && Games.lobby.count == 2) {
             lastMatchMade = Date.now();
             Games.lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);
@@ -70,7 +69,6 @@ io.on("connection", (socket) => {
     socket.on('close', () => {
         Games[socket._carballserver].removePlayer(socket);
         delete sockets[socket.id];
-        console.log("leftgame");
     });
     socket.on('ping', () => {
         socket.emit("pong");
