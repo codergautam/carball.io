@@ -4,7 +4,7 @@ export default function createTiles(app) {
 // Create tile background using background.png
 const background = PIXI.Sprite.from('background.png');
 //Repeat the background image
-let tileSize = 500;
+let tileSize = 1000;
 for (let i = 0; i < WORLD_WIDTH / tileSize; i++) {
   for (let j = 0; j < WORLD_HEIGHT / tileSize; j++) {
     let tile = new PIXI.Sprite(background.texture);

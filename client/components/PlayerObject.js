@@ -16,6 +16,7 @@ export default class PlayerObject {
         this.team = team;
         this.targetAngle = 0;
         this.boost = 0;
+        this.boosting = false;
         this.speed = 0;
 
         this.trailGraphics = new PIXI.Graphics();   // Create a new graphics object for the trail
@@ -78,6 +79,7 @@ export default class PlayerObject {
         this.sprite.x = interpolateEntityX(this, Date.now(), client.lastUpdate);
         this.sprite.y = interpolateEntityY(this, Date.now(), client.lastUpdate);
 
+
         //this.drawTrail();  // Call the drawTrail method to update the trail graphics
     }
 
@@ -121,7 +123,8 @@ export default class PlayerObject {
     }
 
 
-    updatePosition(x, y, angle, client) {
+    updatePosition(x, y, angle, boosting, client) {
+        this.boosting = boosting;
         this.x = interpolateEntityX(this, Date.now(), client.lastUpdate);
         this.y = interpolateEntityY(this, Date.now(), client.lastUpdate);
         this.angle = interpolateEntityAngle(this, Date.now(), client.lastUpdate);

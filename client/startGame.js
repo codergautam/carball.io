@@ -43,7 +43,7 @@ export default function startGame() {
     const app = new PIXI.Application({
         width: window.innerWidth,
         height: window.innerHeight,
-        backgroundColor: 0xAAAAAA
+        backgroundColor: 0x013220
     });
     document.body.appendChild(app.view);
     document.body.style.margin = "0"; // remove default margins
@@ -425,10 +425,9 @@ export default function startGame() {
         for (let id in updatedPlayers) {
             // Minus 90 degrees because the sprite is facing up
 
-
             updatedPlayers[id].angle -= Math.PI / 2;
             if (players[id]) {
-                players[id].updatePosition(updatedPlayers[id].x, updatedPlayers[id].y, updatedPlayers[id].angle, client);
+                players[id].updatePosition(updatedPlayers[id].x, updatedPlayers[id].y, updatedPlayers[id].angle, updatedPlayers[id].boosting, client);
                 players[id].boost = updatedPlayers[id].boost;
             } else {
                 players[id] = new PlayerObject(id, updatedPlayers[id].x, updatedPlayers[id].y, id === client.socketid, app, client, updatedPlayers[id].name, updatedPlayers[id].team);

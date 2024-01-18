@@ -3,5 +3,7 @@ module.exports = {
   MATCH_LENGTH: 3, //IN MINUTES
   MAX_MATCHES: 5,
   BOOST_STRENGTH: 2.5, //multiplier to max velocity
-  DEFAULT_NAME: "Car"
+  DEFAULT_NAME: "Car",
+  WORLD_WIDTH: 3000,
+  WORLD_HEIGHT: 2000,
 }
