@@ -10,7 +10,7 @@ import { formatTime } from './components/utils';
 import Pinger from './Pinger';
 const vW = 1280;
 const vH = 720;
-const initZoom = 1.2;
+const initZoom = 1;
 function fit(center, stage, screenWidth, screenHeight, virtualWidth, virtualHeight, appliedZoom = 1) {
     stage.scale.x = screenWidth / virtualWidth
     stage.scale.y = screenHeight / virtualHeight
