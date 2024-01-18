@@ -467,10 +467,10 @@ export default function startGame() {
             let moving = false;
             if(activeKeys['angle'] && activeKeys['forward']) {
                 moving = true;
-            } else if(activeKeys['up'] || activeKeys['down'] || activeKeys['left'] || activeKeys['right']) {
+            } else if(activeKeys['up'] || activeKeys['down']) {
                 moving = true;
             }
-        const newTargetZoom = Math.max(0.1, initZoom - (client.speed > 50 ? 0.35 : moving ? 0.1 : 0));
+        const newTargetZoom = Math.max(0.1, initZoom - (client.speed > 50 ? 0.35 : moving ? 0.15 : 0));
         client.targetZoom = newTargetZoom;
 
         }
