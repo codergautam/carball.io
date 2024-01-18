@@ -468,13 +468,13 @@ export default function startGame() {
         if(client.you != null) {
                 client.speed = Math.round(client.you.speed * 1);
 
-        const newTargetZoom = Math.max(0.1, initZoom - (Math.floor(client.speed / 10)*10)/200);
+        const newTargetZoom = Math.max(0.1, initZoom - (Math.floor(client.speed / 20)*20)/200);
         client.targetZoom = newTargetZoom;
 
         $("speedometer").innerHTML =  client.speed + "mph";
         }
 
-        const lerpSpeed = 0.05;
+        const lerpSpeed = 0.025;
         if(Math.abs(client.targetZoom - client.zoom) > 0.0001) {
             client.zoom = client.zoom + (client.targetZoom - client.zoom) * lerpSpeed;
             fit(true, app.stage, window.innerWidth, window.innerHeight, vW, vH, client.zoom);
