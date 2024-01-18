@@ -471,7 +471,6 @@ export default function startGame() {
         const newTargetZoom = Math.max(0.1, initZoom - (Math.floor(client.speed / 20)*20)/200);
         client.targetZoom = newTargetZoom;
 
-        $("speedometer").innerHTML =  client.speed + "mph";
         }
 
         const lerpSpeed = 0.025;
@@ -488,6 +487,7 @@ export default function startGame() {
     let guiTick = setInterval(() => {
         if (client.you == null) return;
 
+        $("speedometer").innerHTML =  client.speed + "mph";
 
         let boost = client.you.boost;
         if (boost < 0) boost = 0;
@@ -502,7 +502,7 @@ export default function startGame() {
         } else {
             document.getElementById("time").innerHTML = formatTime(client.gameEnds - Date.now());
         }
-    }, 100);
+    }, 300);
 
     //clean up the game cuz u made it set everything when u start a function
     function cleanup() {
