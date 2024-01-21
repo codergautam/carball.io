@@ -12,6 +12,9 @@ body, html {
 .container {
     text-align: center;
     animation: fadeIn 1s ease-in-out;
+    background: #d3d3d3;
+    padding: 50px;
+    border-radius: 10px;
 }
 
 .toprightcount {
@@ -19,6 +22,7 @@ body, html {
     top: 10px;
     right: 10px;
     z-index: 1000;
+    font-size: 1.5em;
   font-weight: bold;
 }
 
@@ -39,10 +43,11 @@ h1 {
 }
 
 .title {
-    font-size: min(max(7vw, 50px), 200px);
+    font-size: min(max(7vw, 50px), 150px);
     font-weight: bold;
     color: #333;
     margin-bottom: 20px;
+    margin-top: 0;
 
 }
 
@@ -57,7 +62,7 @@ h1 {
     font-size: 1.2em;
     color: #333;
     display: flex;
-    gap: 10px;
+    gap: 25px;
     a {
         color: #333;
 
@@ -80,14 +85,14 @@ h1 {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #28a745;
+    background-color: #289fa7;
     font-size: 1.2em;
     color: white;
     cursor: pointer;
 }
 
     #playButton:hover {
-        background-color: #218838;
+        background-color: #218388;
     }
 
 @media screen and (max-width: 600px) {
@@ -125,6 +130,7 @@ h1 {
 #time {
     font-weight: bold;
     color: #333;
+    font-size: 1.5em;
     text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
@@ -167,7 +173,7 @@ h1 {
 
 #speedometer {
     font-weight: bold;
-    font-size: 1.4em;
+    font-size: 1.8em;
     bottom: 5px;
     left: 5px;
     margin: 0;

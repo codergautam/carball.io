@@ -43,7 +43,7 @@ export default function startGame() {
     const app = new PIXI.Application({
         width: window.innerWidth,
         height: window.innerHeight,
-        backgroundColor: 0x013220
+        backgroundColor: 0x0e5e1e
     });
     document.body.appendChild(app.view);
     document.body.style.margin = "0"; // remove default margins
