@@ -45,7 +45,7 @@ export default function startGame() {
         height: window.innerHeight,
         backgroundColor: 0x0e5e1e
     });
-    const inServer = false;
+    let inServer = false;
     document.body.appendChild(app.view);
     document.body.style.margin = "0"; // remove default margins
     app.renderer.view.style.position = "absolute";
@@ -312,6 +312,7 @@ export default function startGame() {
             deletePlayer(i);
         }
 
+        console.log("server type: " + serverType, "team: " + team, "already started: " + alreadyStarted);
         if (serverType == "lobby" || alreadyStarted) return;
         //start countdown
         $("countdown").style.visibility = "visible";

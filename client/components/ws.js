@@ -22,7 +22,7 @@ export default class SocketWrapper {
     this.ws.binaryType = "arraybuffer";
 
     this.ws.addEventListener("open", (e) => { (opts.open ?? (() => { }))(); this._funcs?.open(e, opts.join); });
-    this.ws.addEventListener("close", (e) => { alert("Connection closed"); this._funcs?.close(e); });
+    this.ws.addEventListener("close", (e) => { this._funcs?.close(e); });
     this.ws.addEventListener("error", (e) => { alert("Connection errored"); console.log(e); this._funcs?.error(e); });
     this.ws.addEventListener("message", (pack) => {
 
