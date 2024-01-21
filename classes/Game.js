@@ -72,6 +72,7 @@ module.exports = class Game {
         if (p.team == "red") { //right
             p.setPos(this.gameWorld.width - 600, this.gameWorld.height / 2, Math.PI);
         }
+        p.boostFuel = 0;
     }
 
     open() {
@@ -85,6 +86,7 @@ module.exports = class Game {
     startGame() {
         if (this.started) return;
         this.started = true;
+
         setTimeout(() => {
             this.movementLock = false;
         }, 3000);
@@ -114,6 +116,16 @@ module.exports = class Game {
         this.teamCount[team]++;
 
         this.players[socket.id] = new Player(socket.id, team);
+        if(this.type !== "lobby") {
+        this.players[socket.id].shouldGainBoost = alreadyStarted;
+        this.players[socket.id].boostFuel = 0;
+
+        if(!alreadyStarted) {
+            setTimeout(() => {
+                if(this.players[socket.id]) this.players[socket.id].shouldGainBoost = true;
+            }, 3000);
+        }
+    }
         this.players[socket.id].name = name;
         Matter.Composite.add(this.gameWorld.engine.world, [this.players[socket.id].body]);
 
@@ -207,9 +219,31 @@ module.exports = class Game {
                 this.ball.scored = true;
             }
 
+            const oppTeam = team === "red" ? "blue" : "red";
+
             if (this.ball.scored) {
-                this.emit("score", this.score, this.lastBallCollision[team].name, team);
+                console.log('goal scored on ', team, ' side!')
+                console.log(this.lastBallCollision);
+                let lastCollideTime = this.lastBallCollision[team]?.[1] ?? 0;
+                const selfGoalInterval = 5000; // 5 seconds
+                if(Date.now() - lastCollideTime > selfGoalInterval) {
+                    console.log('self goal');
+                    const selfGoalScorer = this.lastBallCollision[oppTeam]?.[0]?.name ?? '';
+                    this.emit("score", this.score, selfGoalScorer, team);
+                } else {
+                    console.log('opp goal', team, this.lastBallCollision[team]?.[0]?.name?? 'no name' );
+                    this.emit("score", this.score, this.lastBallCollision[team]?.[0]?.name?? '', team);
+                }
+
+                for (let i in this.players) {
+                    this.players[i].boostFuel = 0;
+                    this.players[i].shouldGainBoost = false;
+                }
                 setTimeout(() => {
+                    for (let i in this.players) {
+                        this.players[i].boostFuel = 0;
+                        this.players[i].shouldGainBoost = true;
+                    }
                     this.newMatch();
                 }, 5000);
             }
@@ -221,7 +255,7 @@ module.exports = class Game {
         //find out who touched le ball last
         for (let i in this.players) {
             if (Matter.Collision.collides(this.players[i].body, this.ball.body)) {
-                this.lastBallCollision[this.players[i].team] = this.players[i];
+                this.lastBallCollision[this.players[i].team] = [this.players[i], Date.now()];
             }
         }
 

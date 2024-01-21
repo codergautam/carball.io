@@ -21,8 +21,9 @@ module.exports = class Player {
         this.name = "VROOM";
         this.speed = 0.15;
         this.team = team;
-        this.boostFuel = 200;
+        this.boostFuel = 0;
         this.boosting = false;
+        this.shouldGainBoost = true;
 
         this.autoDrive = false;
     }
@@ -65,18 +66,22 @@ module.exports = class Player {
             this.updateRotation(torque);
 
         let speed = this.speed;
-        if (this.boosting) {
+        if (this.boosting && this.shouldGainBoost) {
             if (this.boostFuel < 0)
                 this.boosting = false;
 
             speed *= config.BOOST_STRENGTH;
             this.boostFuel -= 4;
         } else {
-            if (this.boostFuel < 200)
-                this.boostFuel += 1;
-        }
+            if ((this.boostFuel < 200) && this.shouldGainBoost) {
+                this.boostFuel += 1 / (1 + Math.log(1 + 0.015 * (200 - this.boostFuel)));
+            }
 
-        if (this.movement.up || this.autoDrive || this.boosting) {
+
+        }
+        this.boostFuel = Math.round(this.boostFuel * 100) / 100;
+
+        if (this.movement.up || this.autoDrive || (this.boosting && this.shouldGainBoost)) {
             let vector = {
                 x: speed / 10 * Math.cos(body.angle),
                 y: speed / 10 * Math.sin(body.angle)

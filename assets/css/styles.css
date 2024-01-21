@@ -38,10 +38,41 @@ h1 {
     margin-bottom: 20px;
 }
 
+.title {
+    font-size: min(max(7vw, 50px), 200px);
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    color: #333;
+    display: flex;
+    gap: 10px;
+    a {
+        color: #333;
+
+    }
+    a:hover {
+        color: gray;
+        text-decoration: underline;
+    }
+}
+
 #nameInput {
     margin-bottom: 20px;
     padding: 10px;
     border-radius: 5px;
+    font-size: 1.2em;
     border: 1px solid #ddd;
 }
 
@@ -50,6 +81,7 @@ h1 {
     border: none;
     border-radius: 5px;
     background-color: #28a745;
+    font-size: 1.2em;
     color: white;
     cursor: pointer;
 }

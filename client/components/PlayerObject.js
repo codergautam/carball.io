@@ -94,6 +94,7 @@ export default class PlayerObject {
 
 
     drawTrail() {
+        return;
         const trailColor = this.carSprite.tint;
         const trailWidth = 8;
         const wheelDistanceFromCenter = 40;

@@ -48,7 +48,7 @@ export default function startGame() {
     document.body.appendChild(app.view);
     document.body.style.margin = "0"; // remove default margins
     app.renderer.view.style.position = "absolute";
-    app.renderer.view.style.display = "block";
+    app.renderer.view.style.display = "hidden";
 
 
     const players = {};

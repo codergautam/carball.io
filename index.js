@@ -109,7 +109,6 @@ function matchMaker(lobby) {
                 delete sockets[nextSocket]; //out of da waitlist
                 break;
             } else {
-                console.log('time since game creation: ', Date.now() - Games[i].gameCreationTime, 'game users: ', Games[i].count);
             }
         }
     }
@@ -181,11 +180,11 @@ function gameLoop() {
     if (Date.now() - lastTpsReport >= 1000) {
         tps = tpsCounter;
         tpsCounter = 0;
-        console.clear();
-        console.log('carball.io :)')
-        console.log("tps: " + tps);
-        console.log("games: " + Object.keys(Games).length);
-        console.log("players: " + getTotalPlayerCount());
+        // console.clear();
+        // console.log('carball.io :)')
+        // console.log("tps: " + tps);
+        // console.log("games: " + Object.keys(Games).length);
+        // console.log("players: " + getTotalPlayerCount());
         lastTpsReport = Date.now();
     }
 
