@@ -99,7 +99,7 @@ function matchMaker(lobby) {
         const playerInfo = lobby.players[nextSocket];
         // try to find a game with space that started less than 1 minute ago
         for(let i in Games) {
-            if(i !== "lobby" && Games[i].count < 6 && (Date.now() - Games[i].gameCreationTime) < 60 * 1000 * 2) { // 2 minutes
+            if(i !== "lobby" && Games[i].count < 6 && (Date.now() - Games[i].gameCreationTime) < 60 * 1000 * 3) { // 3 minutes
                 console.log("adding player to existing game", nextSocket);
                 // remove player from lobby
                 lobby.removePlayer(sockets[nextSocket]);

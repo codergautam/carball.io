@@ -45,10 +45,14 @@ export default function startGame() {
         height: window.innerHeight,
         backgroundColor: 0x0e5e1e
     });
+    const inServer = false;
     document.body.appendChild(app.view);
     document.body.style.margin = "0"; // remove default margins
     app.renderer.view.style.position = "absolute";
-    app.renderer.view.style.display = "hidden";
+    // hide it for now
+    document.getElementById("playButton").innerHTML = `<div id="playSpinner"  class="lds-dual-ring"></div>`;
+
+    app.renderer.view.style.visibility = "hidden";
 
 
     const players = {};
@@ -293,9 +297,15 @@ export default function startGame() {
     let goalPosts = {};
 
     //info when join a match (includes lobby)
+
     socket.on("info", (serverId, serverType, team, alreadyStarted) => {
         client.serverType = serverId;
         console.log("Entered server: " + serverId);
+        if(!inServer) {
+            document.getElementById("playButton").innerHTML = `Play`;
+            app.renderer.view.style.visibility = "visible";
+            inServer = true;
+        }
         client.team = team;
         //reset this
         for (let i in players) {
@@ -306,6 +316,9 @@ export default function startGame() {
         //start countdown
         $("countdown").style.visibility = "visible";
         countdown(3);
+
+        // Remove the loading screen when the game is ready
+        document.body.removeChild(loadingScreen);
     });
 
     function countdown(number) {
@@ -454,9 +467,6 @@ export default function startGame() {
             players[id].interpolatePosition(client);
         }
 
-        const fps = Math.round(app.ticker.FPS);
-
-        $("playerCount").innerHTML = `${Object.keys(players).length} Players<br>${fps} FPS<br>${pinger.ping > 1000000 ? "..." : pinger.ping}ms Ping`;
 
         // Check active keys and send movement
         //emitPlayerMovement();
@@ -490,6 +500,9 @@ export default function startGame() {
         if (client.you == null) return;
 
         $("speedometer").innerHTML =  client.speed + "mph";
+        const fps = Math.round(app.ticker.FPS);
+
+        $("playerCount").innerHTML = `${Object.keys(players).length} Players<br>${fps} FPS<br>${pinger.ping > 1000000 ? "..." : pinger.ping}ms Ping`;
 
         let boost = client.you.boost;
         if (boost < 0) boost = 0;
