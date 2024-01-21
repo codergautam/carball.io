@@ -14,6 +14,10 @@ body, html {
     animation: fadeIn 1s ease-in-out;
     background: #d3d3d3;
     padding: 50px;
+    @media screen and (max-height: 600px) {
+        padding: 20px;
+
+    }
     border-radius: 10px;
 }
 
@@ -23,6 +27,9 @@ body, html {
     right: 10px;
     z-index: 1000;
     font-size: 1.5em;
+    @media screen and (max-height: 600px) {
+        font-size: 0.8em;
+    }
   font-weight: bold;
 }
 
@@ -141,6 +148,7 @@ h1 {
     color: #d5d5d5;
     font-size: 1.5em;
     text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    margin: 4px;
 }
 
 #red {
@@ -183,6 +191,10 @@ h1 {
 #speedometer {
     font-weight: bold;
     font-size: 1.8em;
+    @media screen and (max-height: 600px) {
+        font-size: 0.9em;
+
+    }
     bottom: 5px;
     left: 5px;
     margin: 0;
@@ -202,6 +214,21 @@ h1 {
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
     font-weight: bold;
+}
+
+.controls {
+    p {
+        margin: 10px;
+        @media screen and (max-height: 600px) {
+            margin: 5px;
+        }
+    }
+    label {
+        font-size: 1.2em;
+        @media screen and (max-height: 600px) {
+            font-size: 0.6em;
+        }
+    }
 }
 
 #goal {
@@ -251,16 +278,29 @@ h1 {
         }
 
 .mobilesmall {
-    height: 70%;
+    height: 60%;
     align-self: flex-end;
+    user-select: none;
 }
 
 .mobilebig {
-    height: 100%;
+    height: 80%;
     aspect-ratio: 1/1;
+    user-select: none;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#forcelandscapemobile {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 300;
+    h1 {
+    color: white;
+    }
+    background-color: black;
 }
 
 .boostBar {

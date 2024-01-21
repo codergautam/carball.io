@@ -15,13 +15,20 @@
         <input type="text" id="nameInput" placeholder="Enter Your Name">
         <button id="playButton">Play</button>
         <br />
-        <p><b>Controls:</b></p>
+        <div class="controls">
+        <p ><b>Controls:</b></p>
         <input type="radio" name="controls" id="controls" value="keys" checked/>
         <label for="controls">Keyboard</label>
         <input type="radio" name="controls" id="controls2" value="mouse"/>
         <label for="controls2">Mouse</label>
+        </div>
 
     </div>
+
+    <div id="forcelandscapemobile" style="display: none;">
+        <h1>Rotate your device to landscape mode to play!</h1>
+    </div>
+
     <div id="footer">
         <h2><a href="https://github.com/codergautam/carball.io">About</a></h2>
         <h2><a href="https://discord.gg/7BMEHg5nrz">Discord</a></h2>
@@ -44,16 +51,17 @@
             <div>
                 <div class="mobilebig" style="background: rgba(0, 0, 0, 0); border: none;"></div>
                 <div class="mobilebig mobileControlUp" z="up">up</div>
-                <!--<div class="mobilesmall" z="stealth">stealth</div>
-    <div class="mobilesmall" z="freeze">freeze</div>-->
             </div>
             <div style="justify-content: flex-end;">
+                <div class="mobilebig mobileControlLeft" z="left">Left</div>
+
+                <div class="mobilebig mobileControlRight" z="right">right</div>
+
                 <div class="mobilesmall mobileControlAttack" z="chat" onclick="openMobileChat()">chat</div>
             </div>
             <div>
-                <div class="mobilebig mobileControlLeft" z="left">left</div>
+                <div class="mobilebig mobileControlLeft" style="visibility: hidden;" z="left"></div>
                 <div class="mobilebig mobileControlDown" z="down">down</div>
-                <div class="mobilebig mobileControlRight" z="right">right</div>
             </div>
             <div style="justify-content: flex-end;">
                 <div class="mobilesmall mobileControlDash" z="boost">boost</div>

@@ -37,6 +37,14 @@ function fit(center, stage, screenWidth, screenHeight, virtualWidth, virtualHeig
         stage.position.y = centerYInScreenPixels - virtualHeightInScreenPixels * 0.5;
     }
   }
+  function checkLandScapeMobile() {
+    if(window.matchMedia("(pointer: coarse)").matches && window.innerWidth < window.innerHeight) {
+    document.getElementById("forcelandscapemobile").style.display = "";
+} else {
+    document.getElementById("forcelandscapemobile").style.display = "none";
+
+    }
+}
 
 export default function startGame() {
 
@@ -245,8 +253,10 @@ export default function startGame() {
         controls.addEventListener("touchstart", handleMobileTouchStart);
         controls.addEventListener("touchend", handleMobileTouchEnd);
     }
-    if(window.matchMedia("(pointer: coarse)").matches)
+    if(window.matchMedia("(pointer: coarse)").matches) {
         enableMobileControls();
+        checkLandScapeMobile();
+    }
 
     // Variables to store the position of the pointer
     let mouseX = 0;
@@ -537,6 +547,7 @@ export default function startGame() {
 
     window.addEventListener('resize', function () {
         app.renderer.resize(window.innerWidth, window.innerHeight);
+        checkLandScapeMobile();
         fit(true, app.stage, window.innerWidth, window.innerHeight, vW, vH, client.zoom);
     });
 
