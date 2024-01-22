@@ -217,19 +217,19 @@ export default class PlayerObject {
             if (angleToBall > -Math.PI / 4 && angleToBall < Math.PI / 4) {
                 console.log("right");
                 x = screenW;
-                y = bally + Math.tan(angleToBall) * (screenW - ballx);
+                y = ((screenW/2) * Math.tan(angleToBall)) + screenH / 2;
             } else if (angleToBall > Math.PI / 4 && angleToBall < 3 * Math.PI / 4) {
                 console.log("down");
                 y = screenH;
-                x = ballx + (screenH - bally) / Math.tan(angleToBall);
+                x = ((screenH/2) / Math.tan(angleToBall)) + screenW / 2;
             } else if (angleToBall > -3 * Math.PI / 4 && angleToBall < -Math.PI / 4) {
                 console.log("up");
                 y = 0;
-                x = ballx - bally / Math.tan(angleToBall);
+                x = (-(screenH/2) / Math.tan(angleToBall)) + screenW / 2;
             } else {
                 console.log("left");
                 x = 0;
-                y = bally - ballx * Math.tan(angleToBall);
+                y = (-(screenW /2)* Math.tan(angleToBall)) + screenH / 2;
             }
 
             // find distance from center of screen
@@ -238,13 +238,20 @@ export default class PlayerObject {
             client.ballArrow.position.y =  py - (screenH / 2) + y
 
 
-            // const centerPull = 100;
+            const centerPull = 100;
 
-            // client.ballArrow.position.x -= centerPull * Math.cos(angleToBall);
-            // client.ballArrow.position.y -= centerPull * Math.sin(angleToBall);
+            client.ballArrow.position.x -= centerPull * Math.cos(angleToBall);
+            client.ballArrow.position.y -= centerPull * Math.sin(angleToBall);
 
+            client.ballArrow.rotation = angleToBall- Math.PI / 2;
 
-            client.ballArrow.visible = true;
+            // check if ball in screen
+            if (ballx > px - screenW / 2 && ballx < px + screenW / 2 && bally > py - screenH / 2 && bally < py + screenH / 2) {
+                client.ballArrow.visible = false;
+            } else {
+                client.ballArrow.visible = true;
+            }
+
 
             client.chatDisplay.position.x = px;
             client.chatDisplay.position.y = py - 150;
