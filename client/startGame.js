@@ -99,6 +99,13 @@ export default function startGame() {
     client.chatDisplay.y = 0;
     app.stage.addChild(client.chatDisplay);
 
+    client.ballArrow = PIXI.Sprite.from("./ballArrow.png");
+    client.ballArrow.anchor.set(0.5, 0.5);
+    client.ballArrow.width = 100;
+    client.ballArrow.height = 100;
+    client.ballArrow.visible=false;
+    app.stage.addChild(client.ballArrow);
+
     let soccerBall = new SoccerBallObject(375, 275, 0, app);  // You can initialize it with your own starting x, y
     client.ball = soccerBall; //reference to soccerball
 
