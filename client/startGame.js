@@ -419,7 +419,7 @@ export default function startGame() {
         }, 5000);
 
         if (scorer == null) return; //this means someone got the goal to change the score
-        $("goal").innerHTML = scorer + " scored!";
+        $("goal").innerHTML = `<span style="color:${team};">${scorer}</span> scored!`;
         $("goal").style.left = "0%";
 
         setTimeout(() => {
