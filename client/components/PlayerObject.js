@@ -205,7 +205,6 @@ export default class PlayerObject {
             // const screenH =  this.app.screen.height;
 
             // screen widht in terms of ingame units
-            console.log(this.app.stage.scale.x);
             const screenW = 2 * halfScreenWidth / this.app.stage.scale.x;
             const screenH = 2 * halfScreenHeight / this.app.stage.scale.y;
 
@@ -230,7 +229,6 @@ export default class PlayerObject {
             let xIntersectTop = (-(screenH / 2) / Math.tan(angleToBall)) + screenW / 2;
 
             if (angleToBall > -Math.PI / 4 && angleToBall < Math.PI / 4) {
-                console.log("right");
                 x = xIntersectRight;
                 y = yIntersectRight;
                 if (y < 0 || y > screenH) {
@@ -238,7 +236,6 @@ export default class PlayerObject {
                     x = ((y - screenH / 2) / Math.tan(angleToBall)) + screenW / 2;
                 }
             } else if (angleToBall >= Math.PI / 4 && angleToBall <= 3 * Math.PI / 4) {
-                console.log("down");
                 x = xIntersectBottom;
                 y = yIntersectBottom;
                 if (x < 0 || x > screenW) {
@@ -246,7 +243,6 @@ export default class PlayerObject {
                     y = ((x - screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
                 }
             } else if (angleToBall >= -3 * Math.PI / 4 && angleToBall <= -Math.PI / 4) {
-                console.log("up");
                 x = xIntersectTop;
                 y = yIntersectTop;
                 if (x < 0 || x > screenW) {
@@ -254,7 +250,6 @@ export default class PlayerObject {
                     y = (-(screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
                 }
             } else {
-                console.log("left");
                 x = xIntersectLeft;
                 y = yIntersectLeft;
                 if (y < 0 ) {
@@ -278,7 +273,6 @@ export default class PlayerObject {
 
 
             // find distance from center of screen
-            console.log(x, y);
             client.ballArrow.position.x = px  - (screenW / 2) + x
             client.ballArrow.position.y =  py - (screenH / 2) + y
 
