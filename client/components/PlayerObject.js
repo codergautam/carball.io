@@ -194,6 +194,103 @@ export default class PlayerObject {
             this.app.stage.position.x = halfScreenWidth;
             this.app.stage.position.y = halfScreenHeight;
 
+            const angleToBall = Math.atan2(bally - py, ballx - px);
+            // old system: show it rotating around the player
+            // const radFromScreen = 100;
+            // client.ballArrow.position.x = px + radFromScreen * Math.cos(angleToBall);
+            // client.ballArrow.position.y = py + radFromScreen * Math.sin(angleToBall);
+
+            // new system: show it on the edge of the screen
+            // const screenW = this.app.screen.width;
+            // const screenH =  this.app.screen.height;
+
+            // screen widht in terms of ingame units
+            const screenW = 2 * halfScreenWidth / this.app.stage.scale.x;
+            const screenH = 2 * halfScreenHeight / this.app.stage.scale.y;
+
+            // find intersection of ball direction with screen edge
+            let x = 0;
+            let y = 0;
+            let angle = 0;
+
+            let aspectRatio = screenW / screenH;
+
+            // most cursed code i have ever written
+            let xIntersectRight = screenW;
+            let yIntersectRight = ((screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+
+            let yIntersectBottom = screenH;
+            let xIntersectBottom = ((screenH / 2) / Math.tan(angleToBall)) + screenW / 2;
+
+            let xIntersectLeft = 0;
+            let yIntersectLeft = (-(screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+
+            let yIntersectTop = 0;
+            let xIntersectTop = (-(screenH / 2) / Math.tan(angleToBall)) + screenW / 2;
+
+            if (angleToBall > -Math.PI / 4 && angleToBall < Math.PI / 4) {
+                x = xIntersectRight;
+                y = yIntersectRight;
+                if (y < 0 || y > screenH) {
+                    y = angleToBall > 0 ? screenH : 0;
+                    x = ((y - screenH / 2) / Math.tan(angleToBall)) + screenW / 2;
+                }
+            } else if (angleToBall >= Math.PI / 4 && angleToBall <= 3 * Math.PI / 4) {
+                x = xIntersectBottom;
+                y = yIntersectBottom;
+                if (x < 0 || x > screenW) {
+                    x = screenW;
+                    y = ((x - screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+                }
+            } else if (angleToBall >= -3 * Math.PI / 4 && angleToBall <= -Math.PI / 4) {
+                x = xIntersectTop;
+                y = yIntersectTop;
+                if (x < 0 || x > screenW) {
+                    x = 0;
+                    y = (-(screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+                }
+            } else {
+                x = xIntersectLeft;
+                y = yIntersectLeft;
+                if (y < 0 ) {
+                    y = 0;
+                    x = xIntersectTop;
+                    if (x < 0 || x > screenW) {
+                        x = 0;
+                        y = (-(screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+                    }
+                }
+                if(y > screenH) {
+                    y = screenH;
+                    x = xIntersectBottom;
+                    if (x < 0 || x > screenW) {
+                        x = screenW;
+                        y = ((x - screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+                    }
+                }
+            }
+
+
+
+            // find distance from center of screen
+            client.ballArrow.position.x = px  - (screenW / 2) + x
+            client.ballArrow.position.y =  py - (screenH / 2) + y
+
+
+            const centerPull = 50;
+
+            client.ballArrow.position.x -= centerPull * Math.cos(angleToBall);
+            client.ballArrow.position.y -= centerPull * Math.sin(angleToBall);
+
+            client.ballArrow.rotation = angleToBall- Math.PI / 2;
+
+            // check if ball in screen
+            if (ballx > px - screenW / 2 && ballx < px + screenW / 2 && bally > py - screenH / 2 && bally < py + screenH / 2) {
+                client.ballArrow.visible = false;
+            } else {
+                client.ballArrow.visible = true;
+            }
+
 
             client.chatDisplay.position.x = px;
             client.chatDisplay.position.y = py - 150;
