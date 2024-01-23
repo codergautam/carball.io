@@ -214,23 +214,68 @@ export default class PlayerObject {
             let y = 0;
             let angle = 0;
 
+            let aspectRatio = screenW / screenH;
+
+            // most cursed code i have ever written
+            let xIntersectRight = screenW;
+            let yIntersectRight = ((screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+
+            let yIntersectBottom = screenH;
+            let xIntersectBottom = ((screenH / 2) / Math.tan(angleToBall)) + screenW / 2;
+
+            let xIntersectLeft = 0;
+            let yIntersectLeft = (-(screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+
+            let yIntersectTop = 0;
+            let xIntersectTop = (-(screenH / 2) / Math.tan(angleToBall)) + screenW / 2;
+
             if (angleToBall > -Math.PI / 4 && angleToBall < Math.PI / 4) {
                 console.log("right");
-                x = screenW;
-                y = ((screenW/2) * Math.tan(angleToBall)) + screenH / 2;
-            } else if (angleToBall > Math.PI / 4 && angleToBall < 3 * Math.PI / 4) {
+                x = xIntersectRight;
+                y = yIntersectRight;
+                if (y < 0 || y > screenH) {
+                    y = angleToBall > 0 ? screenH : 0;
+                    x = ((y - screenH / 2) / Math.tan(angleToBall)) + screenW / 2;
+                }
+            } else if (angleToBall >= Math.PI / 4 && angleToBall <= 3 * Math.PI / 4) {
                 console.log("down");
-                y = screenH;
-                x = ((screenH/2) / Math.tan(angleToBall)) + screenW / 2;
-            } else if (angleToBall > -3 * Math.PI / 4 && angleToBall < -Math.PI / 4) {
+                x = xIntersectBottom;
+                y = yIntersectBottom;
+                if (x < 0 || x > screenW) {
+                    x = screenW;
+                    y = ((x - screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+                }
+            } else if (angleToBall >= -3 * Math.PI / 4 && angleToBall <= -Math.PI / 4) {
                 console.log("up");
-                y = 0;
-                x = (-(screenH/2) / Math.tan(angleToBall)) + screenW / 2;
+                x = xIntersectTop;
+                y = yIntersectTop;
+                if (x < 0 || x > screenW) {
+                    x = 0;
+                    y = (-(screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+                }
             } else {
                 console.log("left");
-                x = 0;
-                y = (-(screenW /2)* Math.tan(angleToBall)) + screenH / 2;
+                x = xIntersectLeft;
+                y = yIntersectLeft;
+                if (y < 0 ) {
+                    y = 0;
+                    x = xIntersectTop;
+                    if (x < 0 || x > screenW) {
+                        x = 0;
+                        y = (-(screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+                    }
+                }
+                if(y > screenH) {
+                    y = screenH;
+                    x = xIntersectBottom;
+                    if (x < 0 || x > screenW) {
+                        x = screenW;
+                        y = ((x - screenW / 2) * Math.tan(angleToBall)) + screenH / 2;
+                    }
+                }
             }
+
+
 
             // find distance from center of screen
             console.log(x, y);
@@ -238,7 +283,7 @@ export default class PlayerObject {
             client.ballArrow.position.y =  py - (screenH / 2) + y
 
 
-            const centerPull = 100;
+            const centerPull = 50;
 
             client.ballArrow.position.x -= centerPull * Math.cos(angleToBall);
             client.ballArrow.position.y -= centerPull * Math.sin(angleToBall);
