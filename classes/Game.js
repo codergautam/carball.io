@@ -6,6 +6,7 @@ const SoccerBall = require('./SoccerBall');
 const GoalPost = require('./GoalPost'); // Import GoalPost class
 
 const config = require("../config");
+const AIPlayer = require("./AIPlayer");
 
 module.exports = class Game {
     constructor(id, type = "game") {
@@ -76,11 +77,11 @@ module.exports = class Game {
     }
 
     open() {
-        return (Object.keys(this.sockets).length >= 6);
+        return (Object.keys(this.players).length >= 6);
     }
 
     get count() {
-        return Object.keys(this.sockets).length;
+        return Object.keys(this.players).length;
     }
 
     startGame() {
@@ -97,6 +98,18 @@ module.exports = class Game {
     setEnd(time) {
         this.gameEnds = time;
         this.emit("time", this.remaining);
+    }
+    addBot() {
+        let team = "blue";
+        if (this.teamCount.blue > this.teamCount.red) {
+            team = "red";
+        }
+        this.teamCount[team]++;
+
+        let bot = new AIPlayer("bot" + Math.random(), team);
+        this.players[bot.id] = bot;
+        Matter.Composite.add(this.gameWorld.engine.world, [bot.body]);
+        this.movePlayerToTeamSide(bot);
     }
     join(socket, name, alreadyStarted = false) {
         if(!alreadyStarted) this.startGame();
