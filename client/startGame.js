@@ -58,6 +58,10 @@ export default function startGame() {
     document.body.style.margin = "0"; // remove default margins
     app.renderer.view.style.position = "absolute";
     // hide it for now
+
+  const chatInput = document.getElementById('chatInput');
+  chatInput.style.display = 'none'; // Initially hidden
+
     document.getElementById("playButton").innerHTML = `<div id="playSpinner"  class="lds-dual-ring"></div>`;
 
     app.renderer.view.style.visibility = "hidden";
@@ -124,31 +128,30 @@ export default function startGame() {
 
     function sendChat(text) {
         socket.emit("chat", text);
+
+        chatInput.value = "";
+      chatInput.style.display = "none"
     }
 
     function handleKeyDown(event) {
         if (client.mobile) return;
         let e = event;
 
-        if (e.key == "Enter") {
-            if (client.chatOpen) {
-                sendChat(client.chat);
-                client.chat = "";
-                client.chatDisplay.text = "";
-            }
-
-            client.chatOpen = !client.chatOpen;
-            return;
-        }
+      if (event.key === "Enter") {
+          if (client.chatOpen) {
+              sendChat(chatInput.value);
+              chatInput.value = '';
+              chatInput.style.display = 'none';
+          } else {
+              chatInput.style.display = 'block';
+              chatInput.focus();
+          }
+          client.chatOpen = !client.chatOpen;
+          return;
+      }
 
         if (client.chatOpen) {
-            if (e.key.length == 1) {
-                client.chat += e.key;
-            }
-            if (e.key == "Backspace") {
-                client.chat = client.chat.substring(0, client.chat.length - 1);
-            }
-            client.chatDisplay.text = client.chat;
+            client.chat = chatInput.value;
             return;
         }
 
@@ -200,7 +203,6 @@ export default function startGame() {
 
     function handleMobileChatOpen(e) {
         client.chat = e.target.value;
-        client.chatDisplay.text = client.chat;
     }
     function handleMobileChatClose(event){
         sendChat(client.chat);

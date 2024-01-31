@@ -93,6 +93,11 @@ function matchMaker(lobby) {
         }
     }
 
+    // if(Games.lobby.count % 2 === 1) {
+    //   // add bot
+    //   console.log("adding bot")
+    //   Games.lobby.addBot();
+    // }
 
     if(Games.lobby.count <= 3 && Games.lobby.count > 0) {
         const nextSocket = Object.keys(Games.lobby.sockets)[0];
