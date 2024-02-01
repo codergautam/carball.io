@@ -285,7 +285,7 @@ export default class PlayerObject {
             client.ballArrow.rotation = angleToBall- Math.PI / 2;
 
             // check if ball in screen
-            if (ballx > px - screenW / 2 && ballx < px + screenW / 2 && bally > py - screenH / 2 && bally < py + screenH / 2) {
+            if ((ballx > px - screenW / 2 && ballx < px + screenW / 2 && bally > py - screenH / 2 && bally < py + screenH / 2) || (client.viewTarget == "ball")) {
                 client.ballArrow.visible = false;
             } else {
                 client.ballArrow.visible = true;
