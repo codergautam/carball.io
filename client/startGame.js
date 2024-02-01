@@ -489,7 +489,7 @@ export default function startGame() {
                 players[id].updatePosition(updatedPlayers[id].x, updatedPlayers[id].y, updatedPlayers[id].angle, updatedPlayers[id].boosting, client);
                 players[id].boost = updatedPlayers[id].boost;
             } else {
-                players[id] = new PlayerObject(id, updatedPlayers[id].x, updatedPlayers[id].y, id === client.socketid, app, client, updatedPlayers[id].name, updatedPlayers[id].team);
+                players[id] = new PlayerObject(id, updatedPlayers[id].x, updatedPlayers[id].y, id === client.socketid, app, client, updatedPlayers[id].name, updatedPlayers[id].team, updatedPlayers[id].skin);
                 if (id == client.socketid)
                     client.you = players[id];
             }

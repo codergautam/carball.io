@@ -111,7 +111,7 @@ module.exports = class Game {
         Matter.Composite.add(this.gameWorld.engine.world, [bot.body]);
         this.movePlayerToTeamSide(bot);
     }
-    join(socket, name, alreadyStarted = false) {
+    join(socket, name, alreadyStarted = false, skin=1) {
         if(!alreadyStarted) this.startGame();
 
         this.sockets[socket.id] = socket;
@@ -128,7 +128,7 @@ module.exports = class Game {
         }
         this.teamCount[team]++;
 
-        this.players[socket.id] = new Player(socket.id, team);
+        this.players[socket.id] = new Player(socket.id, team, skin);
         if(this.type !== "lobby") {
         this.players[socket.id].shouldGainBoost = alreadyStarted;
         this.players[socket.id].boostFuel = 0;

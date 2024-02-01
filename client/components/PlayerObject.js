@@ -1,9 +1,9 @@
 import { interpolateEntityAngle, interpolateEntityX, interpolateEntityY } from "./utils";
-
+import cosmetics from "../../shared/cosmetics.json";
 import * as PIXI from 'pixi.js';
 const trailSpeedTresh = 40;
 export default class PlayerObject {
-    constructor(id, x, y, self, app, client, name, team) {
+    constructor(id, x, y, self, app, client, name, team, skin) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -33,7 +33,7 @@ export default class PlayerObject {
         this.chat.anchor.set(0.5, 4.0);
 
 
-        this.carSprite = PIXI.Sprite.from("./car.png");
+        this.carSprite = PIXI.Sprite.from(`./${cosmetics[skin].bodyImage ?? "car.png"}`);
         this.carSprite.anchor.set(0.5, 0.5);
         //this.app.stage.addChild(this.text);
 

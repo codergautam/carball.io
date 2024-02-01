@@ -7,7 +7,7 @@ function mod(n, m) {
 }
 
 module.exports = class Player {
-    constructor(id, team) {
+    constructor(id, team, skin=1) {
         this.id = id;
         this.movement = { "up": false, "down": false, "left": false, "right": false, angle: undefined };
         this.body = Matter.Bodies.rectangle(100, 100, 160, 90, {
@@ -25,6 +25,7 @@ module.exports = class Player {
         this.boosting = false;
         this.shouldGainBoost = true;
         this.isBot = false;
+        this.skin = skin;
 
         this.autoDrive = false;
     }
@@ -121,6 +122,7 @@ module.exports = class Player {
             angle: Math.round(this.body.angle * 100) / 100,
             boost: this.boostFuel,
             boosting: this.boosting,
+            skin: this.skin
         }
     }
 }

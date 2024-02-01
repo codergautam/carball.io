@@ -1,3 +1,4 @@
+import { initSkinShop } from "./skinShop";
 import startGame from "./startGame";
 
 let state = "home";
@@ -11,6 +12,7 @@ if(window.matchMedia("(pointer: coarse)").matches) {
   document.getElementById("controlsDiv").style.display = "none";
 }
 
+initSkinShop();
 
 try {
   const curScores = JSON.parse(localStorage.getItem("goals"));

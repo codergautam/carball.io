@@ -1,0 +1,16 @@
+{
+  "1": {
+    "id": 1,
+    "name": "default",
+    "cost": 0,
+    "description": "A simple car, nothing special.",
+    "bodyImage": "car.png"
+  },
+  "2": {
+    "id": 2,
+    "name": "sport",
+    "cost": 100,
+    "description": "A sporty car, with a bit more speed.",
+    "bodyImage": "logo.png" 
+  }
+}

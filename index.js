@@ -19,6 +19,9 @@ const io = new WebSocket(server, { strictCORS: false });
 // Import classes
 const Game = require('./classes/Game');
 
+// Cosmetics
+const cosmetics = require('./shared/cosmetics.json');
+
 const maintenance = process.env.maintenance || false;
 // const maintenance= true
 app.use(express.static('assets'));
@@ -57,9 +60,10 @@ io.on("connection", (socket) => {
 
     console.log('a user connected:', socket.id);
 
-    socket.on("join", (name) => {
+    socket.on("join", (name, skin) => {
         //todo: add check to see if player is already in a game so they cant join twice by modifying client
-        Games[socket._carballserver].join(socket, name);
+        if(!cosmetics[skin]) skin = 1;
+        Games[socket._carballserver].join(socket, name, undefined, skin);
 
         if (socket._carballserver == "lobby" && Games.lobby.count == 2) {
             lastMatchMade = Date.now();
