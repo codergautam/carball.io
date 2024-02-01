@@ -113,6 +113,8 @@ export default function startGame() {
     let soccerBall = new SoccerBallObject(375, 275, 0, app);  // You can initialize it with your own starting x, y
     client.ball = soccerBall; //reference to soccerball
 
+
+
     socket.on('id', (id) => {
 
         client.socketid = id;
@@ -258,6 +260,17 @@ export default function startGame() {
     window.enableMobileControls = function () {
         $("mobile").style.visibility = "visible";
         client.mobile = true;
+
+        if(client.mobile) {
+            // try to go full screen
+            try {
+            document.body.requestFullscreen();
+            } catch(e) {
+                alert("Could not go full screen", e);
+            }
+
+        }
+        
         let controls = document.getElementById("mobile");
         controls.addEventListener("touchstart", handleMobileTouchStart);
         controls.addEventListener("touchend", handleMobileTouchEnd);
