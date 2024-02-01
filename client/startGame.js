@@ -423,10 +423,12 @@ export default function startGame() {
             $("score").style.visibility = "visible";
         }
 
+        const yourGoal = id == client.socketid;
+
         //make it so dont pan at start
         if (justJoined) return;
 
-        if(id == client.socketid) {
+        if(yourGoal) {
             try {
                 const curGoals = Number(localStorage.getItem('goals')) || 0;
                 localStorage.setItem('goals', curGoals + 1);
@@ -444,7 +446,7 @@ export default function startGame() {
         }, 5000);
 
         if (scorer == null) return; //this means someone got the goal to change the score
-        $("goal").innerHTML = `<span style="color:${team};">${scorer}</span> scored!`;
+        $("goal").innerHTML = `<span style="color:${yourGoal?'purple':team};">${yourGoal?'You':scorer}</span> scored!`;
         $("goal").style.left = "0%";
 
         setTimeout(() => {
