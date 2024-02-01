@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" id="viewport"
-    content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0" />
+    content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no">
     <title>Carball.io</title>
     <link rel="stylesheet" href="/css/styles.css">
 
@@ -61,23 +61,22 @@
         <div id="mobile" style="visibility: hidden;">
             <div>
                 <div class="mobilebig" style="background: rgba(0, 0, 0, 0); border: none;"></div>
-                <div class="mobilebig mobileControlUp" z="up">up</div>
+                <div class="mobilebig mobileControlUp" z="up">Gas</div>
             </div>
             <div style="justify-content: flex-end;">
                 <div class="mobilebig mobileControlLeft" z="left">Left</div>
 
-                <div class="mobilebig mobileControlRight" z="right">right</div>
+                <div class="mobilebig mobileControlRight" z="right">Right</div>
 
-                <div class="mobilesmall mobileControlAttack" z="chat" onclick="openMobileChat()">chat</div>
+                <div class="mobilesmall mobileControlAttack" z="chat" onclick="openMobileChat()">Chat</div>
             </div>
             <div>
                 <div class="mobilebig mobileControlLeft" style="visibility: hidden;" z="left"></div>
-                <div class="mobilebig mobileControlDown" z="down">down</div>
+                <div class="mobilebig mobileControlDown" z="down">Reverse</div>
             </div>
             <div style="justify-content: flex-end;">
-                <div class="mobilesmall mobileControlDash" z="boost">boost</div>
+                <div class="mobilesmall mobileControlDash" z="boost">Boost</div>
             </div>
-            <input id="mobileChat" autocomplete="off" type="text" style="position: absolute; top: 0px; width: 2px; height: 0px; margin: 0; padding: 0; border-radius: 0px; border: none;"/>
         </div>
 
     </div>

@@ -137,10 +137,9 @@ export default function startGame() {
         if (client.mobile) return;
         let e = event;
 
-      if (event.key === "Enter") {
+      if (event.key === "Enter" && !client.mobile) {
           if (client.chatOpen) {
               sendChat(chatInput.value);
-              chatInput.value = '';
               chatInput.style.display = 'none';
           } else {
               chatInput.style.display = 'block';
@@ -149,11 +148,6 @@ export default function startGame() {
           client.chatOpen = !client.chatOpen;
           return;
       }
-
-        if (client.chatOpen) {
-            client.chat = chatInput.value;
-            return;
-        }
 
         //e.keyCode SUCKS
         if (e.key == " ") {
@@ -198,21 +192,28 @@ export default function startGame() {
     document.addEventListener('keyup', handleKeyUp);
 
     window.openMobileChat = function() {
+        if(client.chatOpen) return handleMobileChatClose();
+        client.chatOpen = true;
         chatInput.style.display = '';
-
+        // focus the input
+        chatInput.focus();
+        // add enter listener
+        const onEnter = (e) => {
+            if(e.key === 'Enter') {
+                handleMobileChatClose();
+            chatInput.removeEventListener('keydown', onEnter);
+            }
+        }
+        chatInput.addEventListener('keydown', onEnter);
     }
 
-    function handleMobileChatOpen(e) {
-        client.chat = e.target.value;
-    }
     function handleMobileChatClose(event){
-        sendChat(client.chat);
-        client.chat = "";
-        client.chatDisplay.text = client.chat;
+        sendChat(chatInput.value);
+        client.chatOpen = false;
+        client.chatDisplay.text = chatInput.value;
         document.body.focus();
         chatInput.style.display = 'none';
 
-        $("mobileChat").value = "";
     }
     function handleMobileTouchStart(e) {
         let type = e.target.getAttribute("z");
@@ -255,10 +256,6 @@ export default function startGame() {
     }
 
     window.enableMobileControls = function () {
-        //chat
-        document.getElementById("mobileChat").addEventListener("input", handleMobileChatOpen);
-        document.getElementById("mobileChat").addEventListener("blur", handleMobileChatClose);
-
         $("mobile").style.visibility = "visible";
         client.mobile = true;
         let controls = document.getElementById("mobile");
@@ -550,8 +547,6 @@ export default function startGame() {
         document.removeEventListener('click', handleClick);
         document.removeEventListener('mousemove', handleMouseMove);
         if (client.mobile) {
-            $("mobileChat").removeEventListener("input", handleMobileChatOpen);
-            $("mobileChat").removeEventListener("blur", handleMobileChatClose);
             $("mobile").removeEventListener("touchstart", handleMobileTouchStart);
             $("mobile").removeEventListener("touchend", handleMobileTouchEnd);
         }

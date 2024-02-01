@@ -7,6 +7,9 @@ body, html {
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
     overflow: hidden;
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+-webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+-webkit-user-select: none;
 }
 
 .container {
@@ -278,15 +281,21 @@ h1 {
         }
 
 .mobilesmall {
-    height: 60%;
+    height: 70%;
     align-self: flex-end;
     user-select: none;
+    -moz-user-select: none;
+    -webkit-text-select: none;
+    -webkit-user-select: none;
 }
 
 .mobilebig {
-    height: 80%;
+    height: 90%;
     aspect-ratio: 1/1;
     user-select: none;
+    -moz-user-select: none;
+    -webkit-text-select: none;
+    -webkit-user-select: none;
     display: flex;
     justify-content: center;
     align-items: center;
