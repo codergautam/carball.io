@@ -11,6 +11,6 @@
     "name": "sport",
     "cost": 100,
     "description": "A sporty car, with a bit more speed.",
-    "bodyImage": "logo.png" 
+    "bodyImage": "logo.png"
   }
 }
