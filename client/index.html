@@ -6,6 +6,16 @@
     content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0" />
     <title>Carball.io</title>
     <link rel="stylesheet" href="/css/styles.css">
+
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RH17X7WQ1C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RH17X7WQ1C');
+</script>
 </head>
 <body>
   <span id="playerCountTotal" class="toprightcount">... players online</span>
@@ -38,7 +48,7 @@
     <div id="gameGUI">
         <p id="score"><z id="blue">0</z> - <z id="red">0</z></p>
         <p id="time">0:00</p>
-      <input type="text" id="chatInput" placeholder="Type here to chat..." style="position: absolute; top: 10px; left: 50%; display: none; z-index: 100; transform: translateX(-50%); font-size: max(3vw, 16px)">
+      <input type="text" id="chatInput" placeholder="Type here to chat..." style="position: absolute; top: 20%; left: 50%; display: none; z-index: 100; transform: translateX(-50%); font-size: max(min(30px, 3vw), 16px)">
 
         <p id="speedometer">0mph</p>
         <p id="goal">AAAA</p>
