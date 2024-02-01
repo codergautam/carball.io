@@ -198,7 +198,8 @@ export default function startGame() {
     document.addEventListener('keyup', handleKeyUp);
 
     window.openMobileChat = function() {
-        document.getElementById("mobileChat").focus();
+        chatInput.style.display = '';
+
     }
 
     function handleMobileChatOpen(e) {
@@ -209,6 +210,8 @@ export default function startGame() {
         client.chat = "";
         client.chatDisplay.text = client.chat;
         document.body.focus();
+        chatInput.style.display = 'none';
+
         $("mobileChat").value = "";
     }
     function handleMobileTouchStart(e) {
