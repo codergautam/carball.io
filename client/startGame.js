@@ -268,9 +268,8 @@ export default function startGame() {
             } catch(e) {
                 alert("Could not go full screen", e);
             }
-
         }
-        
+
         let controls = document.getElementById("mobile");
         controls.addEventListener("touchstart", handleMobileTouchStart);
         controls.addEventListener("touchend", handleMobileTouchEnd);
@@ -412,7 +411,8 @@ export default function startGame() {
         $("winlose").innerHTML = text;
     });
 
-    socket.on("score", (score, scorer, team, justJoined=false) => {
+    socket.on("score", (score, scorer, team, justJoined=false, id) => {
+        console.log("score", score, scorer, team);
         client.score = score;
         document.getElementById("blue").innerHTML = client.score.blue;
         document.getElementById("red").innerHTML = client.score.red;
@@ -425,6 +425,16 @@ export default function startGame() {
 
         //make it so dont pan at start
         if (justJoined) return;
+
+        if(id == client.socketid) {
+            try {
+                const curGoals = Number(localStorage.getItem('goals')) || 0;
+                localStorage.setItem('goals', curGoals + 1);
+                document.getElementById('goals').innerHTML = curGoals + 1;
+            } catch(e) {
+                console.error('Could not update goals', e);
+            }
+        }
 
         client.viewTarget = "ball";
         client.lastViewChange = Date.now();

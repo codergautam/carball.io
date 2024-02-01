@@ -7,7 +7,19 @@ window['$'] = function (x) {
     return document.getElementById(x);
 }
 
+if(window.matchMedia("(pointer: coarse)").matches) {
+  document.getElementById("controlsDiv").style.display = "none";
+}
 
+
+try {
+  const curScores = JSON.parse(localStorage.getItem("goals"));
+  if(curScores) {
+    $("goals").innerHTML = curScores;
+  }
+} catch(e) {
+  console.error(e);
+}
 document.getElementById("playButton").addEventListener("click", () => {
     if (state == "game") return;
     state = "game";

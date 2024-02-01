@@ -235,17 +235,17 @@ module.exports = class Game {
             const oppTeam = team === "red" ? "blue" : "red";
 
             if (this.ball.scored) {
-                console.log('goal scored on ', team, ' side!')
-                console.log(this.lastBallCollision);
                 let lastCollideTime = this.lastBallCollision[team]?.[1] ?? 0;
                 const selfGoalInterval = 5000; // 5 seconds
                 if(Date.now() - lastCollideTime > selfGoalInterval) {
-                    console.log('self goal');
-                    const selfGoalScorer = this.lastBallCollision[oppTeam]?.[0]?.name ?? '';
-                    this.emit("score", this.score, selfGoalScorer, team);
+                    // self goal
+                    console.log('self goal', oppTeam, this.lastBallCollision[oppTeam]?.[0]?.name?? 'no name' );
+                    const selfGoalScorer = this.lastBallCollision[oppTeam]?.[0];
+                    this.emit("score", this.score, selfGoalScorer?.name?? '', oppTeam, false, selfGoalScorer?.id);
                 } else {
                     console.log('opp goal', team, this.lastBallCollision[team]?.[0]?.name?? 'no name' );
-                    this.emit("score", this.score, this.lastBallCollision[team]?.[0]?.name?? '', team);
+                    const scorer = this.lastBallCollision[team]?.[0]
+                    this.emit("score", this.score, scorer?.name?? '', team, false, scorer?.id);
                 }
 
                 for (let i in this.players) {
