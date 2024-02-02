@@ -121,7 +121,7 @@ export default function startGame() {
 
         console.log('Connected to server!');
 
-        socket.emit("join", document.getElementById("nameInput").value)
+        socket.emit("join", document.getElementById("nameInput").value, window.equippedSkin ?? 1);
     });
 
     let activeKeys = {};

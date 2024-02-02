@@ -29,6 +29,7 @@ document.getElementById("playButton").addEventListener("click", () => {
     $("gameGUI").style.visibility = "visible";
   $("playerCount").style.display = "";
   $("playerCountTotal").style.display = "none";
+  $("skinsButton").style.display = "none";
     stateObject = startGame();
 });
 
@@ -37,6 +38,7 @@ window.exit = function () {
     $("gameGUI").style.visibility = "hidden";
   $("playerCount").style.display = "none";
   $("playerCountTotal").style.display = "";
+  $("skinsButton").style.display = "";
 
     state = "home";
 
