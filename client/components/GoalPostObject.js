@@ -26,6 +26,9 @@ export default class GoalPostClient {
         // Draw the right slant rectangle
         this.drawRectangle(data.rightSlant);
 
+        // Draw the middle line
+        this.drawMiddleLine(data);
+
         // Add the graphics to the Pixi stage
         this.app.stage.addChild(this.graphics);
     }
@@ -38,6 +41,16 @@ export default class GoalPostClient {
         }
         // Close the shape by connecting the last vertex to the first
         this.graphics.lineTo(edges[0].x, edges[0].y);
+    }
+
+    drawMiddleLine(data) {
+        console.log(data);
+        const topCorner = data.leftSlant[0];
+        const goalHeight = data.base[2].y - data.base[0].y;
+        this.graphics.lineStyle(2, 0xFF0000, 1);
+        this.graphics.moveTo(topCorner.x, topCorner.y);
+        this.graphics.lineTo(topCorner.x, topCorner.y + goalHeight);
+
     }
 
     clear() {
