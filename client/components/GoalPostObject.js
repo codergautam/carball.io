@@ -45,11 +45,13 @@ export default class GoalPostClient {
 
     drawMiddleLine(data) {
         console.log(data);
-        const topCorner = data.leftSlant[0];
+        const topCornerBottom = data.leftSlant[1];
+        const topCornerTop = data.leftSlant[0];
         const goalHeight = data.base[2].y - data.base[0].y;
-        this.graphics.lineStyle(2, 0xFF0000, 1);
-        this.graphics.moveTo(topCorner.x, topCorner.y);
-        this.graphics.lineTo(topCorner.x, topCorner.y + goalHeight);
+        this.graphics.lineStyle(2, 0x808080, 1);
+        //grayhex = 0x808080
+        this.graphics.moveTo(topCornerBottom.x, topCornerBottom.y);
+        this.graphics.lineTo(topCornerBottom.x, topCornerTop.y + goalHeight);
 
     }
 

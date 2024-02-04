@@ -52,6 +52,10 @@ window.exit = function () {
 
     stateObject = null;
 }
+window.rematch = function () {
+    window.exit();
+    window['$']("playButton").click();
+}
 function updatePlayerCnt() {
   const element = document.getElementById("playerCountTotal");
   fetch("/api/serverInfo").then(res => res.json()).then(data => {

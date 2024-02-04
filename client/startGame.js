@@ -8,35 +8,12 @@ import createTiles from './components/Tiles';
 import GoalPostClient from './components/GoalPostObject';
 import { formatTime } from './components/utils';
 import Pinger from './Pinger';
+import BallArrowObject from './components/BallArrowObject';
+import fit from './helpers/screenScaling';
 const vW = 1280;
 const vH = 720;
 const initZoom = 1;
-function fit(center, stage, screenWidth, screenHeight, virtualWidth, virtualHeight, appliedZoom = 1) {
-    stage.scale.x = screenWidth / virtualWidth
-    stage.scale.y = screenHeight / virtualHeight
 
-    if (stage.scale.x < stage.scale.y) {
-        stage.scale.y = stage.scale.x
-    } else {
-        stage.scale.x = stage.scale.y
-    }
-
-    stage.scale.x *= appliedZoom
-    stage.scale.y *= appliedZoom
-
-    const virtualWidthInScreenPixels = virtualWidth * stage.scale.x
-    const virtualHeightInScreenPixels = virtualHeight * stage.scale.y
-    const centerXInScreenPixels = screenWidth * 0.5;
-    const centerYInScreenPixels = screenHeight * 0.5;
-
-    if (center) {
-        stage.position.x = centerXInScreenPixels;
-        stage.position.y = centerYInScreenPixels;
-    } else {
-        stage.position.x = centerXInScreenPixels - virtualWidthInScreenPixels * 0.5;
-        stage.position.y = centerYInScreenPixels - virtualHeightInScreenPixels * 0.5;
-    }
-  }
   function checkLandScapeMobile() {
     if(window.matchMedia("(pointer: coarse)").matches && window.innerWidth < window.innerHeight) {
     document.getElementById("forcelandscapemobile").style.display = "";
@@ -103,16 +80,7 @@ export default function startGame() {
     client.chatDisplay.y = 0;
     app.stage.addChild(client.chatDisplay);
 
-    client.ballArrow = PIXI.Sprite.from("./ballArrow.png");
-    client.ballArrow.anchor.set(0.5, 0.5);
-    client.ballArrow.width = 100;
-    client.ballArrow.height = 100;
-    client.ballArrow.visible=false;
-    app.stage.addChild(client.ballArrow);
-
-    let soccerBall = new SoccerBallObject(375, 275, 0, app);  // You can initialize it with your own starting x, y
-    client.ball = soccerBall; //reference to soccerball
-
+    client.ballArrow = new BallArrowObject(app);
 
 
     socket.on('id', (id) => {
@@ -474,6 +442,12 @@ export default function startGame() {
             goalPosts.rightGoal = new GoalPostClient(app, rightGoal);
             goalPosts.rightGoal.draw();
         }
+
+        // if not exists make the ball
+        if(!client.ball) {
+            let soccerBall = new SoccerBallObject(375, 275, 0, app);  // You can initialize it with your own starting x, y
+            client.ball = soccerBall; //reference to soccerball
+        }
     });
 
     socket.on('pong', () => {
@@ -503,7 +477,8 @@ export default function startGame() {
 
 
     function handleSoccerBall(ballData) {
-        soccerBall.updatePosition(ballData.x, ballData.y, ballData.angle, client);
+        if(!client.ball) return;
+        client.ball.updatePosition(ballData.x, ballData.y, ballData.angle, client);
     }
 
     let ticker = app.ticker.add(() => {
@@ -515,7 +490,7 @@ export default function startGame() {
 
         // Check active keys and send movement
         //emitPlayerMovement();
-        soccerBall.interpolatePosition(client);
+        if(client.ball) client.ball.interpolatePosition(client);
 
         if(client.you != null) {
                 client.speed = Math.round(client.you.speed * 1);
@@ -537,7 +512,6 @@ export default function startGame() {
         }
 
         pinger.update();
-
     });
 
     //update timers and stuff not every render tick to make it super fast
@@ -584,8 +558,6 @@ export default function startGame() {
     });
 
     fit(true, app.stage, window.innerWidth, window.innerHeight, vW, vH, client.zoom);
-
-
 
     return {
         app: app,
