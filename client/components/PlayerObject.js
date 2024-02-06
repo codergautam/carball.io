@@ -35,11 +35,18 @@ export default class PlayerObject {
 
         this.carSprite = PIXI.Sprite.from(`./${cosmetics[skin].bodyImage ?? "car.png"}`);
         this.carSprite.anchor.set(0.5, 0.5);
+
+        this.boostImg = PIXI.Sprite.from(`./boostimg.png`);
+        this.boostImg.anchor.set(0.5, 0.5);
+
+        this.boostImg.width = 50;
+        this.boostImg.height = 50;
         //this.app.stage.addChild(this.text);
 
         this.sprite.addChild(this.carSprite);
         this.sprite.addChild(this.text);
         this.sprite.addChild(this.chat);
+        this.sprite.addChild(this.boostImg);
 
         this.setupSprite();
 
@@ -90,6 +97,19 @@ export default class PlayerObject {
 
     }
         //this.drawTrail();  // Call the drawTrail method to update the trail graphics
+
+    // move it to behind the car
+    this.boostImg.x = 0;
+    this.boostImg.y = 0;
+    this.boostImg.rotation = this.angle;
+    this.boostImg.x -= Math.cos(this.angle+Math.PI/2) * this.carSprite.height/2;
+    this.boostImg.y -= Math.sin(this.angle+Math.PI/2) * this.carSprite.height/2;
+        if(this.boosting && !(client.viewTarget == "ball")) {
+            // show boost img
+            this.boostImg.visible = true;
+        } else {
+            this.boostImg.visible = false;
+        }
     }
 
 

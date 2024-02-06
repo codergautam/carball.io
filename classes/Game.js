@@ -155,6 +155,7 @@ module.exports = class Game {
     handleBoost(socket) {
         if (!(socket.id in this.players)) return;
 
+        if(this.players[socket.id].boostFuel > 0 && this.players[socket.id].shouldGainBoost)
         this.players[socket.id].boost();
     }
     handleMovement(socket, directions) {
@@ -256,6 +257,7 @@ module.exports = class Game {
                     for (let i in this.players) {
                         this.players[i].boostFuel = 0;
                         this.players[i].shouldGainBoost = true;
+                        this.players[i].boosting = false;
                     }
                     this.newMatch();
                 }, 5000);
