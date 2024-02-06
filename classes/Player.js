@@ -10,7 +10,8 @@ module.exports = class Player {
     constructor(id, team, skin=1) {
         this.id = id;
         this.movement = { "up": false, "down": false, "left": false, "right": false, angle: undefined };
-        this.body = Matter.Bodies.rectangle(100, 100, 160, 90, {
+        const dimensions = [160, 90]
+        this.body = Matter.Bodies.rectangle(100, 100, dimensions[0]*0.95, dimensions[1]*0.95, {
             mass: 5,
             restitution: 1.0,
             //friction: 0.1,  THIS is friction with other objects
