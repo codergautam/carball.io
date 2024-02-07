@@ -5,6 +5,7 @@ export default class GoalPostClient {
         this.app = app;
         this.goalPostData = goalPostData;
         this.graphics = new PIXI.Graphics();
+        this.baseVerts = [];
         this.draw();
     }
 
@@ -17,9 +18,6 @@ export default class GoalPostClient {
         // Set the line style for drawing
         this.graphics.lineStyle(2, 0xFFFFFF, 1);
 
-        // Draw the base rectangle
-        this.drawRectangle(data.base);
-
         // Draw the left slant rectangle
         this.drawRectangle(data.leftSlant);
 
@@ -28,6 +26,20 @@ export default class GoalPostClient {
 
         // Draw the middle line
         this.drawMiddleLine(data);
+
+        // Draw base net vertices
+        if(this.baseVerts?.length > 0) {
+        this.graphics.lineStyle(8, 0xFFFFFF, 1);
+
+        this.graphics.moveTo(this.baseVerts[0][0].x, this.baseVerts[0][0].y);
+        for (let i = 0; i < this.baseVerts.length; i++) {
+            const start = this.baseVerts[i][0];
+            const end = this.baseVerts[i][1];
+
+            this.graphics.lineTo(start.x, start.y);
+            this.graphics.lineTo(end.x, end.y);
+        }
+    }
 
         // Add the graphics to the Pixi stage
         this.app.stage.addChild(this.graphics);
@@ -44,7 +56,7 @@ export default class GoalPostClient {
     }
 
     drawMiddleLine(data) {
-        console.log(data);
+        if(!data.base) return;
         const topCornerBottom = data.leftSlant[1];
         const topCornerTop = data.leftSlant[0];
         const goalHeight = data.base[2].y - data.base[0].y;
@@ -53,6 +65,13 @@ export default class GoalPostClient {
         this.graphics.lineTo(topCornerBottom.x, topCornerTop.y + goalHeight);
 
     }
+
+    handleGoalVerts(verts) {
+        console.log('verts', verts);
+        this.baseVerts = verts;
+        this.draw();
+    }
+
 
     clear() {
         // Remove the line from the Pixi stage

@@ -15,14 +15,13 @@ module.exports = class Game {
         this.gameWorld = new GameWorld(config.WORLD_WIDTH, config.WORLD_HEIGHT);
         this.players = {};
         this.ball = new SoccerBall(400, 300);
-        this.leftGoal = new GoalPost(300, this.gameWorld.height / 2, 500, 300); // Create left goal post
-        this.rightGoal = new GoalPost(this.gameWorld.width - 300, this.gameWorld.height / 2, 500, 300, true); // Create right goal post
+        this.leftGoal = new GoalPost(300, this.gameWorld.height / 2, 500, 300, false, this.gameWorld); // Create left goal post
+        this.rightGoal = new GoalPost(this.gameWorld.width - 300, this.gameWorld.height / 2, 500, 300, true, this.gameWorld); // Create right goal post
         this.gameCreationTime = Date.now();
         this.sockets = {};
 
         // Add objects to the Matter.js world
         Matter.Composite.add(this.gameWorld.engine.world, [this.ball.body, this.leftGoal.body, this.rightGoal.body]);
-
         //LEFT -- RIGHT
         this.score = {
             "blue": 0,
@@ -282,6 +281,10 @@ module.exports = class Game {
         let pack = {
             updatedPlayers: {},
             ball: this.ball.exportJSON(),
+            goalVerts: {
+                leftGoal: this.leftGoal.exportVerts(),
+                rightGoal: this.rightGoal.exportVerts()
+            }
         };
         for (let i in this.players) {
             pack.updatedPlayers[i] = this.players[i].exportJSON();

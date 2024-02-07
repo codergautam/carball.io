@@ -454,7 +454,7 @@ export default function startGame() {
         pinger.onPong();
     });
 
-    socket.on('update', ({ updatedPlayers, ball, leftGoal, rightGoal }) => {
+    socket.on('update', ({ updatedPlayers, ball, leftGoal, rightGoal, goalVerts }) => {
         for (let id in updatedPlayers) {
             // Minus 90 degrees because the sprite is facing up
 
@@ -470,11 +470,21 @@ export default function startGame() {
         }
 
         handleSoccerBall(ball);
-
+        handleGoalVerts(goalVerts);
+        
         client.lastUpdate = Date.now();
     });
 
 
+    function handleGoalVerts(goalVerts) {
+        if(!goalVerts) return;
+        if (goalVerts.leftGoal && goalPosts.leftGoal) {
+            goalPosts.leftGoal.handleGoalVerts(goalVerts.leftGoal);
+        }
+        if (goalVerts.rightGoal && goalPosts.rightGoal) {
+            goalPosts.rightGoal.handleGoalVerts(goalVerts.rightGoal);
+        }
+    }
 
     function handleSoccerBall(ballData) {
         if(!client.ball) return;
