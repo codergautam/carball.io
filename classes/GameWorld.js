@@ -9,10 +9,10 @@ module.exports = class GameWorld {
 
         //add le border with chamfer for smoother bounces
         // const chamferValue = 10; // Change as needed
-        let borderTop = Matter.Bodies.rectangle(width / 2, -25, width + 100, 50, { isStatic: true, restitution: 0 });
-        let borderBottom = Matter.Bodies.rectangle(width / 2, height + 25, width + 100, 50, { isStatic: true, restitution: 0 });
-        let borderLeft = Matter.Bodies.rectangle(-25, height / 2, 50, height + 100, { isStatic: true, restitution: 0 });
-        let borderRight = Matter.Bodies.rectangle(width + 25, height / 2, 50, height + 100, { isStatic: true, restitution: 0 });
+        let borderTop = Matter.Bodies.rectangle(width / 2, -25, width + 100, 50, { isStatic: true, restitution: 6 });
+        let borderBottom = Matter.Bodies.rectangle(width / 2, height + 25, width + 100, 50, { isStatic: true, restitution: 6 });
+        let borderLeft = Matter.Bodies.rectangle(-25, height / 2, 50, height + 100, { isStatic: true, restitution: 6 });
+        let borderRight = Matter.Bodies.rectangle(width + 25, height / 2, 50, height + 100, { isStatic: true, restitution: 6 });
         Matter.Composite.add(this.engine.world, [borderTop, borderBottom, borderLeft, borderRight]);
     }
 

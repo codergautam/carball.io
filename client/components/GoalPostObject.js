@@ -24,22 +24,29 @@ export default class GoalPostClient {
         // Draw the right slant rectangle
         this.drawRectangle(data.rightSlant);
 
+        if(data.base) {
+            this.drawRectangle(data.base);
+        }
         // Draw the middle line
         this.drawMiddleLine(data);
 
         // Draw base net vertices
-        if(this.baseVerts?.length > 0) {
-        this.graphics.lineStyle(8, 0xFFFFFF, 1);
+    //     if(this.baseVerts?.length > 0) {
+    //     this.graphics.lineStyle(8, 0xFFFFFF, 1);
+    //         let connect =false;
+    //         for (let i = 0; i < this.baseVerts.length; i++) {
+    //         const start = this.baseVerts[i][0];
+    //         const end = this.baseVerts[i][1];
 
-        this.graphics.moveTo(this.baseVerts[0][0].x, this.baseVerts[0][0].y);
-        for (let i = 0; i < this.baseVerts.length; i++) {
-            const start = this.baseVerts[i][0];
-            const end = this.baseVerts[i][1];
+    //         if(connect ) this.graphics.lineTo(start.x, start.y);
+    //         else {
+    //             connect = true;
+    //             this.graphics.moveTo(start.x, start.y);
+    //         }
+    //         this.graphics.lineTo(end.x, end.y);
+    //     }
+    // }
 
-            this.graphics.lineTo(start.x, start.y);
-            this.graphics.lineTo(end.x, end.y);
-        }
-    }
 
         // Add the graphics to the Pixi stage
         this.app.stage.addChild(this.graphics);

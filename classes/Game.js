@@ -281,10 +281,10 @@ module.exports = class Game {
         let pack = {
             updatedPlayers: {},
             ball: this.ball.exportJSON(),
-            goalVerts: {
-                leftGoal: this.leftGoal.exportVerts(),
-                rightGoal: this.rightGoal.exportVerts()
-            }
+            // goalVerts: {
+            //     leftGoal: this.leftGoal.exportVerts(),
+            //     rightGoal: this.rightGoal.exportVerts()
+            // }
         };
         for (let i in this.players) {
             pack.updatedPlayers[i] = this.players[i].exportJSON();
