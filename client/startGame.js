@@ -15,7 +15,7 @@ const vH = 720;
 const initZoom = 1;
 
   function checkLandScapeMobile() {
-    if(window.matchMedia("(pointer: coarse)").matches && window.innerWidth < window.innerHeight) {
+    if(window.isMobile && window.innerWidth < window.innerHeight) {
     document.getElementById("forcelandscapemobile").style.display = "";
 } else {
     document.getElementById("forcelandscapemobile").style.display = "none";
@@ -242,7 +242,7 @@ export default function startGame() {
         controls.addEventListener("touchstart", handleMobileTouchStart);
         controls.addEventListener("touchend", handleMobileTouchEnd);
     }
-    if(window.matchMedia("(pointer: coarse)").matches) {
+    if(window.isMobile) {
         enableMobileControls();
         checkLandScapeMobile();
     }
@@ -471,7 +471,7 @@ export default function startGame() {
 
         handleSoccerBall(ball);
         handleGoalVerts(goalVerts);
-        
+
         client.lastUpdate = Date.now();
     });
 
