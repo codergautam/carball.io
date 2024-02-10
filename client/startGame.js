@@ -26,6 +26,13 @@ const initZoom = 1;
     }
 }
 
+const keys = {
+    left: [37, 65],
+    right: [39, 68],
+    up: [38, 87],
+    down: [40, 83],
+}
+
 export default function startGame() {
 
     const app = new PIXI.Application({
@@ -137,33 +144,39 @@ export default function startGame() {
           return;
       }
 
+      // { [keyname]: [ arrow, wasd ] }
+
+
         //e.keyCode SUCKS
         if (e.key == " " && !client.chatOpen) {
             socket.emit("boost");
             return;
         }
 
-        if (e.keyCode == 37 || e.keyCode == 65)
-            activeKeys['left'] = true;
-        if (e.keyCode == 39 || e.keyCode == 68)
-            activeKeys['right'] = true;
-        if (e.keyCode == 38 || e.keyCode == 87)
-            activeKeys['up'] = true;
-        if (e.keyCode == 40 || e.keyCode == 83)
-            activeKeys['down'] = true;
+        // if (e.keyCode == 37 || e.keyCode == 65)
+        //     activeKeys['left'] = true;
+        // if (e.keyCode == 39 || e.keyCode == 68)
+        //     activeKeys['right'] = true;
+        // if (e.keyCode == 38 || e.keyCode == 87)
+        //     activeKeys['up'] = true;
+        // if (e.keyCode == 40 || e.keyCode == 83)
+        //     activeKeys['down'] = true;
+
+        for (let key in keys) {
+            if (client.chatOpen ? e.keyCode === keys[key][0] : keys[key].includes(e.keyCode)) {
+                activeKeys[key] = true;
+            }
+        }
 
         if (movementMode === 'keys') emitPlayerMovement();
     }
     function handleKeyUp(event){
         let e = event;
-        if (e.keyCode == 37 || e.keyCode == 65)
-            activeKeys['left'] = false;
-        if (e.keyCode == 39 || e.keyCode == 68)
-            activeKeys['right'] = false;
-        if (e.keyCode == 38 || e.keyCode == 87)
-            activeKeys['up'] = false;
-        if (e.keyCode == 40 || e.keyCode == 83)
-            activeKeys['down'] = false;
+        for (let key in keys) {
+            if (client.chatOpen ? e.keyCode === keys[key][0] : keys[key].includes(e.keyCode)) {
+                activeKeys[key] = false;
+            }
+        }
 
         if (movementMode === 'keys') emitPlayerMovement();
     }

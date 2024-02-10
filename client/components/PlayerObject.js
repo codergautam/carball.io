@@ -63,6 +63,8 @@ export default class PlayerObject {
 
         this.draw(client);
 
+        this.chatTimeout = null;
+
     }
 
     setupSprite() {
@@ -77,7 +79,8 @@ export default class PlayerObject {
 
     setChat(text) {
         this.chat.text = text;
-        setTimeout(() => {
+        if(this.chatTimeout) clearTimeout(this.chatTimeout);
+        this.chatTimeout = setTimeout(() => {
             this.chat.text = "";
         }, 7000);
     }
