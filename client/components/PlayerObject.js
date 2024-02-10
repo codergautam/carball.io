@@ -1,6 +1,7 @@
 import { interpolateEntityAngle, interpolateEntityX, interpolateEntityY } from "./utils";
 import cosmetics from "../../shared/cosmetics.json";
 import * as PIXI from 'pixi.js';
+import Matter from "matter-js";
 const trailSpeedTresh = 40;
 export default class PlayerObject {
     constructor(id, x, y, self, app, client, name, team, skin) {
@@ -19,6 +20,16 @@ export default class PlayerObject {
         this.boosting = false;
         this.speed = 0;
         this.lastTrailUpdate = Date.now();
+
+        const dimensions = [160, 90]
+        this.matterBody = Matter.Bodies.rectangle(100, 100, dimensions[0]*0.95, dimensions[1]*0.95, {
+            mass: 5,
+            restitution: 1.6,
+            //friction: 0.1,  THIS is friction with other objects
+            frictionAir: 0.07,
+            //frictionStatic: 0.5  THIS is friction with other objects
+        });
+        Matter.Composite.add(client.matterEngine.world, [this.matterBody]);
 
         this.trailGraphics = new PIXI.Graphics();   // Create a new graphics object for the trail
         this.app.stage.addChild(this.trailGraphics); // Add the trail graphics to the stage

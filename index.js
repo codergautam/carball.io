@@ -114,7 +114,7 @@ function matchMaker(lobby) {
                 lobby.removePlayer(sockets[nextSocket]);
                 // add player to game
                 sockets[nextSocket]._carballserver = i;
-                Games[i].join(sockets[nextSocket], playerInfo.name, true);
+                Games[i].join(sockets[nextSocket], playerInfo.name, true, playerInfo.skin);
                 delete sockets[nextSocket]; //out of da waitlist
                 break;
             } else {
@@ -147,7 +147,7 @@ function matchMaker(lobby) {
         let playerInfo = lobby.players[sockets[i].id];
         lobby.removePlayer(sockets[i]);
         sockets[i]._carballserver = id;
-        Games[id].join(sockets[i], playerInfo.name);
+        Games[id].join(sockets[i], playerInfo.name, false, playerInfo.skin);
         delete sockets[i]; //out of da waitlist
 
         count++;

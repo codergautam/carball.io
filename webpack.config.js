@@ -11,5 +11,8 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './client/index.html'
         })
-    ]
+    ],
+    externals: {
+        'matter-js': 'Matter'
+    }
 };

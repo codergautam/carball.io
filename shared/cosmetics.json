@@ -9,7 +9,7 @@
   "2": {
     "id": 2,
     "name": "sport",
-    "cost": 100,
+    "cost": 1,
     "description": "A sporty car, with a bit more speed.",
     "bodyImage": "logo.png"
   }

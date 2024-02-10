@@ -10,6 +10,9 @@ import { formatTime } from './components/utils';
 import Pinger from './Pinger';
 import BallArrowObject from './components/BallArrowObject';
 import fit from './helpers/screenScaling';
+import Matter from 'matter-js';
+import config from '../config';
+
 const vW = 1280;
 const vH = 720;
 const initZoom = 1;
@@ -68,8 +71,23 @@ export default function startGame() {
         you: null,
         speed: 0,
         targetZoom: initZoom,
-        zoom: initZoom
+        zoom: initZoom,
+        matterEngine: Matter.Engine.create(),
     }
+
+    console.log("Client", client);
+
+    const width = config.WORLD_WIDTH;
+    const height = config.WORLD_HEIGHT;
+    client.matterEngine.world.gravity.y = 0;
+
+    //add le border with chamfer for smoother bounces
+    // const chamferValue = 10; // Change as needed
+    let borderTop = Matter.Bodies.rectangle(width / 2, -25, width + 100, 50, { isStatic: true, restitution: 6 });
+    let borderBottom = Matter.Bodies.rectangle(width / 2, height + 25, width + 100, 50, { isStatic: true, restitution: 6 });
+    let borderLeft = Matter.Bodies.rectangle(-25, height / 2, 50, height + 100, { isStatic: true, restitution: 6 });
+    let borderRight = Matter.Bodies.rectangle(width + 25, height / 2, 50, height + 100, { isStatic: true, restitution: 6 });
+    Matter.Composite.add(client.matterEngine.world, [borderTop, borderBottom, borderLeft, borderRight]);
 
     createTiles(app);
 
@@ -120,7 +138,7 @@ export default function startGame() {
       }
 
         //e.keyCode SUCKS
-        if (e.key == " ") {
+        if (e.key == " " && !client.chatOpen) {
             socket.emit("boost");
             return;
         }
