@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { WORLD_WIDTH,WORLD_HEIGHT } from '../constants';
 export default function createTiles(app) {
 // Create tile background using background.png
-const background = PIXI.Sprite.from('background.jpg');
+const background = PIXI.Sprite.from('background.png');
 //Repeat the background image
 let tileSize = 1000;
 for (let i = 0; i < WORLD_WIDTH / tileSize; i++) {
