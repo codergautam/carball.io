@@ -43,7 +43,7 @@ module.exports = class Player {
         let dir = mod(this.body.angle * 180 / Math.PI, 360);
 
         //if close just snap
-        if (Math.abs(mod((dirTo - dir + 180), 360) - 180) < 2.5) {
+        if (Math.abs(mod((dirTo - dir + 180), 360) - 180) < 1.5) {
             let angle = dirTo * Math.PI / 180;
             Matter.Body.setAngle(this.body, angle);
             this.torque = 0;
@@ -66,7 +66,7 @@ module.exports = class Player {
         let torque = 400;
 
         if(typeof this.movement.angle == "number") {
-            torque = 550;
+            torque = 500;
          this.updateRotation(torque);
         }
 
