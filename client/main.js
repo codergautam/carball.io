@@ -67,6 +67,45 @@ function updatePlayerCnt() {
 
 };
 
+const canUseLocalStorage = (function() {
+  try {
+    localStorage.setItem("test", "test");
+    localStorage.removeItem("test");
+    return true;
+  } catch(e) {
+    return false;
+  }
+})();
+
+if(canUseLocalStorage) {
+  console.log({ ...localStorage })
+  const oldName = localStorage.getItem("name");
+  if(oldName) {
+    document.getElementById("nameInput").value = oldName;
+  }
+  document.getElementById("nameInput").addEventListener("change", function() {
+    localStorage.setItem("name", this.value);
+  });
+
+  const controlMode = localStorage.getItem("controlMode");
+  const modes = ["controls2", "controls"] // ["mouse", "keyboard"]
+  if(controlMode) {
+    modes.forEach(mode => {
+      document.getElementById(mode).checked = controlMode === mode;
+    });
+  }
+
+  modes.forEach(mode => {
+    document.getElementById(mode).addEventListener("change", function() {
+      if(this.checked) {
+        localStorage.setItem("controlMode", mode);
+      }
+    });
+  });
+
+
+}
+
 
 setInterval(updatePlayerCnt, 10000);
 updatePlayerCnt();
