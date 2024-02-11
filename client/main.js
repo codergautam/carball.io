@@ -78,7 +78,6 @@ const canUseLocalStorage = (function() {
 })();
 
 if(canUseLocalStorage) {
-  console.log({ ...localStorage })
   const oldName = localStorage.getItem("name");
   if(oldName) {
     document.getElementById("nameInput").value = oldName;
@@ -102,8 +101,6 @@ if(canUseLocalStorage) {
       }
     });
   });
-
-
 }
 
 
