@@ -42,11 +42,11 @@
         </div>
         <br />
         <div class="controls" id="controlsDiv">
-            <p ><b>Controls:</b></p>
-            <input type="radio" name="controls" id="controls" value="keys" checked/>
-            <label for="controls">Keyboard</label>
-            <input type="radio" name="controls" id="controls2" value="mouse"/>
+            <p ><b>Control Mode:</b></p>
+            <input type="radio" name="controls" id="controls2" value="mouse" checked/>
             <label for="controls2">Mouse</label>
+            <input type="radio" name="controls" id="controls" value="keys"/>
+            <label for="controls">Keyboard</label>
         </div>
 
         <h2 class="totalGoals">Total Goals Scored: <z id="goals">0</z></h2>
@@ -66,7 +66,7 @@
         <div id="gameGUI">
             <p id="score"><z id="blue">0</z> - <z id="red">0</z></p>
             <p id="time">0:00</p>
-          <input type="text" id="chatInput" placeholder="Type here to chat..." style="position: absolute; top: 20%; left: 50%; display: none; z-index: 100; transform: translateX(-50%); font-size: max(min(30px, 3vw), 16px)">
+          <input type="text" id="chatInput" placeholder="Type here to chat..." style="position: absolute; top: 20%; left: 50%; display: none; z-index: 100; transform: translateX(-50%); font-size: max(min(30px, 3vw), 16px); pointer-events: auto" />
 
             <p id="speedometer">0mph</p>
             <p id="goal">AAAA</p>
