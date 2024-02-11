@@ -24,7 +24,7 @@ export default class PlayerObject {
         const dimensions = [160, 90]
         this.matterBody = Matter.Bodies.rectangle(100, 100, dimensions[0]*0.95, dimensions[1]*0.95, {
             mass: 5,
-            restitution: 1.6,
+            restitution: 1,
             //friction: 0.1,  THIS is friction with other objects
             frictionAir: 0.07,
             //frictionStatic: 0.5  THIS is friction with other objects
