@@ -9,7 +9,6 @@ export default class SocketWrapper {
     this._setupSocket(url, protocols, opts ?? {});
   }
   _setupSocket(url, protocols, opts) {
-
     if (url == null) {
       let proto = "ws://";
       if (location.protocol.match(/https/)) proto = "wss://";
@@ -59,7 +58,6 @@ export default class SocketWrapper {
     });
     // }
     // });
-
   }
   test() {
     this.ws.close(3333);

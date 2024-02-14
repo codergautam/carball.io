@@ -28,10 +28,6 @@ document.getElementById("playButton").addEventListener("click", () => {
     if (state == "game") return;
     state = "game";
 
-    $("gameGUI").style.visibility = "visible";
-  $("playerCount").style.display = "";
-  $("playerCountTotal").style.display = "none";
-  $("skinsButton").style.display = "none";
     stateObject = startGame();
 });
 

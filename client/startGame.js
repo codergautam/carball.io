@@ -17,11 +17,11 @@ const vW = 1280;
 const vH = 720;
 const initZoom = 1;
 
-  function checkLandScapeMobile() {
-    if(window.isMobile && window.innerWidth < window.innerHeight) {
-    document.getElementById("forcelandscapemobile").style.display = "";
-} else {
-    document.getElementById("forcelandscapemobile").style.display = "none";
+function checkLandScapeMobile() {
+    if (window.isMobile && window.innerWidth < window.innerHeight) {
+        document.getElementById("forcelandscapemobile").style.display = "";
+    } else {
+        document.getElementById("forcelandscapemobile").style.display = "none";
 
     }
 }
@@ -46,8 +46,8 @@ export default function startGame() {
     app.renderer.view.style.position = "absolute";
     // hide it for now
 
-  const chatInput = document.getElementById('chatInput');
-  chatInput.style.display = 'none'; // Initially hidden
+    const chatInput = document.getElementById('chatInput');
+    chatInput.style.display = 'none'; // Initially hidden
 
     document.getElementById("playButton").innerHTML = `<div id="playSpinner"  class="lds-dual-ring"></div>`;
 
@@ -113,7 +113,10 @@ export default function startGame() {
         client.socketid = id;
 
         console.log('Connected to server!');
-
+        $("gameGUI").style.visibility = "visible";
+        $("playerCount").style.display = "";
+        $("playerCountTotal").style.display = "none";
+        $("skinsButton").style.display = "none";
         socket.emit("join", document.getElementById("nameInput").value, window.equippedSkin ?? 1);
     });
 
@@ -125,26 +128,26 @@ export default function startGame() {
         socket.emit("chat", text);
 
         chatInput.value = "";
-      chatInput.style.display = "none"
+        chatInput.style.display = "none"
     }
 
     function handleKeyDown(event) {
         if (client.mobile) return;
         let e = event;
 
-      if (event.key === "Enter" && !client.mobile) {
-          if (client.chatOpen) {
-              sendChat(chatInput.value);
-              chatInput.style.display = 'none';
-          } else {
-              chatInput.style.display = 'block';
-              chatInput.focus();
-          }
-          client.chatOpen = !client.chatOpen;
-          return;
-      }
+        if (event.key === "Enter" && !client.mobile) {
+            if (client.chatOpen) {
+                sendChat(chatInput.value);
+                chatInput.style.display = 'none';
+            } else {
+                chatInput.style.display = 'block';
+                chatInput.focus();
+            }
+            client.chatOpen = !client.chatOpen;
+            return;
+        }
 
-      // { [keyname]: [ arrow, wasd ] }
+        // { [keyname]: [ arrow, wasd ] }
 
 
         //e.keyCode SUCKS
@@ -170,7 +173,7 @@ export default function startGame() {
 
         if (movementMode === 'keys') emitPlayerMovement();
     }
-    function handleKeyUp(event){
+    function handleKeyUp(event) {
         let e = event;
         for (let key in keys) {
             if (client.chatOpen ? e.keyCode === keys[key][0] : keys[key].includes(e.keyCode)) {
@@ -181,34 +184,34 @@ export default function startGame() {
         if (movementMode === 'keys') emitPlayerMovement();
     }
     function handleClick() {
-        if(!client.mobile)
+        if (!client.mobile)
             socket.emit("boost");
     }
 
     document.addEventListener('keydown', handleKeyDown);
 
     // document.addEventListener("click", handleClick);
-  document.addEventListener('mousedown', handleClick);
+    document.addEventListener('mousedown', handleClick);
 
     document.addEventListener('keyup', handleKeyUp);
 
-    window.openMobileChat = function() {
-        if(client.chatOpen) return handleMobileChatClose();
+    window.openMobileChat = function () {
+        if (client.chatOpen) return handleMobileChatClose();
         client.chatOpen = true;
         chatInput.style.display = '';
         // focus the input
         chatInput.focus();
         // add enter listener
         const onEnter = (e) => {
-            if(e.key === 'Enter') {
+            if (e.key === 'Enter') {
                 handleMobileChatClose();
-            chatInput.removeEventListener('keydown', onEnter);
+                chatInput.removeEventListener('keydown', onEnter);
             }
         }
         chatInput.addEventListener('keydown', onEnter);
     }
 
-    function handleMobileChatClose(event){
+    function handleMobileChatClose(event) {
         sendChat(chatInput.value);
         client.chatOpen = false;
         client.chatDisplay.text = chatInput.value;
@@ -237,7 +240,7 @@ export default function startGame() {
         }
         emitPlayerMovement();
     }
-    function handleMobileTouchEnd(e){
+    function handleMobileTouchEnd(e) {
         let type = e.target.getAttribute("z");
         switch (type) {
             case "left":
@@ -260,11 +263,11 @@ export default function startGame() {
         $("mobile").style.visibility = "visible";
         client.mobile = true;
 
-        if(client.mobile) {
+        if (client.mobile) {
             // try to go full screen
             try {
-            document.body.requestFullscreen();
-            } catch(e) {
+                document.body.requestFullscreen();
+            } catch (e) {
                 alert("Could not go full screen", e);
             }
         }
@@ -273,7 +276,7 @@ export default function startGame() {
         controls.addEventListener("touchstart", handleMobileTouchStart);
         controls.addEventListener("touchend", handleMobileTouchEnd);
     }
-    if(window.isMobile) {
+    if (window.isMobile) {
         enableMobileControls();
         checkLandScapeMobile();
     }
@@ -283,7 +286,7 @@ export default function startGame() {
     let mouseY = 0;
     let angleDegrees;
 
-    function handleMouseMove(event){
+    function handleMouseMove(event) {
         // Update the position of the pointer
         mouseX = event.clientX;
         mouseY = event.clientY;
@@ -331,7 +334,7 @@ export default function startGame() {
     socket.on("info", (serverId, serverType, team, alreadyStarted) => {
         client.serverType = serverId;
         console.log("Entered server: " + serverId);
-        if(!inServer) {
+        if (!inServer) {
             document.getElementById("playButton").innerHTML = `Play`;
             app.renderer.view.style.visibility = "visible";
             inServer = true;
@@ -355,7 +358,7 @@ export default function startGame() {
     function countdown(number) {
         $("countdown").innerHTML = number;
         $("countdown").style["font-size"] = (5 - number / 2) + "em";
-        $("countdown").style.color = `rgb(${(number) * 255}, ${(3-number)*255}, 0)`;
+        $("countdown").style.color = `rgb(${(number) * 255}, ${(3 - number) * 255}, 0)`;
 
         if (number == 0) {
             $("countdown").innerHTML = "Go!";
@@ -366,7 +369,7 @@ export default function startGame() {
         };
 
         setTimeout(() => {
-            countdown(number-1);
+            countdown(number - 1);
         }, 1000);
     }
 
@@ -410,7 +413,7 @@ export default function startGame() {
         $("winlose").innerHTML = text;
     });
 
-    socket.on("score", (score, scorer, team, justJoined=false, id) => {
+    socket.on("score", (score, scorer, team, justJoined = false, id) => {
         console.log("score", score, scorer, team);
         client.score = score;
         document.getElementById("blue").innerHTML = client.score.blue;
@@ -427,12 +430,12 @@ export default function startGame() {
         //make it so dont pan at start
         if (justJoined) return;
 
-        if(yourGoal) {
+        if (yourGoal) {
             try {
                 const curGoals = Number(localStorage.getItem('goals')) || 0;
                 localStorage.setItem('goals', curGoals + 1);
                 document.getElementById('goals').innerHTML = curGoals + 1;
-            } catch(e) {
+            } catch (e) {
                 console.error('Could not update goals', e);
             }
         }
@@ -445,7 +448,7 @@ export default function startGame() {
         }, 5000);
 
         if (scorer == null) return; //this means someone got the goal to change the score
-        $("goal").innerHTML = `<span style="color:${yourGoal?'purple':team};">${yourGoal?'You':scorer}</span> scored!`;
+        $("goal").innerHTML = `<span style="color:${yourGoal ? 'purple' : team};">${yourGoal ? 'You' : scorer}</span> scored!`;
         $("goal").style.left = "0%";
 
         setTimeout(() => {
@@ -475,7 +478,7 @@ export default function startGame() {
         }
 
         // if not exists make the ball
-        if(!client.ball) {
+        if (!client.ball) {
             let soccerBall = new SoccerBallObject(375, 275, 0, app);  // You can initialize it with your own starting x, y
             client.ball = soccerBall; //reference to soccerball
         }
@@ -508,7 +511,7 @@ export default function startGame() {
 
 
     function handleGoalVerts(goalVerts) {
-        if(!goalVerts) return;
+        if (!goalVerts) return;
         if (goalVerts.leftGoal && goalPosts.leftGoal) {
             goalPosts.leftGoal.handleGoalVerts(goalVerts.leftGoal);
         }
@@ -518,7 +521,7 @@ export default function startGame() {
     }
 
     function handleSoccerBall(ballData) {
-        if(!client.ball) return;
+        if (!client.ball) return;
         client.ball.updatePosition(ballData.x, ballData.y, ballData.angle, client);
     }
 
@@ -531,23 +534,23 @@ export default function startGame() {
 
         // Check active keys and send movement
         //emitPlayerMovement();
-        if(client.ball) client.ball.interpolatePosition(client);
+        if (client.ball) client.ball.interpolatePosition(client);
 
-        if(client.you != null) {
-                client.speed = Math.round(client.you.speed * 1);
+        if (client.you != null) {
+            client.speed = Math.round(client.you.speed * 1);
             let moving = false;
-            if(activeKeys['angle'] && activeKeys['forward']) {
+            if (activeKeys['angle'] && activeKeys['forward']) {
                 moving = true;
-            } else if(activeKeys['up'] || activeKeys['down']) {
+            } else if (!activeKeys['angle'] && (activeKeys['up'] || activeKeys['down'])) {
                 moving = true;
             }
-        const newTargetZoom = Math.max(0.1, initZoom - (client.speed > 50 ? 0.35 : moving ? 0.15 : 0));
-        client.targetZoom = newTargetZoom;
+            const newTargetZoom = Math.max(0.1, initZoom - (client.speed > 50 ? 0.35 : moving ? 0.15 : 0));
+            client.targetZoom = newTargetZoom;
 
         }
 
         const lerpSpeed = 0.025;
-        if(Math.abs(client.targetZoom - client.zoom) > 0.0001) {
+        if (Math.abs(client.targetZoom - client.zoom) > 0.0001) {
             client.zoom = client.zoom + (client.targetZoom - client.zoom) * lerpSpeed;
             fit(true, app.stage, window.innerWidth, window.innerHeight, vW, vH, client.zoom);
         }
@@ -559,7 +562,7 @@ export default function startGame() {
     let guiTick = setInterval(() => {
         if (client.you == null) return;
 
-        $("speedometer").innerHTML =  client.speed + "mph";
+        $("speedometer").innerHTML = client.speed + "mph";
         const fps = Math.round(app.ticker.FPS);
 
         $("playerCount").innerHTML = `${Object.keys(players).length} Players<br>${fps} FPS<br>${pinger.ping > 1000000 ? "..." : pinger.ping}ms Ping`;
