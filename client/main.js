@@ -24,11 +24,16 @@ try {
 } catch(e) {
   console.error(e);
 }
+window.refreshInt = null;
+
 document.getElementById("playButton").addEventListener("click", () => {
     if (state == "game") return;
     state = "game";
 
     stateObject = startGame();
+    if(window.refreshInt) {
+      clearInterval(window.refreshInt);
+    }
 });
 
 window.exit = function () {
@@ -37,6 +42,7 @@ window.exit = function () {
   $("playerCount").style.display = "none";
   $("playerCountTotal").style.display = "";
   $("skinsButton").style.display = "";
+  window.refreshInt = setInterval(updatePlayerCnt, 2000);
 
     state = "home";
 
@@ -54,6 +60,7 @@ window.rematch = function () {
     window.exit();
     window['$']("playButton").click();
 }
+
 function updatePlayerCnt() {
   const element = document.getElementById("playerCountTotal");
   fetch("/api/serverInfo").then(res => res.json()).then(data => {
@@ -100,5 +107,5 @@ if(canUseLocalStorage) {
 }
 
 
-setInterval(updatePlayerCnt, 10000);
+window.refreshInt = setInterval(updatePlayerCnt, 2000);
 updatePlayerCnt();
