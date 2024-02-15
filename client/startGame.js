@@ -44,6 +44,11 @@ export default function startGame() {
     document.body.appendChild(app.view);
     document.body.style.margin = "0"; // remove default margins
     app.renderer.view.style.position = "absolute";
+    app.renderer.view.style.opacity = "0"; // set initial opacity to 0
+    app.renderer.view.style.transition = "opacity 1s"; // add transition property
+    setTimeout(() => {
+        app.renderer.view.style.opacity = "1"; // fade in the application
+    }, 0);
     // hide it for now
 
     const chatInput = document.getElementById('chatInput');
@@ -335,7 +340,9 @@ export default function startGame() {
         client.serverType = serverId;
         console.log("Entered server: " + serverId);
         if (!inServer) {
+            setTimeout(() => {
             document.getElementById("playButton").innerHTML = `Play`;
+            }, 1000);
             app.renderer.view.style.visibility = "visible";
             inServer = true;
         }
