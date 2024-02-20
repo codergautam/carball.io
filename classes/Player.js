@@ -24,6 +24,7 @@ module.exports = class Player {
         this.boostFuel = 0;
         this.boosting = false;
         this.shouldGainBoost = true;
+        this.isBot = false;
 
         this.autoDrive = false;
     }
