@@ -480,7 +480,7 @@ export default function startGame() {
             goalPosts.leftGoal.draw();
         }
         if (rightGoal) {
-            goalPosts.rightGoal = new GoalPostClient(app, rightGoal);
+            goalPosts.rightGoal = new GoalPostClient(app, rightGoal, true);
             goalPosts.rightGoal.draw();
         }
 

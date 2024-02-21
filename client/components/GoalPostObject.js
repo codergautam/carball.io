@@ -1,11 +1,12 @@
 import * as PIXI from 'pixi.js';
 
 export default class GoalPostClient {
-    constructor(app, goalPostData) {
+    constructor(app, goalPostData, right=false) {
         this.app = app;
         this.goalPostData = goalPostData;
         this.graphics = new PIXI.Graphics();
         this.baseVerts = [];
+        this.right = right;
         this.draw();
     }
 
@@ -18,17 +19,17 @@ export default class GoalPostClient {
         // Set the line style for drawing
         this.graphics.lineStyle(2, 0xFFFFFF, 1);
 
-        // Draw the left slant rectangle
-        this.drawRectangle(data.leftSlant);
+        // // Draw the left slant rectangle
+        // this.drawRectangle(data.leftSlant);
 
-        // Draw the right slant rectangle
-        this.drawRectangle(data.rightSlant);
+        // // Draw the right slant rectangle
+        // this.drawRectangle(data.rightSlant);
 
-        if(data.base) {
-            this.drawRectangle(data.base);
-        }
-        // Draw the middle line
-        this.drawMiddleLine(data);
+        // if(data.base) {
+        //     this.drawRectangle(data.base);
+        // }
+        // // Draw the middle line
+        // this.drawMiddleLine(data);
 
         // Draw base net vertices
     //     if(this.baseVerts?.length > 0) {
@@ -47,9 +48,62 @@ export default class GoalPostClient {
     //     }
     // }
 
+        const points = {
+            topLeft: data.base[0],
+            bottomLeft: data.base[1],
+            bottomRight: data.leftSlant[0],
+            topRight: data.rightSlant[1],
+        }
+
+        this.goalImg = PIXI.Sprite.from('./goal.png');
+        // place the goal image correctly and scale it
+        this.goalImg.x = points.topLeft.x;
+        this.goalImg.y = points.topLeft.y;
+        this.goalImg.width = (points.topRight.x - points.topLeft.x)*1.05;
+        this.goalImg.height = (points.bottomLeft.y - points.topLeft.y)*1.05
+        // rotate it 180 degrees around its center
+        this.goalImg.anchor.set(1);
+        this.goalImg.rotation = Math.PI;
+        this.app.stage.addChild(this.goalImg);
+
+        if(this.right) {
+            this.goalImg.x = points.topRight.x;
+            this.goalImg.anchor.set(0);
+            this.goalImg.rotation = 0;
+        }
+
+        Object.values(points).forEach(point => {
+            // draw a large dot at the point
+            this.graphics.beginFill(0xFFFFFF);
+            this.graphics.drawCircle(point.x, point.y, 5);
+            this.graphics.endFill();
+        });
+
+        this.drawOuterLines(points);
+
 
         // Add the graphics to the Pixi stage
         this.app.stage.addChild(this.graphics);
+    }
+
+    drawOuterLines(points) {
+       const ratios = {
+         penaltyBox: 1.5,
+         penaltyBoxSemiCircleRadius: 0.1,
+       }
+        // draw it
+        const penaltyBox = {
+            x: points.topLeft.x,
+            y: points.topLeft.y - (points.bottomLeft.y - points.topLeft.y) * (ratios.penaltyBox - 1) / 2,
+            width: (points.topRight.x - points.topLeft.x) * ratios.penaltyBox,
+            height: (points.bottomLeft.y - points.topLeft.y) * ratios.penaltyBox,
+
+        }
+
+        this.graphics.lineStyle(2, 0xFFFFFF, 1);
+        this.graphics.drawRect(penaltyBox.x, penaltyBox.y, penaltyBox.width, penaltyBox.height);
+
+
     }
 
     drawRectangle(edges) {
