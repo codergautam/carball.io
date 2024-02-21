@@ -15,8 +15,8 @@ module.exports = class Game {
         this.gameWorld = new GameWorld(config.WORLD_WIDTH, config.WORLD_HEIGHT);
         this.players = {};
         this.ball = new SoccerBall(400, 300);
-        this.leftGoal = new GoalPost(300, this.gameWorld.height / 2, 500, 300, false, this.gameWorld); // Create left goal post
-        this.rightGoal = new GoalPost(this.gameWorld.width - 300, this.gameWorld.height / 2, 500, 300, true, this.gameWorld); // Create right goal post
+        this.leftGoal = new GoalPost(10, this.gameWorld.height / 2, 500, 300, false, this.gameWorld); // Create left goal post
+        this.rightGoal = new GoalPost(this.gameWorld.width-10, this.gameWorld.height / 2, 500, 300, true, this.gameWorld); // Create right goal post
         this.gameCreationTime = Date.now();
         this.sockets = {};
 

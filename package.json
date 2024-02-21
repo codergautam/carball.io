@@ -7,12 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx webpack --config webpack.config.js",
     "watch": "npx webpack --config webpack.config.js --watch --mode development --devtool inline-source-map",
-    "start": "node ."
+    "start": "node .",
+    "dev": "nodemon ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pixi/layers": "^2.1.0",
     "express": "^4.18.2",
     "html-webpack-plugin": "^5.5.3",
     "matter-js": "^0.19.0",

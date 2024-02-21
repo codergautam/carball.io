@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 export default class BallArrowObject {
   constructor(app) {
     this.object = PIXI.Sprite.from("./ballArrow.png");
+    this.object.parentLayer = app.pixiLayer;
     this.object.anchor.set(0.5, 0.5);
     this.object.width = 100;
     this.object.height = 100;

@@ -5,6 +5,9 @@ export default class GoalPostClient {
         this.app = app;
         this.goalPostData = goalPostData;
         this.graphics = new PIXI.Graphics();
+        this.graphics.parentLayer = app.pixiLayer;
+        this.graphics.zOrder = 1;
+
         this.baseVerts = [];
         this.right = right;
         this.draw();
@@ -56,6 +59,8 @@ export default class GoalPostClient {
         }
 
         this.goalImg = PIXI.Sprite.from('./goal.png');
+        this.goalImg.parentLayer = this.app.pixiLayer;
+        this.goalImg.zOrder = 10;
         // place the goal image correctly and scale it
         this.goalImg.x = points.topLeft.x;
         this.goalImg.y = points.topLeft.y;
@@ -72,12 +77,15 @@ export default class GoalPostClient {
             this.goalImg.rotation = 0;
         }
 
-        Object.values(points).forEach(point => {
-            // draw a large dot at the point
-            this.graphics.beginFill(0xFFFFFF);
-            this.graphics.drawCircle(point.x, point.y, 5);
-            this.graphics.endFill();
-        });
+        // Object.values(points).forEach(point => {
+        //     // draw a large dot at the point
+        //     this.graphics.beginFill(0xFFFFFF);
+        //     this.graphics.drawCircle(point.x, point.y, 5);
+        //     this.graphics.endFill();
+        // });
+        // this.graphics.beginFill(0xFFFFFF);
+        // this.graphics.drawCircle(points.topLeft.x, points.topLeft.y, 5);
+        // this.graphics.endFill();
 
         this.drawOuterLines(points);
 
@@ -98,6 +106,12 @@ export default class GoalPostClient {
             width: (points.topRight.x - points.topLeft.x) * ratios.penaltyBox,
             height: (points.bottomLeft.y - points.topLeft.y) * ratios.penaltyBox,
 
+        }
+        if(this.right && (penaltyBox.width < 0 || penaltyBox.height < 0)) {
+            // modify the x and y to make sure the width and height are positive
+            penaltyBox.x = penaltyBox.x + penaltyBox.width;
+            penaltyBox.width = Math.abs(penaltyBox.width);
+            penaltyBox.height = Math.abs(penaltyBox.height);
         }
 
         this.graphics.lineStyle(2, 0xFFFFFF, 1);

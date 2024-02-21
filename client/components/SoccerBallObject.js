@@ -15,6 +15,8 @@ export default class SoccerBallObject {
     this.sprite.anchor.set(0.5); // Center anchor to the middle of the sprite
     this.sprite.width = 100;     // Set a specific width or scale accordingly
     this.sprite.height = 100;    // Set a specific height or scale accordingly
+    this.sprite.parentLayer = app.pixiLayer;
+    this.sprite.zOrder = 6;
     this.setupSprite();
   }
   setupSprite() {

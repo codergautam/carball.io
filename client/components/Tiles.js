@@ -9,11 +9,16 @@ const lineRatios = {
 export default function createTiles(app) {
 // Create tile background using background.png
 const background = PIXI.Sprite.from('background.png');
+background.parentLayer = app.pixiLayer;
+background.zOrder = -1;
 //Repeat the background image
 let tileSize = 250;
 for (let i = 0; i < WORLD_WIDTH / tileSize; i++) {
   for (let j = 0; j < WORLD_HEIGHT / tileSize; j++) {
     let tile = new PIXI.Sprite(background.texture);
+    tile.parentLayer = app.pixiLayer;
+    tile.zOrder = -1;
+    
     tile.width = tileSize;
     tile.height = tileSize;
     tile.x = i * tileSize;
@@ -24,6 +29,8 @@ for (let i = 0; i < WORLD_WIDTH / tileSize; i++) {
 
 // Draw the lines on the field
 const graphics = new PIXI.Graphics();
+graphics.parentLayer = app.pixiLayer;
+graphics.zOrder = 0;
 
 // Halfway line
 graphics.lineStyle(WORLD_WIDTH * lineRatios.halfwayLine.thicknessRatio, 0xFFFFFF);

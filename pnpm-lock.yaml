@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@pixi/layers':
+    specifier: ^2.1.0
+    version: 2.1.0(@pixi/canvas-renderer@7.4.0)(@pixi/core@7.3.1)(@pixi/display@7.3.1)
   express:
     specifier: ^4.18.2
     version: 4.18.2
@@ -111,6 +114,14 @@ packages:
       '@pixi/core': 7.3.1
       '@pixi/utils': 7.3.1
       '@types/css-font-loading-module': 0.0.7
+    dev: false
+
+  /@pixi/canvas-renderer@7.4.0(@pixi/core@7.3.1):
+    resolution: {integrity: sha512-lN6aB4hScv64jK95z6MfsFwPf2+faWgLr5tainwXFROgRfNqCIeI334wwvQPSeWHJ2Bv6O9K9p10/8zYDqsQAw==}
+    peerDependencies:
+      '@pixi/core': 7.4.0
+    dependencies:
+      '@pixi/core': 7.3.1
     dev: false
 
   /@pixi/color@7.3.1:
@@ -239,6 +250,18 @@ packages:
       '@pixi/core': 7.3.1
       '@pixi/display': 7.3.1(@pixi/core@7.3.1)
       '@pixi/sprite': 7.3.1(@pixi/core@7.3.1)(@pixi/display@7.3.1)
+    dev: false
+
+  /@pixi/layers@2.1.0(@pixi/canvas-renderer@7.4.0)(@pixi/core@7.3.1)(@pixi/display@7.3.1):
+    resolution: {integrity: sha512-e3p3xaHSkVF1jLTfiTEsFGNzGRPffTO0UkKbwA9pfBzRHIBOFM2mCbVqcdhgHSMXRFYr2FoOp1+zK9jJifEUug==}
+    peerDependencies:
+      '@pixi/canvas-renderer': ^7.0.0
+      '@pixi/core': ^7.0.0
+      '@pixi/display': ^7.0.0
+    dependencies:
+      '@pixi/canvas-renderer': 7.4.0(@pixi/core@7.3.1)
+      '@pixi/core': 7.3.1
+      '@pixi/display': 7.3.1(@pixi/core@7.3.1)
     dev: false
 
   /@pixi/math@7.3.1:

@@ -12,6 +12,8 @@ import BallArrowObject from './components/BallArrowObject';
 import fit from './helpers/screenScaling';
 import Matter from 'matter-js';
 import config from '../config';
+import { Layer, Stage } from '@pixi/layers';
+
 
 const vW = 1280;
 const vH = 720;
@@ -34,12 +36,16 @@ const keys = {
 }
 
 export default function startGame() {
+    const layer = new Layer();
 
     const app = new PIXI.Application({
         width: window.innerWidth,
         height: window.innerHeight,
         backgroundColor: 0x0e5e1e
     });
+    app.stage = new Stage();
+    app.pixiLayer = layer;
+    app.stage.addChild(app.pixiLayer);
     let inServer = false;
     document.body.appendChild(app.view);
     document.body.style.margin = "0"; // remove default margins
@@ -105,6 +111,8 @@ export default function startGame() {
 
     //create chat display
     client.chatDisplay = new PIXI.Text("", { font: "10px Arial", fill: "black" });
+    client.chatDisplay.parentLayer = app.pixiLayer;
+    client.chatDisplay.zOrder = 11;
     client.chatDisplay.anchor.set(0.5, 0.5);
     client.chatDisplay.x = 0;
     client.chatDisplay.y = 0;
@@ -337,6 +345,8 @@ export default function startGame() {
     //info when join a match (includes lobby)
 
     socket.on("info", (serverId, serverType, team, alreadyStarted) => {
+    app.pixiLayer.group.enableSort = true;
+
         client.serverType = serverId;
         console.log("Entered server: " + serverId);
         if (!inServer) {
@@ -568,7 +578,6 @@ export default function startGame() {
     //update timers and stuff not every render tick to make it super fast
     let guiTick = setInterval(() => {
         if (client.you == null) return;
-
         $("speedometer").innerHTML = client.speed + "mph";
         const fps = Math.round(app.ticker.FPS);
 

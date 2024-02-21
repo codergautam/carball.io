@@ -13,6 +13,9 @@ export default class PlayerObject {
         this.targetX = x;
         this.targetY = y;
         this.sprite = new PIXI.Sprite(); //PIXI.Sprite.from("./car.png");  // Using Sprite with your image
+        this.sprite.parentLayer = app.pixiLayer;
+        this.sprite.zOrder = 5;
+
         this.angle = 0;
         this.team = team;
         this.targetAngle = 0;
@@ -32,6 +35,7 @@ export default class PlayerObject {
         Matter.Composite.add(client.matterEngine.world, [this.matterBody]);
 
         this.trailGraphics = new PIXI.Graphics();   // Create a new graphics object for the trail
+        this.trailGraphics.parentLayer = app.pixiLayer;
         this.app.stage.addChild(this.trailGraphics); // Add the trail graphics to the stage
         this.self = self;
         this.history = [];  // Store historical positions and angles
@@ -52,6 +56,8 @@ export default class PlayerObject {
 
         this.boostImg.width = 50;
         this.boostImg.height = 50;
+
+
         //this.app.stage.addChild(this.text);
 
         this.sprite.addChild(this.carSprite);
