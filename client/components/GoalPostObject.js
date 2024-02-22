@@ -96,15 +96,16 @@ export default class GoalPostClient {
 
     drawOuterLines(points) {
        const ratios = {
-         penaltyBox: 1.5,
+         penaltyBoxW: 1.5,
+            penaltyBoxH: 1.8,
          penaltyBoxSemiCircleRadius: 0.1,
        }
         // draw it
         const penaltyBox = {
             x: points.topLeft.x,
-            y: points.topLeft.y - (points.bottomLeft.y - points.topLeft.y) * (ratios.penaltyBox - 1) / 2,
-            width: (points.topRight.x - points.topLeft.x) * ratios.penaltyBox,
-            height: (points.bottomLeft.y - points.topLeft.y) * ratios.penaltyBox,
+            y: points.topLeft.y - (points.bottomLeft.y - points.topLeft.y) * (ratios.penaltyBoxH - 1) / 2,
+            width: (points.topRight.x - points.topLeft.x) * ratios.penaltyBoxW,
+            height: (points.bottomLeft.y - points.topLeft.y) * ratios.penaltyBoxH,
 
         }
         if(this.right && (penaltyBox.width < 0 || penaltyBox.height < 0)) {
@@ -114,8 +115,21 @@ export default class GoalPostClient {
             penaltyBox.height = Math.abs(penaltyBox.height);
         }
 
-        this.graphics.lineStyle(2, 0xFFFFFF, 1);
+        this.graphics.lineStyle(5, 0xFFFFFF, 1);
         this.graphics.drawRect(penaltyBox.x, penaltyBox.y, penaltyBox.width, penaltyBox.height);
+
+        // semi circle
+        const semiCircle = {
+            x: penaltyBox.x + penaltyBox.width,
+            y: penaltyBox.y + penaltyBox.height / 2,
+            radius: penaltyBox.height * ratios.penaltyBoxSemiCircleRadius,
+        }
+        if(this.right) {
+            semiCircle.x = penaltyBox.x;
+            // arc the other way
+            this.graphics.arc(semiCircle.x, semiCircle.y, semiCircle.radius, Math.PI / 2, -Math.PI / 2, false);
+        } else this.graphics.arc(semiCircle.x, semiCircle.y, semiCircle.radius, Math.PI / 2, -Math.PI / 2, true);
+
 
 
     }
