@@ -115,7 +115,7 @@ export default class GoalPostClient {
             penaltyBox.height = Math.abs(penaltyBox.height);
         }
 
-        this.graphics.lineStyle(5, 0xFFFFFF, 1);
+        this.graphics.lineStyle(10, 0xFFFFFF, 1);
         this.graphics.drawRect(penaltyBox.x, penaltyBox.y, penaltyBox.width, penaltyBox.height);
 
         // semi circle

@@ -7,6 +7,7 @@ export default class BallArrowObject {
     this.object.anchor.set(0.5, 0.5);
     this.object.width = 100;
     this.object.height = 100;
+    this.object.zOrder = 10;
     this.object.visible=false;
 
     this.app = app;
