@@ -10,7 +10,6 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
     font-family: poppins;
     overflow: hidden;
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
@@ -419,7 +418,7 @@ h1 {
 
   /* Modal Content */
   .modal-content {
-    background-color: #fefefe;
+    background-color: rgba(255, 255, 255, 0.4);
     margin: 5% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
@@ -528,3 +527,17 @@ h1 {
       font-size: 10em !important;
     }
   }
+
+.bg {
+    background-size: cover;
+    background-color: #464646;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    transition: all 0.5s ease;
+}
