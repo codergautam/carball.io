@@ -1,6 +1,8 @@
 
 hidden = [".config", "package-lock.json"]
 run = "npm run start"
+entrypoint = "index.js"
+modules = ["nodejs-20:v8-20230920-bd784b9"]
 
 [[hints]]
 regex = "Error \\[ERR_REQUIRE_ESM\\]"
@@ -79,6 +81,11 @@ pattern = "**/{*.js,*.jsx,*.ts,*.tsx,*.json}"
 start = "typescript-language-server --stdio"
 
 [deployment]
-run = ["sh", "-c", "npm run start"]
-deploymentTarget = "cloudrun"
+run = ["sh", "-c", "pnpm start"]
+deploymentTarget = "gce"
 ignorePorts = false
+build = ["sh", "-c", "pnpm build"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80

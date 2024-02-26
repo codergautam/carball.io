@@ -174,36 +174,37 @@ let lastTpsReport = Date.now();
 let avgTimePerUpdate = 0;
 let tps = 0;
 
-function gameLoop() {
+  function memUsageInMB() {
+    return (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+  }
+  function updateGame() {
     let now = Date.now();
     let delta = now - lastUpdate;
-    if (delta < 1000 / 60) { // Ensure we don't update more than 60 times per second
-        setImmediate(gameLoop);
-        return;
+
+    // Update game state for each game
+    for (let i in Games) {
+        Games[i].update(lastUpdate);
     }
 
-    for (let i in Games)
-        Games[i].update(lastUpdate);
-
+    // Update performance metrics
     tpsCounter++;
-    avgTimePerUpdate = (avgTimePerUpdate + (Date.now() - now)) / 2;
-    if (Date.now() - lastTpsReport >= 1000) {
+    avgTimePerUpdate = (avgTimePerUpdate + (now - lastUpdate)) / 2;
+
+    // Report TPS and memory usage every second
+    if (now - lastTpsReport >= 1000) {
         tps = tpsCounter;
         tpsCounter = 0;
-        // console.clear();
-        // console.log('carball.io :)')
-        // console.log("tps: " + tps);
-        // console.log("games: " + Object.keys(Games).length);
-        // console.log("players: " + getTotalPlayerCount());
-        lastTpsReport = Date.now();
+        console.clear();
+        console.log(`Carball Server\n\n${getTotalPlayerCount()} players\nTPS: ${tps}\n${memUsageInMB()} MB`);
+        lastTpsReport = now;
     }
 
-    lastUpdate = Date.now();
-    setImmediate(gameLoop);
-}
+    lastUpdate = now;
+  }
 
-// Start the game loop
-gameLoop();
+  // Start the game loop with a target of 60 updates per second
+  const updateInterval = 1000 / 60; // Approximately 16.67ms
+  setInterval(updateGame, updateInterval);
 
 app.get('/api/serverInfo', (req, res) => {
   const gamesCount = Object.keys(Games).length;
