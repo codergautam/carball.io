@@ -71,6 +71,7 @@ io.on("connection", (socket) => {
         }
     });
     socket.on('close', () => {
+        if(!socket._carballserver) return;
         Games[socket._carballserver].removePlayer(socket);
         delete sockets[socket.id];
     });
