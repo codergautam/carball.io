@@ -1,6 +1,6 @@
 import { interpolateEntityAngle, interpolateEntityX, interpolateEntityY } from "./utils";
 import * as PIXI from 'pixi.js';
-
+import { DropShadowFilter } from "@pixi/filter-drop-shadow";
 export default class SoccerBallObject {
   constructor(x, y,angle, app) {
     this.x = x;
@@ -22,6 +22,12 @@ export default class SoccerBallObject {
   setupSprite() {
     // Add the sprite to the Pixi stage
     this.app.stage.addChild(this.sprite);
+
+    const dropShadowFilter = new DropShadowFilter();
+    dropShadowFilter.distance = 15;
+    dropShadowFilter.blur = 5;
+    dropShadowFilter.alpha = 0.6;
+    this.sprite.filters = [dropShadowFilter];
   }
   draw(client) {
     // Update the position of the sprite instead of drawing a circle

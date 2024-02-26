@@ -2,6 +2,7 @@ import { interpolateEntityAngle, interpolateEntityX, interpolateEntityY } from "
 import cosmetics from "../../shared/cosmetics.json";
 import * as PIXI from 'pixi.js';
 import Matter from "matter-js";
+import { DropShadowFilter } from "@pixi/filter-drop-shadow";
 const trailSpeedTresh = 40;
 export default class PlayerObject {
     constructor(id, x, y, self, app, client, name, team, skin) {
@@ -48,6 +49,11 @@ export default class PlayerObject {
         this.chat.anchor.set(0.5, 4.0);
 
 
+        const shadow = new DropShadowFilter();
+        shadow.distance = 5;
+        shadow.blur = 5;
+        shadow.alpha = 0.6;
+        this.sprite.filters = [shadow];
         this.carSprite = PIXI.Sprite.from(`./${cosmetics[skin].bodyImage ?? "car.png"}`);
         this.carSprite.anchor.set(0.5, 0.5);
 
