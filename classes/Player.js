@@ -63,10 +63,10 @@ module.exports = class Player {
     }
     updatePosition() {
         let body = this.body;
-        let torque = 400;
+        let torque = 600;
 
         if(typeof this.movement.angle == "number") {
-            torque = 500;
+            torque = 800;
          this.updateRotation(torque);
         }
 
