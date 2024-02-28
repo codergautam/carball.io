@@ -3,7 +3,7 @@ const Matter = require("matter-js");
 module.exports = class SoccerBall {
     constructor(x, y) {
         this.body = Matter.Bodies.circle(x, y, 50, {
-            mass: 5,
+            mass: 4,
             restitution: 1.5,
             frictionAir: 0.015,
             inertia: 1500

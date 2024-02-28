@@ -367,9 +367,6 @@ export default function startGame() {
         //start countdown
         $("countdown").style.visibility = "visible";
         countdown(3);
-
-        // Remove the loading screen when the game is ready
-        document.body.removeChild(loadingScreen);
     });
 
     function countdown(number) {
@@ -487,11 +484,9 @@ export default function startGame() {
         // Create goal posts
         if (leftGoal) {
             goalPosts.leftGoal = new GoalPostClient(app, leftGoal);
-            goalPosts.leftGoal.draw();
         }
         if (rightGoal) {
             goalPosts.rightGoal = new GoalPostClient(app, rightGoal, true);
-            goalPosts.rightGoal.draw();
         }
 
         // if not exists make the ball
@@ -521,21 +516,10 @@ export default function startGame() {
         }
 
         handleSoccerBall(ball);
-        handleGoalVerts(goalVerts);
 
         client.lastUpdate = Date.now();
     });
 
-
-    function handleGoalVerts(goalVerts) {
-        if (!goalVerts) return;
-        if (goalVerts.leftGoal && goalPosts.leftGoal) {
-            goalPosts.leftGoal.handleGoalVerts(goalVerts.leftGoal);
-        }
-        if (goalVerts.rightGoal && goalPosts.rightGoal) {
-            goalPosts.rightGoal.handleGoalVerts(goalVerts.rightGoal);
-        }
-    }
 
     function handleSoccerBall(ballData) {
         if (!client.ball) return;

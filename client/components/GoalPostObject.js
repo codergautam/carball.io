@@ -6,6 +6,7 @@ export default class GoalPostClient {
         this.goalPostData = goalPostData;
         this.graphics = new PIXI.Graphics();
         this.graphics.parentLayer = app.pixiLayer;
+      this.goalImg = null;
         this.graphics.zOrder = 1;
 
         this.baseVerts = [];
@@ -15,9 +16,15 @@ export default class GoalPostClient {
 
     draw() {
         const data = this.goalPostData;
+      console.log("drawing a goal post")
 
         // Clear any previous graphics
         this.graphics.clear();
+      // clear previous img
+      if(this.goalImg) {
+        this.goalImg.destroy();
+        this.goalImg = null;
+      }
 
         // Set the line style for drawing
         this.graphics.lineStyle(2, 0xFFFFFF, 1);
@@ -155,15 +162,10 @@ export default class GoalPostClient {
 
     }
 
-    handleGoalVerts(verts) {
-        console.log('verts', verts);
-        this.baseVerts = verts;
-        this.draw();
-    }
-
 
     clear() {
         // Remove the line from the Pixi stage
         this.app.stage.removeChild(this.graphics);
+      this.app.stage.removeChild(this.goalImg);
     }
 }

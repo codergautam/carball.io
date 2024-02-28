@@ -12,7 +12,7 @@ module.exports = class Player {
         this.movement = { "up": false, "down": false, "left": false, "right": false, angle: undefined };
         const dimensions = [160, 90]
         this.body = Matter.Bodies.rectangle(100, 100, dimensions[0]*0.95, dimensions[1]*0.95, {
-            mass: 5,
+            mass: 10,
             restitution: 1,
             //friction: 0.1,  THIS is friction with other objects
             frictionAir: 0.07,
@@ -20,7 +20,7 @@ module.exports = class Player {
         });
         //Matter.Body.setInertia(this.body, 500000);
         this.name = "VROOM";
-        this.speed = 0.14;
+        this.speed = 0.2;
         this.team = team;
         this.boostFuel = 0;
         this.boosting = false;
@@ -63,10 +63,9 @@ module.exports = class Player {
     }
     updatePosition() {
         let body = this.body;
-        let torque = 600;
+        let torque = 400;
 
         if(typeof this.movement.angle == "number") {
-            torque = 800;
          this.updateRotation(torque);
         }
 
