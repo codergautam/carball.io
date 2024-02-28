@@ -22,7 +22,7 @@ const Game = require('./classes/Game');
 // Cosmetics
 const cosmetics = require('./shared/cosmetics.json');
 
-const maintenance = process.env.maintenance || false;
+const maintenance = false;
 // const maintenance= true
 app.use(express.static('assets'));
 

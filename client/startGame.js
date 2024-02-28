@@ -275,6 +275,7 @@ export default function startGame() {
     window.enableMobileControls = function () {
         $("mobile").style.visibility = "visible";
         client.mobile = true;
+        movementMode = 'keys';
 
         if (client.mobile) {
             // try to go full screen
