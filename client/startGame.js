@@ -344,9 +344,9 @@ export default function startGame() {
     let goalPosts = {};
 
     //info when join a match (includes lobby)
+  app.pixiLayer.group.enableSort = true;
 
     socket.on("info", (serverId, serverType, team, alreadyStarted) => {
-    app.pixiLayer.group.enableSort = true;
 
         client.serverType = serverId;
         console.log("Entered server: " + serverId);
@@ -476,17 +476,12 @@ export default function startGame() {
     });
 
     socket.on('goalPosts', ({ leftGoal, rightGoal }) => {
-        if (goalPosts.leftGoal) {
-            goalPosts.leftGoal.clear();
-        }
-        if (goalPosts.rightGoal) {
-            goalPosts.rightGoal.clear();
-        }
+       
         // Create goal posts
-        if (leftGoal) {
+        if (leftGoal && !goalPosts.leftGoal) {
             goalPosts.leftGoal = new GoalPostClient(app, leftGoal);
         }
-        if (rightGoal) {
+        if (rightGoal && !goalPosts.rightGoal) {
             goalPosts.rightGoal = new GoalPostClient(app, rightGoal, true);
         }
 
