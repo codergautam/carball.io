@@ -476,7 +476,8 @@ export default function startGame() {
     });
 
     socket.on('goalPosts', ({ leftGoal, rightGoal }) => {
-       
+        if(window.goalsRendered) return;
+      window.goalsRendered = true;
         // Create goal posts
         if (leftGoal && !goalPosts.leftGoal) {
             goalPosts.leftGoal = new GoalPostClient(app, leftGoal);

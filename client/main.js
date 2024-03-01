@@ -9,6 +9,7 @@ window['$'] = function (x) {
 }
 
 window.isMobile = window.matchMedia("(pointer: coarse)").matches;
+window.goalsRendered = false; 
 
 if(window.isMobile) {
   document.getElementById("controlsDiv").style.display = "none";
