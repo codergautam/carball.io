@@ -236,7 +236,6 @@ export default function startGame() {
 
     window.openMobileChat = function () {
         if (client.chatOpen) return handleMobileChatClose();
-      window.disableJoystickArea();
         client.chatOpen = true;
         chatInput.style.display = '';
         // focus the input
@@ -253,8 +252,6 @@ export default function startGame() {
 
     function handleMobileChatClose(event) {
         sendChat(chatInput.value);
-      window.enableJoystickArea();
-
         client.chatOpen = false;
         client.chatDisplay.text = chatInput.value;
         document.body.focus();
