@@ -13,7 +13,7 @@ import fit from './helpers/screenScaling';
 import Matter from 'matter-js';
 import config from '../config';
 import { Layer, Stage } from '@pixi/layers';
-
+import nipplejs from 'nipplejs';
 
 const vW = 1280;
 const vH = 720;
@@ -68,7 +68,7 @@ export default function startGame() {
     const players = {};
 
     const socket = new SocketWrapper(config.GAME_SERVER? 'wss://'+config.GAME_SERVER : null);
-  
+
     const pinger = new Pinger(socket);
 
     //throw all global variables in here
@@ -110,6 +110,8 @@ export default function startGame() {
 
     createTiles(app);
 
+
+
     //create chat display
     client.chatDisplay = new PIXI.Text("", { font: "10px Arial", fill: "black" });
     client.chatDisplay.parentLayer = app.pixiLayer;
@@ -132,6 +134,28 @@ export default function startGame() {
         $("playerCountTotal").style.display = "none";
         $("skinsButton").style.display = "none";
         socket.emit("join", document.getElementById("nameInput").value, window.equippedSkin ?? 1);
+
+
+        if(client.mobile) {
+            var options = {
+                mode: 'semi',
+                size: 150,
+                color: 'blue'
+            };
+            var manager = nipplejs.create(options);
+            manager.on('move', function (evt, data) {
+                activeKeys['angle'] = Math.round(data.angle.degree*-1);
+                activeKeys['forward'] = true;
+                emitPlayerMovement();
+            });
+
+            manager.on('end', function (evt, data) {
+                activeKeys['forward'] = false;
+                emitPlayerMovement();
+            });
+
+            client.joyStick = manager;
+        }
     });
 
     let activeKeys = {};
@@ -590,6 +614,9 @@ export default function startGame() {
         if (client.mobile) {
             $("mobile").removeEventListener("touchstart", handleMobileTouchStart);
             $("mobile").removeEventListener("touchend", handleMobileTouchEnd);
+            if(client.joyStick) {
+                client.joyStick.destroy();
+            }
         }
     }
 
