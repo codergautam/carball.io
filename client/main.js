@@ -8,11 +8,24 @@ window['$'] = function (x) {
     return document.getElementById(x);
 }
 
+
 window.isMobile = window.matchMedia("(pointer: coarse)").matches;
 // window.isMobile = true;
 window.goalsRendered = false;
 
+
+const joystickDiv = document.getElementById('joystickZone')
+window.enableJoystickArea = () => {
+  if(!window.isMobile) return;
+  joystickDiv.style.visibility = "visible";
+}
+window.disableJoystickArea = () => {
+  joystickDiv.style.visibility = 'hidden';
+}
+window.disableJoystickArea();
+
 if(window.isMobile) {
+  alert("Using beta mobile support");
   document.getElementById("controlsDiv").style.display = "none";
 }
 

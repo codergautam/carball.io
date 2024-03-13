@@ -138,11 +138,13 @@ export default function startGame() {
 
         if(client.mobile) {
             var options = {
-                mode: 'semi',
+                mode: 'dynamic',
                 size: 150,
-                color: 'blue'
+                color: 'blue',
+              zone: document.getElementById('joystickZone')
             };
             var manager = nipplejs.create(options);
+          window.enableJoystickArea();
             manager.on('move', function (evt, data) {
                 activeKeys['angle'] = Math.round(data.angle.degree*-1);
                 activeKeys['forward'] = true;
@@ -153,7 +155,6 @@ export default function startGame() {
                 activeKeys['forward'] = false;
                 emitPlayerMovement();
             });
-
             client.joyStick = manager;
         }
     });
@@ -235,6 +236,7 @@ export default function startGame() {
 
     window.openMobileChat = function () {
         if (client.chatOpen) return handleMobileChatClose();
+      window.disableJoystickArea();
         client.chatOpen = true;
         chatInput.style.display = '';
         // focus the input
@@ -251,6 +253,8 @@ export default function startGame() {
 
     function handleMobileChatClose(event) {
         sendChat(chatInput.value);
+      window.enableJoystickArea();
+
         client.chatOpen = false;
         client.chatDisplay.text = chatInput.value;
         document.body.focus();
@@ -307,7 +311,7 @@ export default function startGame() {
             try {
                 document.body.requestFullscreen();
             } catch (e) {
-                alert("Could not go full screen", e);
+              console.log("Failed full screen", e)
             }
         }
 
@@ -616,6 +620,7 @@ export default function startGame() {
             $("mobile").removeEventListener("touchend", handleMobileTouchEnd);
             if(client.joyStick) {
                 client.joyStick.destroy();
+              window.disableJoystickArea();
             }
         }
     }
