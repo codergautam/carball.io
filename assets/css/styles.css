@@ -60,7 +60,6 @@ body, html {
     filter: drop-shadow(5px 5px 1px rgba(255, 0, 0, 0.2));
     @media screen and (max-height: 600px) {
         padding: 20px;
-
     }
 }
 
