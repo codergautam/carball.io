@@ -538,7 +538,6 @@ export default function startGame() {
     });
 
     socket.on('fPU', (playersArray) => {
-        console.log("fPU", playersArray);
         for (let p of playersArray) {
 
             // n -> name
@@ -602,7 +601,8 @@ export default function startGame() {
 
     function handleSoccerBall(ballData) {
         if (!client.ball) return;
-        client.ball.updatePosition(ballData.x, ballData.y, ballData.angle, client);
+        // a -> angle
+        client.ball.updatePosition(ballData.x, ballData.y, ballData.a, client);
     }
 
     let ticker = app.ticker.add(() => {
