@@ -53,6 +53,6 @@ module.exports = class SoccerBall {
     }
 
     exportJSON() {
-        return { x: Math.round(this.body.position.x), y: Math.round(this.body.position.y), angle: Math.round(this.body.angle*100)/100 }
+        return { x: Math.round(this.body.position.x), y: Math.round(this.body.position.y), a: Math.round(this.body.angle*100)/100 }
     };
 }

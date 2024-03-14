@@ -150,6 +150,13 @@ module.exports = class Game {
             leftGoal: this.leftGoal.exportJSON(),
             rightGoal: this.rightGoal.exportJSON()
         });
+
+        // tell everyone about the new player (fpu = Full Player Update)
+        this.emit("fPU", [this.players[socket.id].exportInitialJSON()]);
+        // tell the new player about everyone else
+        const playersData = Object.values(this.players).map(p => p.exportInitialJSON()).filter(p => p.id !== socket.id);
+        if(playersData.length>0) socket.emit("fPU", playersData);
+
     }
     handleBoost(socket) {
         if (!(socket.id in this.players)) return;
@@ -279,16 +286,16 @@ module.exports = class Game {
 
         // Prepare the data packet
         let pack = {
-            updatedPlayers: {},
-            ball: this.ball.exportJSON(),
+            p: {},
+            b: this.ball.exportJSON(),
             // goalVerts: {
             //     leftGoal: this.leftGoal.exportVerts(),
             //     rightGoal: this.rightGoal.exportVerts()
             // }
         };
         for (let i in this.players) {
-            pack.updatedPlayers[i] = this.players[i].exportJSON();
+            pack.p[i] = this.players[i].exportUpdateJSON();
         }
-        this.emit('update', pack);
+        this.emit('u', pack);
     }
 }

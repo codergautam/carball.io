@@ -2,6 +2,17 @@ const { v4: uuidv4 } = require('uuid');
 const { WebSocketServer } = require('ws');
 const dns = require("node:dns");
 const { URL } = require("node:url");
+
+//assume there arent 50k clients at once
+const max_id = 50000;
+let cur_id = 0;
+function idgen() {
+    if(cur_id >= max_id) cur_id = 0;
+    cur_id++;
+    console.log(cur_id);
+    return cur_id;
+}
+
 /*
 TODO:
 -binary format
@@ -155,7 +166,7 @@ class WebSocket {
         //WebSocket.servers.push(this);
         this.wss.on("connection", (ws, req) => {
             let ip = req.headers['x-forwarded-for'];
-            let id = uuidv4();
+            let id = idgen();
             this.clients[id] = new Client(ws, this, id, ip);
             this.bindClient(this.clients[id]);
             this.bindEvents(this.clients[id]);

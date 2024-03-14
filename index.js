@@ -88,6 +88,17 @@ io.on("connection", (socket) => {
     socket.on('move', (directions) => {
         Games[socket._carballserver].handleMovement(socket, directions);
     });
+    // socket.on('requestPlayer', (id) => {
+    //     const game = Games[socket._carballserver];
+    //     console.log('request for player', id)
+    //     if(game) {
+    //         const player = game.players[id];
+    //         if(player) {
+    //             console.log('sending player info', player);
+    //             socket.emit('fPU', [player.exportInitialJSON()]);
+    //         }
+    //     }
+    // })
 });
 
 

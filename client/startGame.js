@@ -92,6 +92,9 @@ export default function startGame() {
         targetZoom: initZoom,
         zoom: initZoom,
         matterEngine: Matter.Engine.create(),
+        lastAngleSent: null,
+        lastAngleSendTime: 0,
+        lastKeysSent: null,
     }
 
     console.log("Client", client);
@@ -354,6 +357,17 @@ export default function startGame() {
     document.addEventListener('mousemove', handleMouseMove);
 
     function emitPlayerMovement() {
+        if(activeKeys['angle'] !== undefined) {
+            if ((Math.abs(client.lastAngleSent - activeKeys['angle']) < 2) || Date.now() - client.lastAngleSendTime < 50) return;
+            client.lastAngleSent = activeKeys['angle'];
+            client.lastAngleSendTime = Date.now();
+        }
+        if( movementMode === 'keys' && !activeKeys['angle'] ) {
+            console.log(activeKeys, client.lastKeysSent)
+            if(JSON.stringify(activeKeys) === client.lastKeysSent) return;
+            client.lastKeysSent = JSON.stringify(activeKeys);
+        }
+
         socket.emit('move', activeKeys)
     }
 
@@ -523,18 +537,60 @@ export default function startGame() {
         pinger.onPong();
     });
 
-    socket.on('update', ({ updatedPlayers, ball, leftGoal, rightGoal, goalVerts }) => {
+    socket.on('fPU', (playersArray) => {
+        console.log("fPU", playersArray);
+        for (let p of playersArray) {
+
+            // n -> name
+            // t -> team
+            // a -> angle
+            // b - boost
+            // bi -> boosting
+            // s -> skin
+            p.name = p.n;
+            p.team = p.t;
+            p.angle = p.a;
+            p.boost = p.b;
+            p.boosting = p.bi;
+            p.skin = p.s;
+
+            if (players[p.id]) {
+                console.log("Player already exists", p.id);
+                players[p.id].updatePosition(p.x, p.y, p.angle, p.boosting, client);
+                players[p.id].boost = p.boost;
+                players[p.id].name = p.name;
+                players[p.id].team = p.team;
+                players[p.id].skin = p.skin;
+            } else players[p.id] = new PlayerObject(p.id, p.x, p.y, p.id === client.socketid, app, client, p.name, p.team, p.skin);
+            if (p.id == client.socketid)
+                client.you = players[p.id];
+        }
+    })
+
+    socket.on('u', ({ p: updatedPlayers, b: ball }) => {
         for (let id in updatedPlayers) {
             // Minus 90 degrees because the sprite is facing up
+
+            // a -> angle
+            // b - boost
+            // bi -> boosting
+
+            updatedPlayers[id].angle = updatedPlayers[id].a;
+            updatedPlayers[id].boosting = updatedPlayers[id].bi;
+            updatedPlayers[id].boost = updatedPlayers[id].b;
 
             updatedPlayers[id].angle -= Math.PI / 2;
             if (players[id]) {
                 players[id].updatePosition(updatedPlayers[id].x, updatedPlayers[id].y, updatedPlayers[id].angle, updatedPlayers[id].boosting, client);
                 players[id].boost = updatedPlayers[id].boost;
             } else {
-                players[id] = new PlayerObject(id, updatedPlayers[id].x, updatedPlayers[id].y, id === client.socketid, app, client, updatedPlayers[id].name, updatedPlayers[id].team, updatedPlayers[id].skin);
-                if (id == client.socketid)
-                    client.you = players[id];
+                console.warn("Received update for non-existent player", id);
+                // request the player
+                // socket.emit('requestPlayer', id);
+
+                // players[id] = new PlayerObject(id, updatedPlayers[id].x, updatedPlayers[id].y, id === client.socketid, app, client, updatedPlayers[id].name, updatedPlayers[id].team, updatedPlayers[id].skin);
+                // if (id == client.socketid)
+                //     client.you = players[id];
             }
         }
 
@@ -555,6 +611,10 @@ export default function startGame() {
             players[id].interpolatePosition(client);
         }
 
+
+        if(activeKeys['angle'] !== undefined) {
+            emitPlayerMovement();
+        }
 
         // Check active keys and send movement
         //emitPlayerMovement();

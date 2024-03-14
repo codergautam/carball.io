@@ -19,7 +19,7 @@ module.exports = class Player {
             //frictionStatic: 0.5  THIS is friction with other objects
         });
         //Matter.Body.setInertia(this.body, 500000);
-        this.name = "VROOM";
+        this.name = "Carball.io Player";
         this.speed = 0.2;
         this.team = team;
         this.boostFuel = 0;
@@ -115,16 +115,29 @@ module.exports = class Player {
         Matter.Body.setAngularVelocity(this.body, angularVelocity);
     }
 
-    exportJSON() {
+    // todo: minimize this further by only sending fuel data to the playing client
+    exportInitialJSON(self=true) {
         return {
-            name: this.name,
-            team: this.team,
+            n: this.name,
+            t: this.team,
             x: Math.round(this.body.position.x),
             y: Math.round(this.body.position.y),
-            angle: Math.round(this.body.angle * 100) / 100,
-            boost: this.boostFuel,
-            boosting: this.boosting,
-            skin: this.skin
+            a: Math.round(this.body.angle * 100) / 100,
+            b: self?this.boostFuel: undefined,
+            bi: this.boosting,
+            s: this.skin,
+            id: this.id
+        }
+    }
+
+    exportUpdateJSON(self=true) {
+        return {
+            x: Math.round(this.body.position.x),
+            y: Math.round(this.body.position.y),
+            a: Math.round(this.body.angle * 100) / 100,
+            b: self?this.boostFuel: undefined,
+            bi: this.boosting,
+            id: this.id
         }
     }
 }
