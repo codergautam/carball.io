@@ -21,6 +21,7 @@ const Game = require('./classes/Game');
 
 // Cosmetics
 const cosmetics = require('./shared/cosmetics.json');
+// allow cors
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
