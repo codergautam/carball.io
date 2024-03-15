@@ -1,3 +1,4 @@
+import preloadImages from "./preloadImgs";
 import { initSkinShop } from "./skinShop";
 import startGame from "./startGame";
 
@@ -12,6 +13,8 @@ window['$'] = function (x) {
 window.isMobile = window.matchMedia("(pointer: coarse)").matches;
 // window.isMobile = true;
 window.goalsRendered = false;
+
+preloadImages()
 
 
 const joystickDiv = document.getElementById('joystickZone')

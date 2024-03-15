@@ -58,7 +58,7 @@ body, html {
     flex-direction: column;
     align-items: center;
     filter: drop-shadow(5px 5px 1px rgba(255, 0, 0, 0.2));
-    @media screen and (max-height: 600px) {
+  @media screen and (max-height: 600px), screen and (max-width: 400px) {
         padding: 20px;
     }
 }
@@ -70,7 +70,7 @@ body, html {
     z-index: 1000;
     color: #000000;
     font-size: 1.2em;
-    @media screen and (max-height: 600px) {
+  @media screen and (max-height: 600px), screen and (max-width: 400px) {
         font-size: 0.8em;
     }
   font-weight: bold;
@@ -134,9 +134,11 @@ h1 {
     font-size: 1.2em;
     border: 2px solid #bbbbbb;
     filter: drop-shadow(0px 5px 0px #999);
-    @media screen and (max-height: 600px) {
+    @media screen and (max-height: 600px), screen and (max-width: 400px) {
         font-size: 0.6em;
     }
+
+  
 
 }
 
@@ -154,7 +156,7 @@ h1 {
     cursor: pointer;
     transition: background 0.2s, padding 0.2s ease;
 
-    @media screen and (max-height: 600px) {
+  @media screen and (max-height: 600px), screen and (max-width: 400px) {
         font-size: 0.6em;
     }
 }
@@ -164,7 +166,7 @@ h1 {
     padding: 15px 20px;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-height: 600px), screen and (max-width: 400px) {
     body, html {
         flex-direction: column;
     }
@@ -286,13 +288,13 @@ h1 {
 .controls {
     p {
         margin: 10px;
-        @media screen and (max-height: 600px) {
+      @media screen and (max-height: 600px), screen and (max-width: 400px) {
             margin: 0px;
         }
     }
     label {
         font-size: 1.2em;
-        @media screen and (max-height: 600px) {
+      @media screen and (max-height: 600px), screen and (max-width: 400px) {
             font-size: 0.6em;
         }
     }
