@@ -81,7 +81,7 @@ window.rematch = function () {
 
 function updatePlayerCnt() {
   const element = document.getElementById("playerCountTotal");
-  fetch("/api/serverInfo").then(res => res.json()).then(data => {
+  fetch(`${config.GAME_SERVER?'https://'+config.GAME_SERVER:''}/api/serverInfo`).then(res => res.json()).then(data => {
     if(!data || !data.hasOwnProperty("playersCount")) return;
     element.innerHTML = data.playersCount+" players online"
   });

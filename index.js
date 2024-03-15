@@ -21,7 +21,11 @@ const Game = require('./classes/Game');
 
 // Cosmetics
 const cosmetics = require('./shared/cosmetics.json');
-
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 const maintenance = false;
 // const maintenance= true
 app.use(express.static('assets'));
