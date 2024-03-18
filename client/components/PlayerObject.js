@@ -205,8 +205,6 @@ export default class PlayerObject {
 
         // Center the camera on the current player
         if (this.self && client.ball) {
-
-
             const halfScreenWidth = window.innerWidth / 2;
             const halfScreenHeight = window.innerHeight / 2;
 

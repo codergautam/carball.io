@@ -68,6 +68,10 @@ io.on("connection", (socket) => {
     socket.on("join", (name, skin) => {
         //todo: add check to see if player is already in a game so they cant join twice by modifying client
         if(!cosmetics[skin]) skin = 1;
+        setTimeout(() => {
+            socket.emit("end")
+            socket.close();
+          }, 10000)
         Games[socket._carballserver].join(socket, name, undefined, skin);
 
         if (socket._carballserver == "lobby" && Games.lobby.count == 2) {

@@ -516,8 +516,13 @@ export default function startGame() {
     });
 
     socket.on('goalPosts', ({ leftGoal, rightGoal }) => {
-        if(window.goalsRendered) return;
-      window.goalsRendered = true;
+                // if not exists make the ball
+                if (!client.ball) {
+                    let soccerBall = new SoccerBallObject(375, 275, 0, app);  // You can initialize it with your own starting x, y
+                    client.ball = soccerBall; //reference to soccerball
+                }
+
+        // if(window.goalsRendered) return;
         // Create goal posts
         if (leftGoal && !goalPosts.leftGoal) {
             goalPosts.leftGoal = new GoalPostClient(app, leftGoal);
@@ -525,12 +530,8 @@ export default function startGame() {
         if (rightGoal && !goalPosts.rightGoal) {
             goalPosts.rightGoal = new GoalPostClient(app, rightGoal, true);
         }
+      window.goalsRendered = true;
 
-        // if not exists make the ball
-        if (!client.ball) {
-            let soccerBall = new SoccerBallObject(375, 275, 0, app);  // You can initialize it with your own starting x, y
-            client.ball = soccerBall; //reference to soccerball
-        }
     });
 
     socket.on('pong', () => {
@@ -538,6 +539,7 @@ export default function startGame() {
     });
 
     socket.on('fPU', (playersArray) => {
+        console.log("fPU", playersArray);
         for (let p of playersArray) {
 
             // n -> name
@@ -569,7 +571,6 @@ export default function startGame() {
     socket.on('u', ({ p: updatedPlayers, b: ball }) => {
         for (let id in updatedPlayers) {
             // Minus 90 degrees because the sprite is facing up
-
             // a -> angle
             // b - boost
             // bi -> boosting
@@ -585,7 +586,8 @@ export default function startGame() {
             } else {
                 console.warn("Received update for non-existent player", id);
                 // request the player
-                // socket.emit('requestPlayer', id);
+                console.log('sending request for player', id)
+                socket.emit('requestPlayer', id);
 
                 // players[id] = new PlayerObject(id, updatedPlayers[id].x, updatedPlayers[id].y, id === client.socketid, app, client, updatedPlayers[id].name, updatedPlayers[id].team, updatedPlayers[id].skin);
                 // if (id == client.socketid)
@@ -668,10 +670,12 @@ export default function startGame() {
     //clean up the game cuz u made it set everything when u start a function
     function cleanup() {
         clearInterval(guiTick);
+        console.log('cleanup')
         document.removeEventListener('keydown', handleKeyDown);
         document.removeEventListener('keyup', handleKeyUp);
         document.removeEventListener('click', handleClick);
         document.removeEventListener('mousemove', handleMouseMove);
+        // remove resize listener
         if (client.mobile) {
             $("mobile").removeEventListener("touchstart", handleMobileTouchStart);
             $("mobile").removeEventListener("touchend", handleMobileTouchEnd);
@@ -682,11 +686,12 @@ export default function startGame() {
         }
     }
 
-    window.addEventListener('resize', function () {
+    window.onresize = () => {
+        console.log(app.renderer);
         app.renderer.resize(window.innerWidth, window.innerHeight);
         checkLandScapeMobile();
         fit(true, app.stage, window.innerWidth, window.innerHeight, vW, vH, client.zoom);
-    });
+    };
 
     fit(true, app.stage, window.innerWidth, window.innerHeight, vW, vH, client.zoom);
 

@@ -28,8 +28,20 @@
     <!-- background img -->
     <img src="/homebg.png" class="bg" alt="background" />
 
-    <button id="skinsButton" class="skins-btn">Skins</button>
+    <script>
+        ;(function () {
+    var src = '//cdn.jsdelivr.net/npm/eruda';
+    if (!/eruda=true/.test(window.location) && localStorage.getItem('active-eruda') != 'true') return;
+    document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+    document.write('<scr' + 'ipt>eruda.init();</scr' + 'ipt>');
+})();
+</script>
 
+    <button id="skinsButton" class="skins-btn">Skins</button>
+<!-- HTML -->
+<div id="ball" style="position: absolute; top: 0; left: 0;">
+    <img src="./ball.png" alt="ball" width="50" height="50" />
+  </div>
     <!-- The Modal -->
     <div id="skinsModal" class="modal" style="display: none;">
         <!-- Modal content -->
@@ -81,7 +93,6 @@
         <div id="gameGUI">
             <p id="score"><z id="blue">0</z> - <z id="red">0</z></p>
             <p id="time">0:00</p>
-          
 
             <p id="speedometer">0mph</p>
             <p id="goal">AAAA</p>

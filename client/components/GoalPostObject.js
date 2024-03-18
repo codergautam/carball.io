@@ -16,7 +16,7 @@ export default class GoalPostClient {
 
     draw() {
         const data = this.goalPostData;
-      console.log("drawing a goal post")
+      console.log("drawing a goal post, right:", this.right, "data:", data);
 
         // Clear any previous graphics
         this.graphics.clear();
@@ -82,6 +82,11 @@ export default class GoalPostClient {
             this.goalImg.x = points.topRight.x;
             this.goalImg.anchor.set(0);
             this.goalImg.rotation = 0;
+        }
+
+        if(window.goalsRendered && this.right) {
+            // flip it horizontally
+            this.goalImg.scale.x *= -1;
         }
 
         // Object.values(points).forEach(point => {

@@ -28,7 +28,6 @@ window.disableJoystickArea = () => {
 window.disableJoystickArea();
 
 if(window.isMobile) {
-  alert("Using beta mobile support");
   document.getElementById("controlsDiv").style.display = "none";
 }
 
@@ -44,9 +43,60 @@ try {
 }
 window.refreshInt = null;
 
+// JavaScript
+let ball = document.getElementById('ball');
+let directionX = 2;
+let directionY = 2;
+let angle = 0;
+let angularVelocity = 0.05; // Define una velocidad angular constante
+
+// JavaScript
+function moveBall() {
+  let x = ball.offsetLeft;
+  let y = ball.offsetTop;
+
+  if (x + ball.offsetWidth > window.innerWidth || x < 0) {
+    directionX = -directionX;
+    let angle = Math.atan2(directionY, directionX);
+    angularVelocity = angle;
+  }
+
+  if (y + ball.offsetHeight > window.innerHeight || y < 0) {
+    directionY = -directionY;
+    let angle = Math.atan2(directionY, directionX);
+    angularVelocity = angle;
+  }
+
+  angularVelocity *= 0.8;
+  angle += angularVelocity;
+
+  ball.style.left = x + directionX + 'px';
+  ball.style.top = y + directionY + 'px';
+  ball.style.transform = `rotate(${angle}rad)`;
+}
+
+let intervalId = setInterval(moveBall, 10);
+
+// Función de limpieza
+function cleanupBall() {
+  clearInterval(intervalId);
+  ball.style.display = 'none';
+}
+
+// Función para volver a mostrar
+function reshowBall() {
+  ball.style.display = 'block';
+  intervalId = setInterval(moveBall, 10);
+}
+
+if(window.isMobile) {
+  cleanupBall();
+}
+
 document.getElementById("playButton").addEventListener("click", () => {
     if (state == "game") return;
     state = "game";
+    cleanupBall();
 
     stateObject = startGame();
     if(window.refreshInt) {
@@ -57,6 +107,7 @@ document.getElementById("playButton").addEventListener("click", () => {
 window.exit = function () {
     $("matchInfo").style.visibility = "hidden";
     $("gameGUI").style.visibility = "hidden";
+  if(!window.isMobile) reshowBall();
   $("playerCount").style.display = "none";
   $("playerCountTotal").style.display = "";
   $("skinsButton").style.display = "";
@@ -127,3 +178,10 @@ if(canUseLocalStorage) {
 
 window.refreshInt = setInterval(updatePlayerCnt, 2000);
 updatePlayerCnt();
+
+window.addEventListener('beforeunload', function (e) {
+  if(state === "game") {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
