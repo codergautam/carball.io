@@ -69,6 +69,11 @@ io.on("connection", (socket) => {
         if(!cosmetics[skin]) skin = 1;
         Games[socket._carballserver].join(socket, name, undefined, skin);
 
+        // to debug death screen
+        // setTimeout(() => {
+        //     socket.emit('end');
+        //     socket.close();
+        // }, 500);
         if (socket._carballserver == "lobby" && Games.lobby.count == 2) {
             lastMatchMade = Date.now();
             Games.lobby.setEnd(lastMatchMade + config.MIN_MATCH_WAITTIME * 1000);

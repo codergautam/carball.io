@@ -34,7 +34,7 @@ body, html {
     filter: brightness(1.3) drop-shadow(0px 5px 0px #999);
 
     width: 100%;
-  padding-top: 20px;  
+  padding-top: 20px;
   padding-bottom: 20px;
 
 }
@@ -43,7 +43,7 @@ body, html {
     #nameplate {
       padding-top: 0px;
       padding-bottom: 5px;
-      
+
     }
 }
 
@@ -138,7 +138,7 @@ h1 {
         font-size: 0.6em;
     }
 
-  
+
 
 }
 
@@ -237,25 +237,56 @@ h1 {
 }
 
 #matchInfo {
-    position: absolute;
-    left: 0;
-    left: 25%;
-    height: 50%;
-    background-color: aliceblue;
-    width: 50%;
-    top: 25%;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    display: flex;
-    z-index: 30;
-    flex-direction: column;
-    align-items: center;
-    visibility: hidden;
+  position: absolute;
+  left: 25%;
+  height: 50%;
+  background-color: rgba(243, 243, 243, 0.9); /* Semi-transparent background */
+  width: 50%;
+  top: 25%;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  display: flex;
+  z-index: 30;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center items vertically */
+  visibility: hidden;
+  padding: 20px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center; /* Center text */
 }
 
-    #matchInfo hr {
-        width: 50%;
-    }
+#matchInfo hr {
+  width: 80%;
+  border-top: 1px solid darkgray;
+  margin: 0;
+  padding: 0;
+}
+
+#matchInfo h1 {
+  font-size: 2em; /* Larger heading */
+  margin-bottom: 20px; /* Add some space below the heading */
+}
+
+#matchInfo p {
+  font-size: 1.2em; /* Larger paragraph text */
+  margin-bottom: 10px; /* Add some space below each paragraph */
+}
+
+.leavebtn {
+  background-color: #218388; /* Button color */
+  color: #fff; /* Text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 20px; /* Padding */
+  font-size: 1.2em; /* Larger font */
+  cursor: pointer; /* Cursor on hover */
+  margin-top: 20px; /* Space above the button */
+}
+
+.leavebtn:hover {
+  background-color: #1a616a; /* Darker color on hover */
+}
 
 #speedometer {
     font-weight: bold;
@@ -422,13 +453,24 @@ h1 {
 /* Skin shop */
 /* Button styling */
 .skins-btn {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    font-size: 1.5em;
-    margin: 10px;
-  }
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  font-size: 1.5em;
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: rgb(218, 97, 97);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.skins-btn:hover {
+  background-color: #5a0d0d;
+}
 
   /* The Modal (background) */
   .modal {
@@ -469,91 +511,95 @@ h1 {
   }
 
   #skins {
-    h1 {
-        font-size: 24px;
-        font-weight: 400;
-        text-align: center;
-    }
-    img {
-      height: auto;
-      max-width: 100%;
-      vertical-align: middle;
-    }
-    .card_image {
-      background-color: lime;
-    }
-    .btn {
-      color: #ffffff;
-      padding: 0.8rem;
-      font-size: 14px;
-      text-transform: uppercase;
-      border-radius: 4px;
-      font-weight: 400;
-      display: block;
-      width: 100%;
-      cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: transparent;
-    }
-    .btn:hover {
-      background-color: rgba(255, 255, 255, 0.12);
-    }
-    .cards {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .cards_item {
-      display: flex;
-      padding: 1rem;
-    }
-    @media (min-width: 60rem) {
-      .cards_item {
-        width: 20%;
-      }
-    }
-    @media (min-width: 40rem) {
-      .cards_item {
-        width: 40%;
-      }
-    }
-    @media (min-width: 56rem) {
-      .cards_item {
-        width: 23.3333%;
-      }
-    }
-    .card {
-      background: linear-gradient(to bottom left, #0a3e0a 5%, green 100%);
-      box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .card_content {
-      padding: 1rem;
-      text-align: center;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+  }
 
-    }
-    .card_title {
-      color: #ffffff;
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: capitalize;
-      margin: 0px;
-    }
-    .card_text {
-      color: #ffffff;
-      font-size: 0.875rem;
-      line-height: 1.5;
-      font-weight: 400;
-    }
-    a {
-      font-size: 10em !important;
-    }
+  #skins h1 {
+    font-size: 2em;
+    font-weight: 500;
+    text-align: center;
+    color: #4a4a4a;
+    margin-bottom: 1em;
+  }
+
+  #skins img {
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+  }
+
+  #skins .card_image {
+    background-color: #f5f5f5;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  #skins .btn {
+    color: #fff;
+    padding: 1em;
+    font-size: 1em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    font-weight: 500;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    background: #007BFF;
+    transition: background 0.3s ease;
+  }
+
+  #skins .btn:hover {
+    background: #0056b3;
+  }
+
+  #skins .cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    gap: 20px;
+    padding: 0;
+  }
+
+
+  #skins .card {
+    background: #fff;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 8px;
+    width: 300px;
+  }
+
+  #skins .card_content {
+    padding: 1em;
+    text-align: center;
+  }
+
+  #skins .card_title {
+    color: #333;
+    font-size: 1.2em;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    margin: 0px;
+  }
+
+  #skins .card_text {
+    color: #666;
+    font-size: 1em;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  #skins a {
+    font-size: 1em;
+    color: #007BFF;
+    text-decoration: none;
   }
 
 .bg {

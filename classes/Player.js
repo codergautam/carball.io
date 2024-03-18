@@ -78,7 +78,7 @@ module.exports = class Player {
             this.boostFuel -= 4;
         } else {
             if ((this.boostFuel < 200) && this.shouldGainBoost) {
-                this.boostFuel += 1 / (1 + Math.log(1 + 0.015 * (200 - this.boostFuel)));
+                this.boostFuel += (1 / (1 + Math.log(1 + 0.015 * (200 - this.boostFuel)))) / (this.boostFuel < 100 ? 1 : 2);
             }
 
 
