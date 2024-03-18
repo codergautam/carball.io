@@ -1,23 +1,16 @@
 {
   "1": {
     "id": 1,
-    "name": "default",
+    "name": "Van",
     "cost": 0,
-    "description": "A simple car, nothing special.",
-    "bodyImage": "car.png"
+    "description": "The default vehicle for newbs.",
+    "bodyImage": "van.png"
   },
   "2": {
     "id": 2,
-    "name": "Van",
+    "name": "car",
     "cost": 10,
-    "description": "Strong and sturdy",
-    "bodyImage": "van.png"
-  },
-  "3": {
-    "id": 3,
-    "name": "Lamborghini",
-    "cost": 100,
-    "description": "Fast and furious",
-    "bodyImage": "lamborghini.png"
+    "description": "The iconic carball.io car.",
+    "bodyImage": "car.png"
   }
 }

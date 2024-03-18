@@ -557,7 +557,7 @@ h1 {
   }
 
 .bg {
-    background-size: cover;
+    object-fit: contain;
     background-color: #464646;
     height: 100%;
     width: 100%;
