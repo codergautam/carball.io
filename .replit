@@ -81,10 +81,10 @@ pattern = "**/{*.js,*.jsx,*.ts,*.tsx,*.json}"
 start = "typescript-language-server --stdio"
 
 [deployment]
-deploymentTarget = "static"
+deploymentTarget = "gce"
 ignorePorts = false
 build = ["sh", "-c", "pnpm build"]
-publicDir = "dist"
+run = ["sh", "-c", "pnpm start"]
 
 [[ports]]
 localPort = 3000
