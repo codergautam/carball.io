@@ -1,3 +1,13 @@
+/*
+/*
+                _           _ _   _       
+  ___ __ _ _ __| |__   __ _| | | (_) ___  
+ / __/ _` | '__| '_ \ / _` | | | | |/ _ \ 
+| (_| (_| | |  | |_) | (_| | | |_| | (_) |
+ \___\__,_|_|  |_.__/ \__,_|_|_(_)_|\___/ 
+ A game by Gautam
+*/
+
 import preloadImages from "./preloadImgs";
 import { initSkinShop } from "./skinShop";
 import startGame from "./startGame";
