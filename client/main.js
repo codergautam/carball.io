@@ -106,7 +106,7 @@ window.serverList = Object.keys(config.GAME_SERVERS).map(server => {
 });
 if(window.serverList.length === 0) {
   window.serverList.push({
-    name: window.location.host + " server",
+    name: window.location.hostname.split('.').slice(-2).join('.') + " server",
     url: window.location.host,
     secure: window.location.protocol === "https:",
     selected: true,
