@@ -67,7 +67,7 @@ export default function startGame() {
 
     const players = {};
 
-    const socket = new SocketWrapper(config.GAME_SERVER? 'wss://'+config.GAME_SERVER : null);
+    const socket = new SocketWrapper(window.selectedServer? 'wss://'+window.selectedServer : null);
 
     const pinger = new Pinger(socket);
 

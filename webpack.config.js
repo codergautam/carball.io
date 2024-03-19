@@ -3,7 +3,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
-console.log("SERVER", process.env.GAME_SERVER)
+try {
+    require('dotenv').config();
+} catch (e) {
+    console.log("No dotenv file found")
+}
+
+console.log("SERVERS", process.env.GAME_SERVERS)
 
 module.exports = {
     entry: './client/main.js',
@@ -21,7 +27,7 @@ module.exports = {
             ]
         }),
       new webpack.DefinePlugin({
-    'config.GAME_SERVER': JSON.stringify(process.env.GAME_SERVER),
+    'config.GAME_SERVERS': process.env.GAME_SERVERS ? JSON.parse(JSON.stringify(process.env.GAME_SERVERS)) : {},
     }),
     ],
     externals: {

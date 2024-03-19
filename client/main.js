@@ -93,7 +93,103 @@ if(window.isMobile) {
   cleanupBall();
 }
 
+// Figure out which server to use
+async function checkServers() {
+window.serverList = Object.keys(config.GAME_SERVERS).map(server => {
+  return {
+    name: server,
+    url: config.GAME_SERVERS[server],
+    secure: window.location.protocol === "https:",
+    selected: false,
+    online: null
+  }
+});
+if(window.serverList.length === 0) {
+  window.serverList.push({
+    name: window.location.host + " server",
+    url: window.location.host,
+    secure: window.location.protocol === "https:",
+    selected: true,
+    online: null
+  })
+}
+// Check all the servers to see if they are online
+// window.serverList.forEach(server => {
+  for(let server of window.serverList) {
+  const checkUrl = `http${server.secure ? 's' : ''}://${server.url}/api/serverInfo`;
+  const startTime = Date.now();
+  // fetch(checkUrl).then(res => res.json()).then(data => {
+    const res = await fetch(checkUrl);
+    const data = await res.json();
+    if(data && data.gamesCount > 0) {
+    server.online = true;
+    server.ping = Date.now() - startTime;
+    server.playersCount = data.playersCount;
+
+    // Lower ping is good, but a server with 0 players is not good
+    // If there is atleast 3 players on a server, then we can look at the ping
+
+    // Swordbattle.io has this logic, (p.ping*3) - (p.info.actualPlayercount ? p.info.actualPlayercount * 50 : 0) + (p.info.lag == "No lag" ? 0 : p.info.lag == "Moderate lag" ? 250 : 1000) + (p.info.actualPlayercount > 10 ? Math.abs(p.info.actualPlayercount-10)*100: 0) + (p.info.actualPlayercount < 3 ? Math.abs(p.info.actualPlayercount)*200: 0)).map((p) => !p ? Infinity : p);, lets steal it
+
+    // We want to find the best server, so we want to minimize the score
+    server.score = (server.ping*2) - (server.playersCount ? server.playersCount * 50 : 0) + (server.playersCount > 10 ? Math.abs(server.playersCount-10)*100: 0) + (server.playersCount < 3 ? server.playersCount*200: 0);
+    } else {
+      server.online = false;
+    }
+  }
+// find the auto selected server (best score)
+const bestServer = window.serverList.sort((a, b) => a.score - b.score)[0];
+// populate the server list UI
+let alreadyChosen = 'auto';
+try {
+  alreadyChosen = window.localStorage.getItem("server");
+} catch(e) {
+  console.error(e);
+}
+const serverSelect = document.getElementById("serverSelect");
+// clear it
+serverSelect.innerHTML = "";
+// Add the auto server
+const autoOption = document.createElement("option");
+autoOption.value = "auto";
+autoOption.innerText = bestServer.name+" (auto) - "+bestServer.playersCount+" players | "+bestServer.ping+"ms";
+if(alreadyChosen === "auto") {
+  autoOption.selected = true;
+}
+serverSelect.appendChild(autoOption);
+
+window.serverList.forEach(server => {
+  const option = document.createElement("option");
+  option.value = server.name;
+  if(alreadyChosen === server.name) {
+    option.selected = true;
+  }
+  option.innerText = server.name+" - "+server.playersCount+" players | "+server.ping+"ms";
+  serverSelect.appendChild(option);
+});
+
+window.selectedServer = (window.serverList.find(server => server.name === alreadyChosen) || bestServer)?.url;
+
+// bind onchange event
+serverSelect.onchange = (function() {
+  if(this.value === "auto") {
+    window.selectedServer = bestServer.url;
+  } else {
+    window.selectedServer = window.serverList.find(server => server.name === this.value)?.url;
+  }
+  try {
+    window.localStorage.setItem("server", this.value);
+  } catch(e) {
+    console.error(e);
+  }
+});
+
+
+}
+checkServers();
+
 document.getElementById("playButton").addEventListener("click", () => {
+  if(!window.selectedServer) return;
     if (state == "game") return;
     state = "game";
     cleanupBall();
@@ -104,7 +200,9 @@ document.getElementById("playButton").addEventListener("click", () => {
     }
 });
 
+
 window.exit = function () {
+  checkServers();
     $("matchInfo").style.visibility = "hidden";
     $("gameGUI").style.visibility = "hidden";
   if(!window.isMobile) reshowBall();
@@ -131,8 +229,9 @@ window.rematch = function () {
 }
 
 function updatePlayerCnt() {
+  if(!window.selectedServer) return;
   const element = document.getElementById("playerCountTotal");
-  fetch(`${config.GAME_SERVER?'https://'+config.GAME_SERVER:''}/api/serverInfo`).then(res => res.json()).then(data => {
+  fetch(`https://${window.selectedServer}/api/serverInfo`).then(res => res.json()).then(data => {
     if(!data || !data.hasOwnProperty("playersCount")) return;
     element.innerHTML = data.playersCount+" players online"
   });
