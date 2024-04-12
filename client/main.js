@@ -114,6 +114,7 @@ window.serverList = Object.keys(config.GAME_SERVERS).map(server => {
     online: null
   }
 });
+  // todo: add localhost support aswell
   const onReplitDomain = window.location.hostname.includes('repl')
 if(window.serverList.length === 0 || onReplitDomain) {
   window.serverList.push({
