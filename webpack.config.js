@@ -8,8 +8,11 @@ try {
 } catch (e) {
     console.log("No dotenv file found")
 }
-
-console.log("SERVERS", process.env.GAME_SERVERS)
+let servers = process.env.GAME_SERVERS;
+if(!servers) {
+  servers = {'Carball Main': 'carball.io'}
+}
+console.log("SERVERS", servers)
 
 module.exports = {
     entry: './client/main.js',
@@ -27,7 +30,7 @@ module.exports = {
             ]
         }),
       new webpack.DefinePlugin({
-    'config.GAME_SERVERS': process.env.GAME_SERVERS ? JSON.parse(JSON.stringify(process.env.GAME_SERVERS)) : {},
+    'config.GAME_SERVERS': JSON.stringify((servers)),
     }),
     ],
     externals: {

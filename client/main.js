@@ -114,13 +114,15 @@ window.serverList = Object.keys(config.GAME_SERVERS).map(server => {
     online: null
   }
 });
-if(window.serverList.length === 0) {
+  const onReplitDomain = window.location.hostname.includes('repl')
+if(window.serverList.length === 0 || onReplitDomain) {
   window.serverList.push({
     name: window.location.hostname.split('.').slice(-2).join('.') + " server",
     url: window.location.host,
     secure: window.location.protocol === "https:",
     selected: true,
-    online: null
+    online: null,
+    weightChange: 100
   })
 }
 // Check all the servers to see if they are online
@@ -142,7 +144,7 @@ if(window.serverList.length === 0) {
     // Swordbattle.io has this logic, (p.ping*3) - (p.info.actualPlayercount ? p.info.actualPlayercount * 50 : 0) + (p.info.lag == "No lag" ? 0 : p.info.lag == "Moderate lag" ? 250 : 1000) + (p.info.actualPlayercount > 10 ? Math.abs(p.info.actualPlayercount-10)*100: 0) + (p.info.actualPlayercount < 3 ? Math.abs(p.info.actualPlayercount)*200: 0)).map((p) => !p ? Infinity : p);, lets steal it
 
     // We want to find the best server, so we want to minimize the score
-    server.score = (server.ping*2) - (server.playersCount ? server.playersCount * 50 : 0) + (server.playersCount > 10 ? Math.abs(server.playersCount-10)*100: 0) + (server.playersCount < 3 ? server.playersCount*200: 0);
+    server.score = (server.ping*2) - (server.playersCount ? server.playersCount * 50 : 0) + (server.playersCount > 10 ? Math.abs(server.playersCount-10)*100: 0) + (server.playersCount < 3 ? server.playersCount*200: 0)+(server.weightChange ? server.weightChange : 0)
     } else {
       server.online = false;
     }
