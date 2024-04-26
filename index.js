@@ -81,7 +81,8 @@ io.on("connection", (socket) => {
         }
     });
     socket.on('close', () => {
-        if(!socket._carballserver) return;
+        console.log('socket close');
+        if(!socket._carballserver || !Games[socket._carballserver]) return;
         Games[socket._carballserver].removePlayer(socket);
         delete sockets[socket.id];
     });
@@ -167,10 +168,14 @@ function matchMaker(lobby) {
         if (count >= 6) break;
 
         let playerInfo = lobby.players[sockets[i].id];
+        if(playerInfo) { 
         lobby.removePlayer(sockets[i]);
         sockets[i]._carballserver = id;
         Games[id].join(sockets[i], playerInfo.name, false, playerInfo.skin);
         delete sockets[i]; //out of da waitlist
+        } else {
+            console.log('there is a socket without playerinfo, weird', sockets[i].id);
+        }
 
         count++;
     }
