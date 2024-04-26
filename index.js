@@ -40,7 +40,7 @@ app.use(express.static('dist'));
 
 const config = require("./config");
 
-process.on('uncaughtException', UncaughtExceptionHandler);
+//process.on('uncaughtException', UncaughtExceptionHandler);
 
 //craete games here
 const Games = {
