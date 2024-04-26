@@ -57,7 +57,7 @@ const sockets = {};
 let lastMatchMade = Date.now();
 
 io.on("connection", (socket) => {
-
+    
     socket._carballserver = "lobby";
     sockets[socket.id] = socket;
     socket.emit("id", socket.id);
@@ -68,6 +68,7 @@ io.on("connection", (socket) => {
         //todo: add check to see if player is already in a game so they cant join twice by modifying client
         if(!cosmetics[skin]) skin = 1;
         Games[socket._carballserver].join(socket, name, undefined, skin);
+        console.log('join packet', name, skin);
 
         // to debug death screen
         // setTimeout(() => {
@@ -214,8 +215,8 @@ let tps = 0;
     if (now - lastTpsReport >= 1000) {
         tps = tpsCounter;
         tpsCounter = 0;
-        console.clear();
-        console.log(`Carball Server\n\n${getTotalPlayerCount()} players\nTPS: ${tps}\n${memUsageInMB()} MB`);
+        // console.clear();
+        // console.log(`Carball Server\n\n${getTotalPlayerCount()} players\nTPS: ${tps}\n${memUsageInMB()} MB`);
         lastTpsReport = now;
     }
 
