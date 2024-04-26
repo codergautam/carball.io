@@ -5,7 +5,7 @@ const { URL } = require("node:url");
 
 //assume there arent 50k clients at once
 const max_id = 50000;
-let cur_id = 0;
+let cur_id = 100;
 function idgen() {
     if(cur_id >= max_id) cur_id = 0;
     cur_id++;
