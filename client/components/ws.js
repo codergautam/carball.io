@@ -60,7 +60,9 @@ export default class SocketWrapper {
 
   _generateURL() {
     let proto = location.protocol.match(/https/) ? "wss://" : "ws://";
-    return proto + location.host + location.pathname + location.search;
+    let port = parseInt(location.port) || (location.protocol === 'https:' ? 443 : 80);
+    let wsPort = port + 1; // uWS runs on port+1
+    return proto + location.hostname + ':' + wsPort + location.pathname + location.search;
   }
 
   _onOpen(e) {
