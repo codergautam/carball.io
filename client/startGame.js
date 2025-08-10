@@ -72,7 +72,12 @@ export default function startGame() {
     if (window.selectedServer) {
         const selectedServerObj = window.serverList?.find(server => server.url === window.selectedServer);
         const wsProtocol = selectedServerObj && selectedServerObj.secure ? 'wss' : 'ws';
-        wsUrl = `${wsProtocol}://${window.selectedServer}`;
+        
+        // Extract host and port, then add 1 to port for uWS
+        const serverUrl = window.selectedServer;
+        const [host, port] = serverUrl.split(':');
+        const wsPort = (parseInt(port) || 3000) + 1;
+        wsUrl = `${wsProtocol}://${host}:${wsPort}`;
     }
     const socket = new SocketWrapper(wsUrl);
 

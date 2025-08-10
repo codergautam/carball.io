@@ -30,6 +30,8 @@ export default class SocketWrapper {
     this.url = url || this._generateURL();
     this.protocols = protocols || [];
     this.opts = opts;
+    
+    console.log('Connecting to WebSocket URL:', this.url);
 
     try {
       this.ws = new WebSocket(this.url, this.protocols);
