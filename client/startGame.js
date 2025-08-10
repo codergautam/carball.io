@@ -67,7 +67,14 @@ export default function startGame() {
 
     const players = {};
 
-    const socket = new SocketWrapper(window.selectedServer? 'wss://'+window.selectedServer : null);
+    // Determine the correct WebSocket protocol based on server security settings
+    let wsUrl = null;
+    if (window.selectedServer) {
+        const selectedServerObj = window.serverList?.find(server => server.url === window.selectedServer);
+        const wsProtocol = selectedServerObj && selectedServerObj.secure ? 'wss' : 'ws';
+        wsUrl = `${wsProtocol}://${window.selectedServer}`;
+    }
+    const socket = new SocketWrapper(wsUrl);
 
     const pinger = new Pinger(socket);
 

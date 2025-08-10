@@ -1,10 +1,10 @@
 /*
 /*
-                _           _ _   _       
-  ___ __ _ _ __| |__   __ _| | | (_) ___  
- / __/ _` | '__| '_ \ / _` | | | | |/ _ \ 
+                _           _ _   _
+  ___ __ _ _ __| |__   __ _| | | (_) ___
+ / __/ _` | '__| '_ \ / _` | | | | |/ _ \
 | (_| (_| | |  | |_) | (_| | | |_| | (_) |
- \___\__,_|_|  |_.__/ \__,_|_|_(_)_|\___/ 
+ \___\__,_|_|  |_.__/ \__,_|_|_(_)_|\___/
  A game by Gautam
 */
 
@@ -105,22 +105,31 @@ if(window.isMobile) {
 
 // Figure out which server to use
 async function checkServers() {
-window.serverList = Object.keys(config.GAME_SERVERS).map(server => {
-  return {
-    name: server,
-    url: config.GAME_SERVERS[server],
-    secure: window.location.protocol === "https:",
-    selected: false,
-    online: null
-  }
-});
-  // todo: add localhost support aswell
-  const onReplitDomain = window.location.hostname.includes('repl')
-if(window.serverList.length === 0 || onReplitDomain) {
+window.serverList = [];
+
+// Check if config.GAME_SERVERS exists and is an object
+if (typeof config !== 'undefined' && config.GAME_SERVERS && typeof config.GAME_SERVERS === 'object') {
+  window.serverList = Object.keys(config.GAME_SERVERS).map(server => {
+    return {
+      name: server,
+      url: config.GAME_SERVERS[server],
+      secure: window.location.protocol === "https:",
+      selected: false,
+      online: null
+    }
+  });
+}
+
+  // Check if we're on localhost or replit domain
+  const onReplitDomain = window.location.hostname.includes('repl');
+  const onLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+if(window.serverList.length === 0 || onReplitDomain || onLocalhost) {
+  const serverName = onLocalhost ? "localhost" : (window.location.hostname.split('.').slice(-2).join('.') + " server");
   window.serverList.push({
-    name: window.location.hostname.split('.').slice(-2).join('.') + " server",
+    name: serverName,
     url: window.location.host,
-    secure: window.location.protocol === "https:",
+    secure: onLocalhost ? false : window.location.protocol === "https:",
     selected: true,
     online: null,
     weightChange: 100
@@ -129,6 +138,7 @@ if(window.serverList.length === 0 || onReplitDomain) {
 // Check all the servers to see if they are online
 // window.serverList.forEach(server => {
   for(let server of window.serverList) {
+    console.log(window.serverList);
   const checkUrl = `http${server.secure ? 's' : ''}://${server.url}/api/serverInfo`;
   const startTime = Date.now();
   // fetch(checkUrl).then(res => res.json()).then(data => {
@@ -244,7 +254,9 @@ window.rematch = function () {
 function updatePlayerCnt() {
   if(!window.selectedServer) return;
   const element = document.getElementById("playerCountTotal");
-  fetch(`https://${window.selectedServer}/api/serverInfo`).then(res => res.json()).then(data => {
+  const selectedServerObj = window.serverList.find(server => server.url === window.selectedServer);
+  const protocol = selectedServerObj && selectedServerObj.secure ? 'https' : 'http';
+  fetch(`${protocol}://${window.selectedServer}/api/serverInfo`).then(res => res.json()).then(data => {
     if(!data || !data.hasOwnProperty("playersCount")) return;
     element.innerHTML = data.playersCount+" players online"
   });

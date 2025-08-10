@@ -6,11 +6,19 @@ const webpack = require('webpack');
 try {
     require('dotenv').config();
 } catch (e) {
+    console.error("Error loading .env file", e);
     console.log("No dotenv file found")
 }
 let servers = process.env.GAME_SERVERS;
 if(!servers) {
   servers = {'Carball Main': 'carball.io'}
+} else {
+  try {
+    servers = JSON.parse(servers);
+  } catch (e) {
+    console.error("Error parsing GAME_SERVERS from .env", e);
+    servers = {'Carball Main': 'carball.io'};
+  }
 }
 console.log("SERVERS", servers)
 
