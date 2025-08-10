@@ -3,7 +3,9 @@
     "allow": [
       "Bash(timeout 10 npm start)",
       "Bash(git add:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(git rm:*)"
     ],
     "deny": []
   }

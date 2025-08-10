@@ -14,9 +14,9 @@ const CONNECTION_STATES = {
 const DEFAULT_CONFIG = {
     maxConnections: 1000,
     maxConnectionsPerIP: 10,
-    pingInterval: 30000,
+    pingInterval: 20000, // Back to 20s like original
     pongTimeout: 5000,
-    connectionTimeout: 30000,
+    connectionTimeout: 45000, // More lenient timeout
     maxMessageSize: 1024 * 1024, // 1MB
     rateLimitWindow: 60000, // 1 minute
     rateLimitMaxMessages: 100
@@ -70,7 +70,11 @@ class Client extends EventEmitter {
         }
 
         try {
-            const packet = [id1, data];
+            // Keep the old packet format for compatibility
+            let packet = [id1, new Array(data.length)];
+            for (let i = 0; i < data.length; i++)
+                packet[1][i] = data[i];
+            
             const serialized = JSON.stringify(packet);
             
             if (serialized.length > this.parent.config.maxMessageSize) {
@@ -232,13 +236,22 @@ class WebSocket extends EventEmitter {
             const now = Date.now();
             
             this.clients.forEach((client, id) => {
+                // More aggressive dead client detection
+                if (client.ws.readyState === CONNECTION_STATES.CLOSED || 
+                    client.ws.readyState === CONNECTION_STATES.CLOSING) {
+                    console.log(`Client ${id}: Connection already closed/closing`);
+                    deadClients.push(id);
+                    return;
+                }
+                
                 if (!client.isAlive) {
+                    console.log(`Client ${id}: Failed ping-pong check`);
                     deadClients.push(id);
                     return;
                 }
                 
                 if (now - client.lastPing > this.config.connectionTimeout) {
-                    console.warn(`Client ${id}: Connection timeout`);
+                    console.warn(`Client ${id}: Connection timeout (${now - client.lastPing}ms)`);
                     deadClients.push(id);
                     return;
                 }
@@ -264,7 +277,7 @@ class WebSocket extends EventEmitter {
                 }
             });
             
-        }, this.config.pingInterval);
+        }, this.config.pingInterval); // Use configured ping interval
     }
 
     setupGracefulShutdown() {
@@ -305,18 +318,22 @@ class WebSocket extends EventEmitter {
     }
 
     handleUpgrade(req, socket, head) {
+        console.log('WebSocket upgrade request received from:', req.headers.origin);
         try {
             if (this.isShuttingDown) {
+                console.log('Rejecting upgrade: Server shutting down');
                 socket.destroy();
                 return;
             }
 
             if (!this._onupgrade(req, socket)) {
+                console.log('Rejecting upgrade: Custom upgrade handler rejected');
                 socket.destroy();
                 return;
             }
 
             const ip = this.getClientIP(req);
+            console.log('Client IP:', ip);
             
             if (this.clients.size >= this.config.maxConnections) {
                 console.warn(`Connection rejected: Max connections reached (${this.config.maxConnections})`);
@@ -332,16 +349,20 @@ class WebSocket extends EventEmitter {
             }
 
             if (!this.validateOrigin(req)) {
+                console.log('Rejecting upgrade: Origin validation failed');
                 socket.destroy();
                 return;
             }
 
             if (!this._auth(req)) {
+                console.log('Rejecting upgrade: Authentication failed');
                 socket.destroy();
                 return;
             }
 
+            console.log('Handling WebSocket upgrade...');
             this.wss.handleUpgrade(req, socket, head, (ws) => {
+                console.log('WebSocket upgrade successful, emitting connection event');
                 this.wss.emit("connection", ws, req);
             });
 
@@ -363,16 +384,18 @@ class WebSocket extends EventEmitter {
             
             this.bindClientEvents(client);
             
-            this._connectionHandlers.forEach(handler => {
+            console.log(`About to call ${this._connectionHandlers.length} connection handlers for client ${id}`);
+            this._connectionHandlers.forEach((handler, index) => {
                 try {
+                    console.log(`Calling connection handler ${index} for client ${id}`);
                     handler(client);
                 } catch (error) {
-                    console.error(`Error in connection handler:`, error);
+                    console.error(`Error in connection handler ${index}:`, error);
                 }
             });
             
             console.log(`Client ${id} connected from ${ip}. Total connections: ${this.clients.size}`);
-            this.emit('connection', client);
+            super.emit('connection', client);
             
         } catch (error) {
             console.error('Error handling connection:', error);
@@ -450,43 +473,27 @@ class WebSocket extends EventEmitter {
                 const clientObj = this.clients.get(id);
                 if (!clientObj) return;
 
-                if (clientObj.isRateLimited()) {
-                    console.warn(`Client ${id}: Rate limited`);
-                    clientObj.close(1008, 'Rate limit exceeded');
-                    return;
-                }
-
                 clientObj.messageCount++;
 
-                if (data.length > this.config.maxMessageSize) {
-                    console.warn(`Client ${id}: Message too large: ${data.length} bytes`);
-                    clientObj.close(1009, 'Message too large');
-                    return;
-                }
-
                 let packet;
-                let isBinary = false;
-
                 try {
-                    if (Buffer.isBuffer(data)) {
-                        isBinary = true;
+                    const messageStr = data.toString();
+                    if (messageStr.startsWith('[') || messageStr.startsWith('{')) {
+                        packet = JSON.parse(messageStr);
+                    } else {
                         if (data.length > 0) {
                             const handler = clientObj._functionsBin.get(data[0]);
                             if (handler) {
-                                handler.call(clientObj, data);
+                                handler(data);
                             }
                         }
                         return;
                     }
-
-                    packet = JSON.parse(data.toString());
                 } catch (parseError) {
-                    console.warn(`Client ${id}: Invalid JSON message`);
                     return;
                 }
 
                 if (!Array.isArray(packet) || packet.length !== 2) {
-                    console.warn(`Client ${id}: Invalid packet format`);
                     return;
                 }
 
@@ -495,9 +502,9 @@ class WebSocket extends EventEmitter {
                 
                 if (handler) {
                     if (Array.isArray(eventData)) {
-                        handler.call(clientObj, ...eventData);
+                        handler(...eventData);
                     } else {
-                        handler.call(clientObj, eventData);
+                        handler(eventData);
                     }
                 }
 
@@ -514,7 +521,7 @@ class WebSocket extends EventEmitter {
                 const closeHandler = clientObj._functions.get('close');
                 if (closeHandler) {
                     try {
-                        closeHandler.call(clientObj, code, reason.toString());
+                        closeHandler(code, reason.toString());
                     } catch (error) {
                         console.error(`Client ${id}: Error in close handler:`, error);
                     }
@@ -551,7 +558,7 @@ class WebSocket extends EventEmitter {
             }
 
             console.log(`Client ${id} destroyed. Total connections: ${this.clients.size}`);
-            this.emit('disconnection', client);
+            super.emit('disconnection', client);
 
         } catch (error) {
             console.error(`Error destroying client ${id}:`, error);
@@ -590,14 +597,19 @@ class WebSocket extends EventEmitter {
         return Object.fromEntries(this.connectedIPs);
     }
 
-    emit(eventId, ...data) {
+    broadcast(eventId, ...data) {
         if (this.clients.size === 0) return 0;
         
-        const packet = JSON.stringify([eventId, data]);
+        // Keep the old packet format for compatibility
+        let packet = [eventId, new Array(data.length)];
+        for (let i = 0; i < data.length; i++)
+            packet[1][i] = data[i];
+        
+        const serialized = JSON.stringify(packet);
         let sent = 0;
         
         this.clients.forEach(client => {
-            if (client.send(packet)) {
+            if (client.send(serialized)) {
                 sent++;
             }
         });
@@ -605,7 +617,7 @@ class WebSocket extends EventEmitter {
         return sent;
     }
 
-    emitBinary(data) {
+    broadcastBinary(data) {
         if (this.clients.size === 0) return 0;
         
         let sent = 0;
@@ -616,6 +628,15 @@ class WebSocket extends EventEmitter {
         });
         
         return sent;
+    }
+
+    // Alias for backwards compatibility
+    emit(eventId, ...data) {
+        return this.broadcast(eventId, ...data);
+    }
+
+    emitBinary(data) {
+        return this.broadcastBinary(data);
     }
 
     close() {
