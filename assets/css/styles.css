@@ -298,24 +298,153 @@ input[type="text"]:focus, select:focus {
     box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.1);
 }
 
-/* Control Options */
+/* Card Structure */
+.card-header {
+    margin-bottom: 20px;
+}
+
+.card-content {
+    flex-grow: 1;
+    padding: 0;
+}
+
+.card-footer {
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    background: white;
+    transition: var(--transition);
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.1);
+}
+
+/* Control Toggle */
+.control-toggle {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.toggle-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    background: white;
+    min-width: 70px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.toggle-option:hover {
+    border-color: var(--primary);
+    background: rgba(76, 110, 245, 0.05);
+}
+
+.toggle-option input[type="radio"] {
+    display: none;
+}
+
+.toggle-option input[type="radio"]:checked + .material-icons {
+    color: var(--primary);
+}
+
+.toggle-option input[type="radio"]:checked ~ span {
+    color: var(--primary);
+}
+
+.toggle-option .material-icons {
+    font-size: 20px;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+/* Play Button */
+.play-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.play-button:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(76, 110, 245, 0.3);
+}
+
+.play-button .material-icons {
+    font-size: 20px;
+}
+
+/* Legacy Control Options (keep for backward compatibility) */
 .control-options {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .control-option {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 15px;
+    gap: 6px;
+    padding: 8px 12px;
     border: 2px solid #e9ecef;
     border-radius: 8px;
     cursor: pointer;
     transition: var(--transition);
     flex: 1;
-    min-width: 120px;
+    min-width: 100px;
+    max-width: 130px;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .control-option:hover {
@@ -970,6 +1099,13 @@ input[type="text"]:focus, select:focus {
     
     .control-options {
         flex-direction: column;
+        gap: 8px;
+    }
+    
+    .control-option {
+        max-width: none;
+        min-width: auto;
+        justify-content: center;
     }
     
     .match-buttons {

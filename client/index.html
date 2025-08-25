@@ -78,31 +78,48 @@
 
                     <!-- Play Card -->
                     <div class="joinCard menuCard panel">
-
-                        <div class="menuHeader">
-                            Control Mode
-                        </div>
-                        <div class="control-options">
-                            <label class="control-option">
-                                <input type="radio" name="controls" id="controls2" value="mouse" checked>
-                                <span class="material-icons">mouse</span>
-                                <span>Mouse</span>
-                            </label>
-                            <label class="control-option">
-                                <input type="radio" name="controls" id="controls" value="keys">
-                                <span class="material-icons">keyboard</span>
-                                <span>Keyboard</span>
-                            </label>
-                        </div>
-                        <div class="joinCardInput">
-                            <input type="text" id="nameInput" placeholder="Enter Your Name" maxlength="16" autocomplete="off">
-                            <div id="playButton" class="menuButton big">
-                                <span class="material-icons">play_arrow</span>
-                                PLAY NOW!
+                        <div class="card-header">
+                            <div class="menuHeader">
+                                <span class="material-icons">sports_soccer</span>
+                                Join Game
                             </div>
-                            <select id="serverSelect">
-                                <option value="loading">Loading servers...</option>
-                            </select>
+                        </div>
+                        
+                        <div class="card-content">
+                            <div class="form-group">
+                                <label class="form-label">Player Name</label>
+                                <input type="text" id="nameInput" class="form-input" placeholder="Enter your name" maxlength="16" autocomplete="off">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Server</label>
+                                <select id="serverSelect" class="form-select">
+                                    <option value="loading">Loading servers...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Controls</label>
+                                <div class="control-toggle">
+                                    <input type="radio" name="controls" id="controls2" value="mouse" checked>
+                                    <label for="controls2" class="toggle-option">
+                                        <span class="material-icons">mouse</span>
+                                        <span>Mouse</span>
+                                    </label>
+                                    <input type="radio" name="controls" id="controls" value="keys">
+                                    <label for="controls" class="toggle-option">
+                                        <span class="material-icons">keyboard</span>
+                                        <span>Keys</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <div id="playButton" class="play-button">
+                                <span class="material-icons">play_arrow</span>
+                                <span>PLAY NOW</span>
+                            </div>
                         </div>
                     </div>
 
