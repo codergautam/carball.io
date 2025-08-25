@@ -169,43 +169,50 @@ try {
 } catch(e) {
   console.error(e);
 }
+// Auto-select the best server since UI is hidden
+window.selectedServer = bestServer.url;
+
+// Optional: Still populate server select if element exists (for future use)
 const serverSelect = document.getElementById("serverSelect");
-// clear it
-serverSelect.innerHTML = "";
-// Add the auto server
-const autoOption = document.createElement("option");
-autoOption.value = "auto";
-autoOption.innerText = bestServer.name+" (auto) - "+bestServer.playersCount+" players | "+bestServer.ping+"ms";
-if(alreadyChosen === "auto") {
-  autoOption.selected = true;
+if(serverSelect) {
+  // clear it
+  serverSelect.innerHTML = "";
+  // Add the auto server
+  const autoOption = document.createElement("option");
+  autoOption.value = "auto";
+  autoOption.innerText = bestServer.name+" (auto) - "+bestServer.playersCount+" players | "+bestServer.ping+"ms";
+  if(alreadyChosen === "auto") {
+    autoOption.selected = true;
+  }
+  serverSelect.appendChild(autoOption);
+
+  window.serverList.forEach(server => {
+    const option = document.createElement("option");
+    option.value = server.name;
+    if(alreadyChosen === server.name) {
+      option.selected = true;
+    }
+    option.innerText = server.name+" - "+server.playersCount+" players | "+server.ping+"ms";
+    serverSelect.appendChild(option);
+  });
+
+  // bind onchange event
+  serverSelect.onchange = (function() {
+    if(this.value === "auto") {
+      window.selectedServer = bestServer.url;
+    } else {
+      window.selectedServer = window.serverList.find(server => server.name === this.value)?.url;
+    }
+    try {
+      window.localStorage.setItem("server", this.value);
+    } catch(e) {
+      console.error(e);
+    }
+  });
+  
+  // Update selectedServer based on saved preference if serverSelect exists
+  window.selectedServer = (window.serverList.find(server => server.name === alreadyChosen) || bestServer)?.url;
 }
-serverSelect.appendChild(autoOption);
-
-window.serverList.forEach(server => {
-  const option = document.createElement("option");
-  option.value = server.name;
-  if(alreadyChosen === server.name) {
-    option.selected = true;
-  }
-  option.innerText = server.name+" - "+server.playersCount+" players | "+server.ping+"ms";
-  serverSelect.appendChild(option);
-});
-
-window.selectedServer = (window.serverList.find(server => server.name === alreadyChosen) || bestServer)?.url;
-
-// bind onchange event
-serverSelect.onchange = (function() {
-  if(this.value === "auto") {
-    window.selectedServer = bestServer.url;
-  } else {
-    window.selectedServer = window.serverList.find(server => server.name === this.value)?.url;
-  }
-  try {
-    window.localStorage.setItem("server", this.value);
-  } catch(e) {
-    console.error(e);
-  }
-});
 
 // Show the menu cards after loading is complete
 const loadingText = document.getElementById("loadingText");
