@@ -666,7 +666,7 @@ export default function startGame() {
 
         let boost = client.you.boost;
         if (boost < 0) boost = 0;
-        $("boostBarPercent").style.width = (100 - Math.round(100 * boost / 200)) + "%";
+        $("boostBarPercent").style.width = Math.round(100 * boost / 200) + "%";
 
         if (client.serverType == "lobby") {
             if (Object.keys(players).length > 1) {
