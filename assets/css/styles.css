@@ -945,6 +945,11 @@ input[type="text"]:focus, select:focus {
         max-width: 350px;
     }
     
+    /* Hide server info card on mobile - reserved for ads */
+    .serverCard {
+        display: none;
+    }
+    
     #gameTitle {
         font-size: 36px;
     }
