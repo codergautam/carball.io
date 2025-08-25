@@ -760,7 +760,7 @@ input[type="text"]:focus, select:focus {
 }
 
 #speedometer {
-    bottom: 120px;
+    bottom: 20px;
     left: 20px;
     font-size: 18px;
     background: rgba(0, 0, 0, 0.5);
