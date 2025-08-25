@@ -183,23 +183,40 @@ module.exports = class Game {
         }
     }
     emit(id, ...data) {
-        let packet = [id, new Array(data.length)];
-        let l = data.length;
-        for (let i = 0; i < l; i++)
-            packet[1][i] = data[i];
-        packet = JSON.stringify(packet);
-        for (let i in this.sockets)
-            this.sockets[i].ws.send(packet);
+        try {
+            let packet = [id, new Array(data.length)];
+            let l = data.length;
+            for (let i = 0; i < l; i++)
+                packet[1][i] = data[i];
+            packet = JSON.stringify(packet);
+            for (let i in this.sockets) {
+                try {
+                    if (this.sockets[i].ws && this.sockets[i].ws.readyState === 1) {
+                        this.sockets[i].ws.send(packet);
+                    }
+                } catch (socketError) {
+                    console.error(`Error sending to socket ${i}:`, socketError);
+                    delete this.sockets[i];
+                }
+            }
+        } catch (error) {
+            console.error('Error in emit:', error);
+        }
     }
     removePlayer(socket) {
         if (!(socket.id in this.sockets)) return;
 
-        this.emit("deletePlayer", socket.id);
-        console.log('user disconnected:', socket.id);
-        this.teamCount[this.players[socket.id].team]--;
-        Matter.Composite.remove(this.gameWorld.engine.world, [this.players[socket.id].body]);
-        delete this.players[socket.id];
-        delete this.sockets[socket.id];
+        try {
+            console.log('user disconnected:', socket.id);
+            this.teamCount[this.players[socket.id].team]--;
+            Matter.Composite.remove(this.gameWorld.engine.world, [this.players[socket.id].body]);
+            delete this.players[socket.id];
+            delete this.sockets[socket.id];
+            
+            this.emit("deletePlayer", socket.id);
+        } catch (error) {
+            console.error('Error removing player:', error);
+        }
     }
 
     closeGame() {

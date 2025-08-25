@@ -31,7 +31,7 @@ export default class SocketWrapper {
     this.protocols = protocols || [];
     this.opts = opts;
     
-    console.log('Connecting to WebSocket URL:', this.url);
+    // console.log('Connecting to WebSocket URL:', this.url);
 
     try {
       this.ws = new WebSocket(this.url, this.protocols);
@@ -61,10 +61,16 @@ export default class SocketWrapper {
   }
 
   _generateURL() {
-    let proto = location.protocol.match(/https/) ? "wss://" : "ws://";
-    let port = parseInt(location.port) || (location.protocol === 'https:' ? 443 : 80);
-    let wsPort = port + 1; // uWS runs on port+1
-    return proto + location.hostname + ':' + wsPort + location.pathname + location.search;
+    try {
+      let proto = location.protocol.match(/https/) ? "wss://" : "ws://";
+      let port = parseInt(location.port) || (location.protocol === 'https:' ? 443 : 80);
+      let wsPort = port + 1; // uWS runs on port+1
+      // console.log('Generating URL - location.port:', location.port, 'calculated port:', port, 'wsPort:', wsPort);
+      return proto + location.hostname + ':' + wsPort + location.pathname + location.search;
+    } catch (error) {
+      console.error('Error generating WebSocket URL:', error);
+      return 'ws://localhost:3001';
+    }
   }
 
   _onOpen(e) {
@@ -199,9 +205,14 @@ export default class SocketWrapper {
   }
 
   _flushMessageQueue() {
-    while (this.messageQueue.length > 0 && this.isConnected) {
-      const message = this.messageQueue.shift();
-      this.ws.send(message);
+    try {
+      while (this.messageQueue.length > 0 && this.isConnected) {
+        const message = this.messageQueue.shift();
+        this.ws.send(message);
+      }
+    } catch (error) {
+      console.error('Error flushing message queue:', error);
+      this.messageQueue = [];
     }
   }
   test() {
@@ -225,10 +236,15 @@ export default class SocketWrapper {
   }
 
   switch(url, protocols) {
-    this.shouldReconnect = false;
-    this.close(1000, "switching servers");
-    this.shouldReconnect = true;
-    this._setupSocket(url, protocols, {});
+    try {
+      this.shouldReconnect = false;
+      this.close(1000, "switching servers");
+      this.shouldReconnect = true;
+      this._setupSocket(url, protocols, {});
+    } catch (error) {
+      console.error('Error switching servers:', error);
+      this.shouldReconnect = true;
+    }
   }
 
   emitBinary(bin) {
@@ -253,12 +269,13 @@ export default class SocketWrapper {
   }
 
   emit(id, ...data) {
-    // Keep the old packet format for compatibility
-    let packet = [id, new Array(data.length)];
-    for (let i = 0; i < data.length; i++)
-      packet[1][i] = data[i];
-    
-    const serialized = JSON.stringify(packet);
+    try {
+      // Keep the old packet format for compatibility
+      let packet = [id, new Array(data.length)];
+      for (let i = 0; i < data.length; i++)
+        packet[1][i] = data[i];
+      
+      const serialized = JSON.stringify(packet);
     
     if (!this.isConnected) {
       if (this.shouldReconnect) {
@@ -272,26 +289,38 @@ export default class SocketWrapper {
       return false;
     }
 
-    return this.send(serialized);
+      return this.send(serialized);
+    } catch (error) {
+      console.error('Error in emit:', error);
+      return false;
+    }
   }
 
   close(code = 1000, reason = 'Normal closure') {
-    this.shouldReconnect = false;
-    
-    if (this.connectionTimer) {
-      clearTimeout(this.connectionTimer);
-      this.connectionTimer = null;
-    }
+    try {
+      this.shouldReconnect = false;
+      
+      if (this.connectionTimer) {
+        clearTimeout(this.connectionTimer);
+        this.connectionTimer = null;
+      }
 
-    if (this.ws) {
-      this.ws.close(code, reason);
+      if (this.ws) {
+        this.ws.close(code, reason);
+      }
+    } catch (error) {
+      console.error('Error closing WebSocket:', error);
     }
   }
 
   reconnect() {
-    this.shouldReconnect = true;
-    this.reconnectAttempts = 0;
-    this._setupSocket(this.url, this.protocols, this.opts);
+    try {
+      this.shouldReconnect = true;
+      this.reconnectAttempts = 0;
+      this._setupSocket(this.url, this.protocols, this.opts);
+    } catch (error) {
+      console.error('Error during reconnect:', error);
+    }
   }
 
   getConnectionState() {
