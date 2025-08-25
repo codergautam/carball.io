@@ -1034,11 +1034,26 @@ input[type="text"]:focus, select:focus {
     .menuCard {
         min-width: 300px;
         max-width: 350px;
+        height: 350px;
+        margin-bottom: 15px;
+    }
+    
+    /* Reorder cards on mobile: Join Game first, then Stats */
+    .joinCard {
+        order: 1;
+    }
+    
+    .profileCard {
+        order: 2;
     }
     
     /* Hide server info card on mobile - reserved for ads */
     .serverCard {
         display: none;
+    }
+    
+    #gameName {
+        margin-bottom: 25px;
     }
     
     #gameTitle {
