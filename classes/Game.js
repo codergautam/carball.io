@@ -191,7 +191,7 @@ module.exports = class Game {
             packet = JSON.stringify(packet);
             for (let i in this.sockets) {
                 try {
-                    if (this.sockets[i].ws && this.sockets[i].ws.readyState === 1) {
+                    if (this.sockets[i].ws) {
                         this.sockets[i].ws.send(packet);
                     }
                 } catch (socketError) {
