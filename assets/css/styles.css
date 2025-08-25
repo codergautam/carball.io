@@ -419,10 +419,14 @@ input[type="text"]:focus, select:focus {
     width: 100%;
     height: 100%;
     z-index: 2000;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s ease-out;
+}
+
+.modal[style*="block"] {
+    display: flex !important;
 }
 
 .modal__overlay {
@@ -433,6 +437,7 @@ input[type="text"]:focus, select:focus {
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(5px);
+    z-index: 2000;
 }
 
 .modal__container {
@@ -443,6 +448,11 @@ input[type="text"]:focus, select:focus {
     overflow: hidden;
     z-index: 2001;
     animation: modalSlideIn 0.3s ease-out;
+    margin: auto;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .modal__header {
@@ -492,6 +502,7 @@ input[type="text"]:focus, select:focus {
     padding: 25px;
     max-height: calc(80vh - 80px);
     overflow-y: auto;
+    color: var(--text-primary);
 }
 
 /* Goals Display in Modal */
