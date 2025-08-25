@@ -496,13 +496,13 @@ input[type="text"]:focus, select:focus {
     position: fixed;
     top: 20px;
     left: 20px;
-    padding: 10px 20px;
-    background: var(--card-bg);
-    border-radius: var(--border-radius);
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
     font-weight: 600;
-    font-size: 14px;
-    color: var(--text-primary);
-    box-shadow: var(--shadow);
+    font-size: 18px;
+    color: white;
+    backdrop-filter: blur(10px);
     z-index: 1000;
 }
 
@@ -1084,8 +1084,8 @@ input[type="text"]:focus, select:focus {
     .player-count {
         top: 15px;
         left: 15px;
-        font-size: 12px;
-        padding: 8px 12px;
+        font-size: 16px;
+        padding: 6px 14px;
     }
 }
 
