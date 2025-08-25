@@ -56,6 +56,11 @@ body::after {
     background: var(--bg-overlay);
     z-index: 0;
     pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+body.in-game::after {
+    opacity: 0;
 }
 
 /* Main Menu */

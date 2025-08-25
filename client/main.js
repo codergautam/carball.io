@@ -308,6 +308,9 @@ document.getElementById("playButton").addEventListener("click", () => {
     if (gameGUI) gameGUI.classList.add("active");
     if (playerCount) playerCount.style.display = "block";
     if (playerCountTotal) playerCountTotal.style.display = "none";
+    
+    // Remove dark overlay for game
+    document.body.classList.add("in-game");
 
     stateObject = startGame();
     if(window.refreshInt) {
@@ -331,6 +334,9 @@ window.exit = function () {
   if (matchInfo) matchInfo.classList.remove("active");
   if (playerCount) playerCount.style.display = "none";
   if (playerCountTotal) playerCountTotal.style.display = "block";
+  
+  // Restore dark overlay for menu
+  document.body.classList.remove("in-game");
   
   if(!window.isMobile) reshowBall();
   window.refreshInt = setInterval(updatePlayerCnt, 2000);
