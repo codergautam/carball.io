@@ -29,7 +29,7 @@ export function initSkinShop() {
   // Initialize the modal, button, and span elements
   var modal = document.getElementById("skinsModal");
   var btn = document.getElementById("skinsButton");
-  var span = document.getElementsByClassName("close")[0];
+  var closeBtn = document.getElementById("skinsClose");
 
   // Try to load the equippedSkin from localStorage, default to 1 if not found or in case of error
   window.equippedSkin = 1;
@@ -42,20 +42,26 @@ export function initSkinShop() {
   }
 
   // When the skins button is clicked, show the modal and update the skins display
-  btn.onclick = function() {
-    modal.style.display = "block";
-    updateSkinsDisplay();
+  if (btn) {
+    btn.onclick = function() {
+      modal.style.display = "block";
+      updateSkinsDisplay();
+    }
   }
 
-  // Close the modal when the user clicks on <span> (x)
-  span.onclick = function() {
-    modal.style.display = "none";
-  }
-
-  // Close the modal when the user clicks anywhere outside of it
-  window.onclick = function(event) {
-    if (event.target == modal) {
+  // Close the modal when the user clicks on close button
+  if (closeBtn) {
+    closeBtn.onclick = function() {
       modal.style.display = "none";
+    }
+  }
+
+  // Close the modal when the user clicks on the overlay
+  if (modal) {
+    modal.onclick = function(event) {
+      if (event.target === modal || event.target.classList.contains('modal__overlay')) {
+        modal.style.display = "none";
+      }
     }
   }
 }

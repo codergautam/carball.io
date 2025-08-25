@@ -207,9 +207,90 @@ serverSelect.onchange = (function() {
   }
 });
 
+// Show the menu cards after loading is complete
+const loadingText = document.getElementById("loadingText");
+const menuCardHolder = document.getElementById("menuCardHolder");
+if (loadingText) loadingText.style.display = "none";
+if (menuCardHolder) menuCardHolder.style.display = "block";
+
+// Update server info display
+const currentServerName = document.getElementById("currentServer-name");
+const currentServerPlayers = document.getElementById("currentServer-players");
+if (currentServerName) currentServerName.textContent = bestServer.name;
+if (currentServerPlayers) currentServerPlayers.textContent = bestServer.playersCount + " players online";
+
+// Initialize stats display
+try {
+  const goalsFromStorage = localStorage.getItem("goals") || "0";
+  const goals = JSON.parse(goalsFromStorage);
+  
+  // Update all goals displays
+  const goalsElements = document.querySelectorAll("#goals, #totalGoals");
+  goalsElements.forEach(el => {
+    if (el) el.textContent = goals;
+  });
+  
+  // Initialize other stats (placeholder values for now)
+  const totalWinsEl = document.getElementById("totalWins");
+  const totalGamesEl = document.getElementById("totalGames");
+  if (totalWinsEl) totalWinsEl.textContent = "0";
+  if (totalGamesEl) totalGamesEl.textContent = "0";
+} catch(e) {
+  console.error("Error loading stats:", e);
+}
+
 
 }
 checkServers();
+
+// Add event listeners for the new UI elements
+function initializeUIHandlers() {
+  // Stats button
+  const statsButton = document.getElementById("statsButton");
+  const statsModal = document.getElementById("statsModal");
+  const statsClose = document.getElementById("statsClose");
+  
+  if (statsButton && statsModal) {
+    statsButton.addEventListener("click", () => {
+      statsModal.style.display = "block";
+    });
+  }
+  
+  if (statsClose && statsModal) {
+    statsClose.addEventListener("click", () => {
+      statsModal.style.display = "none";
+    });
+  }
+  
+  // Settings button
+  const settingsButton = document.getElementById("settingsButton");
+  const settingsModal = document.getElementById("settingsModal");
+  const settingsClose = document.getElementById("settingsClose");
+  
+  if (settingsButton && settingsModal) {
+    settingsButton.addEventListener("click", () => {
+      settingsModal.style.display = "block";
+    });
+  }
+  
+  if (settingsClose && settingsModal) {
+    settingsClose.addEventListener("click", () => {
+      settingsModal.style.display = "none";
+    });
+  }
+  
+  // Close modals when clicking overlay
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal || e.target.classList.contains('modal__overlay')) {
+        modal.style.display = 'none';
+      }
+    });
+  });
+}
+
+// Initialize handlers immediately
+initializeUIHandlers();
 
 document.getElementById("playButton").addEventListener("click", () => {
   if(!window.selectedServer) return;
