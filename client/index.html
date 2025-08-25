@@ -72,7 +72,6 @@
                             </div>
                         </div>
                         <div class="menu-buttons">
-                            <div class="menuButton small" id="statsButton">View All Stats</div>
                             <div class="menuButton small" id="skinsButton">Customize Car</div>
                         </div>
                     </div>
@@ -180,29 +179,6 @@
         </div>
     </div>
 
-    <!-- STATISTICS MODAL -->
-    <div class="modal" id="statsModal" style="display: none">
-        <div class="modal__overlay">
-            <div class="modal__container panel">
-                <header class="modal__header">
-                    <h2 class="modal__title">
-                        <span class="material-icons">bar_chart</span>
-                        Player Statistics
-                    </h2>
-                    <button class="modal__close" id="statsClose">&times;</button>
-                </header>
-                <main class="modal__content">
-                    <div class="stats-grid" id="statsGrid">
-                        <!-- Stats will be populated by JavaScript -->
-                    </div>
-                    <div class="stats-actions">
-                        <div class="menuButton small" onclick="resetStats()">Reset Stats</div>
-                        <div class="menuButton small" onclick="exportStats()">Export Data</div>
-                    </div>
-                </main>
-            </div>
-        </div>
-    </div>
 
     <!-- SETTINGS MODAL -->
     <div class="modal" id="settingsModal" style="display: none">

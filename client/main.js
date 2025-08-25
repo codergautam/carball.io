@@ -245,23 +245,6 @@ checkServers();
 
 // Add event listeners for the new UI elements
 function initializeUIHandlers() {
-  // Stats button
-  const statsButton = document.getElementById("statsButton");
-  const statsModal = document.getElementById("statsModal");
-  const statsClose = document.getElementById("statsClose");
-  
-  if (statsButton && statsModal) {
-    statsButton.addEventListener("click", () => {
-      statsModal.style.display = "block";
-    });
-  }
-  
-  if (statsClose && statsModal) {
-    statsClose.addEventListener("click", () => {
-      statsModal.style.display = "none";
-    });
-  }
-  
   // Settings button
   const settingsButton = document.getElementById("settingsButton");
   const settingsModal = document.getElementById("settingsModal");
