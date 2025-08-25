@@ -71,6 +71,10 @@ body::after {
     justify-content: center;
 }
 
+#mainMenu.hidden {
+    display: none !important;
+}
+
 #menuContainer {
     width: 100%;
     max-width: 1200px;

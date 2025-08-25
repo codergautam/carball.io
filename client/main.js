@@ -297,6 +297,17 @@ document.getElementById("playButton").addEventListener("click", () => {
     if (state == "game") return;
     state = "game";
     cleanupBall();
+    
+    // Hide main menu and show game UI
+    const mainMenu = document.getElementById("mainMenu");
+    const gameGUI = document.getElementById("gameGUI");
+    const playerCount = document.getElementById("playerCount");
+    const playerCountTotal = document.getElementById("playerCountTotal");
+    
+    if (mainMenu) mainMenu.style.display = "none";
+    if (gameGUI) gameGUI.classList.add("active");
+    if (playerCount) playerCount.style.display = "block";
+    if (playerCountTotal) playerCountTotal.style.display = "none";
 
     stateObject = startGame();
     if(window.refreshInt) {
@@ -307,25 +318,34 @@ document.getElementById("playButton").addEventListener("click", () => {
 
 window.exit = function () {
   checkServers();
-    $("matchInfo").style.visibility = "hidden";
-    $("gameGUI").style.visibility = "hidden";
+  
+  // Show main menu and hide game UI
+  const mainMenu = document.getElementById("mainMenu");
+  const gameGUI = document.getElementById("gameGUI");
+  const matchInfo = document.getElementById("matchInfo");
+  const playerCount = document.getElementById("playerCount");
+  const playerCountTotal = document.getElementById("playerCountTotal");
+  
+  if (mainMenu) mainMenu.style.display = "block";
+  if (gameGUI) gameGUI.classList.remove("active");
+  if (matchInfo) matchInfo.classList.remove("active");
+  if (playerCount) playerCount.style.display = "none";
+  if (playerCountTotal) playerCountTotal.style.display = "block";
+  
   if(!window.isMobile) reshowBall();
-  $("playerCount").style.display = "none";
-  $("playerCountTotal").style.display = "";
-  $("skinsButton").style.display = "";
   window.refreshInt = setInterval(updatePlayerCnt, 2000);
 
-    state = "home";
+  state = "home";
 
-    if (stateObject == null) return;
+  if (stateObject == null) return;
 
-    //cleanup
-    stateObject.cleanup();
-    stateObject.app.destroy();
-    document.querySelector("canvas").remove();
-    //ready to make a new pixi.js thing which is pretty fast!
+  //cleanup
+  stateObject.cleanup();
+  stateObject.app.destroy();
+  document.querySelector("canvas").remove();
+  //ready to make a new pixi.js thing which is pretty fast!
 
-    stateObject = null;
+  stateObject = null;
 }
 window.rematch = function () {
     window.exit();
