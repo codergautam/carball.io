@@ -422,44 +422,6 @@ input[type="text"]:focus, select:focus {
     font-size: 20px;
 }
 
-/* Legacy Control Options (keep for backward compatibility) */
-.control-options {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.control-option {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    flex: 1;
-    min-width: 100px;
-    max-width: 130px;
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.control-option:hover {
-    border-color: var(--primary);
-    background: rgba(76, 110, 245, 0.05);
-}
-
-.control-option input[type="radio"] {
-    margin: 0;
-    width: auto;
-}
-
-.control-option input[type="radio"]:checked + .material-icons {
-    color: var(--primary);
-}
 
 /* Server Info */
 #serverInfo {
