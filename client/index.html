@@ -83,27 +83,6 @@
                             <span class="material-icons">sports_soccer</span>
                             Join Game
                         </div>
-                        <div class="joinCardInput">
-                            <input type="text" id="nameInput" placeholder="Enter Your Name" maxlength="16" autocomplete="off">
-                            <div id="playButton" class="menuButton big">
-                                <span class="material-icons">play_arrow</span>
-                                PLAY NOW!
-                            </div>
-                            <select id="serverSelect">
-                                <option value="loading">Loading servers...</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Server Info Card -->
-                    <div class="serverCard menuCard panel">
-                        <div id="serverInfo">
-                            <span class="material-icons">dns</span>
-                            <div class="server-details">
-                                <span id="currentServer-name" class="menuSubheader">Server</span>
-                                <span id="currentServer-players">0 players online</span>
-                            </div>
-                        </div>
                         <div class="menuHeader">
                             <span class="material-icons">settings</span>
                             Controls
@@ -119,6 +98,49 @@
                                 <span class="material-icons">keyboard</span>
                                 <span>Keyboard</span>
                             </label>
+                        </div>
+                        <div class="joinCardInput">
+                            <input type="text" id="nameInput" placeholder="Enter Your Name" maxlength="16" autocomplete="off">
+                            <div id="playButton" class="menuButton big">
+                                <span class="material-icons">play_arrow</span>
+                                PLAY NOW!
+                            </div>
+                            <select id="serverSelect">
+                                <option value="loading">Loading servers...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Server Info Card -->
+                    <div class="serverCard menuCard panel">
+                        <div class="menuHeader">
+                            <span class="material-icons">dns</span>
+                            Server Information
+                        </div>
+                        <div id="serverInfo">
+                            <span class="material-icons">dns</span>
+                            <div class="server-details">
+                                <span id="currentServer-name" class="menuSubheader">Server</span>
+                                <span id="currentServer-players">0 players online</span>
+                            </div>
+                        </div>
+                        <div class="menuHeader">
+                            <span class="material-icons">info</span>
+                            Game Info
+                        </div>
+                        <div class="menuText">
+                            <div class="stat-row">
+                                <span>Game Mode:</span>
+                                <span>Car Soccer</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Max Players:</span>
+                                <span>6 per match</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Match Time:</span>
+                                <span>5 minutes</span>
+                            </div>
                         </div>
                     </div>
                 </div>

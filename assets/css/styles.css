@@ -159,9 +159,13 @@ body.in-game::after {
     flex: 1;
     min-width: 280px;
     max-width: 350px;
+    height: 420px;
     padding: 25px;
     transition: var(--transition);
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .menuCard:hover {
@@ -420,9 +424,10 @@ input[type="text"]:focus, select:focus {
     height: 100%;
     z-index: 2000;
     display: none;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     animation: fadeIn 0.3s ease-out;
+    padding-top: 50px;
 }
 
 .modal[style*="block"] {
