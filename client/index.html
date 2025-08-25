@@ -1,150 +1,285 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" id="viewport"
-    content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0" />
-    <title>Carball.io</title>
-  <!-- favicon -->
-  <link rel="icon" href="/ball.png" type="image/png" />
-  <meta name="description" content="Join the thrilling world of Carball.io, an online multiplayer car soccer game! Drive, dash, and score your way to victory.">
-  <meta name="keywords" content="Carball.io, car soccer, online multiplayer, car game, soccer game">
-  <title>Carball.io!</title>
-  <meta property="og:title" content="Carball.io - The Ultimate Car Soccer Game!">
-  <meta property="og:description" content="Join the thrilling world of Carball.io, an online multiplayer car soccer game! Drive, dash, and score your way to victory.">
-  <meta property="og:image" content="https://carball.io/ball.png">
-  <meta property="og:url" content="https://carball.io/">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Carball.io">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:locale:alternate" content="en_GB">
-    <link rel="stylesheet" href="/css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    <title>Carball.io - Car Soccer</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Carball.io - The ultimate car soccer multiplayer game! Drive, boost, and score goals in epic online matches.">
+    <meta name="keywords" content="carball,car soccer,online multiplayer,car game,soccer game,rocket league,io game">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Carball.io - The Ultimate Car Soccer Game!">
+    <meta property="og:description" content="Join the thrilling world of Carball.io, an online multiplayer car soccer game! Drive, dash, and score your way to victory.">
+    <meta property="og:image" content="https://carball.io/ball.png">
+    <meta property="og:url" content="https://carball.io/">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/ball.png" type="image/png">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js" integrity="sha512-0z8URjGET6GWnS1xcgiLBZBzoaS8BNlKayfZyQNKz4IRp+s7CKXx0yz7Eco2+TcwoeMBa5KMwmTX7Kus7Fa5Uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- background img -->
-    <img src="/homebg.png" class="bg" alt="background" />
+    <!-- Background -->
+    <div id="background"></div>
+    
+    <!-- MAIN MENU -->
+    <div id="mainMenu">
+        <div id="menuContainer">
+            <!-- GAME NAME -->
+            <div id="gameName">
+                <img src="/logo.png" alt="Carball.io" id="gameLogoImg">
+                <div id="gameTitle">CARBALL.IO</div>
+                <div id="gameSubtitle">Car Soccer Mayhem</div>
+            </div>
+            
+            <!-- LOADING TEXT -->
+            <div id="loadingText">Loading...</div>
+            
+            <!-- MENU CARDS -->
+            <div id="menuCardHolder" style="display: none">
+                <div class="menu">
+                    <!-- Profile/Stats Card -->
+                    <div class="profileCard menuCard panel">
+                        <div class="menuHeader">
+                            <span class="material-icons">sports_score</span>
+                            Player Stats
+                        </div>
+                        <div class="menuText">
+                            <div class="stat-row">
+                                <span>Goals Scored:</span>
+                                <span id="totalGoals">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Wins:</span>
+                                <span id="totalWins">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Games:</span>
+                                <span id="totalGames">0</span>
+                            </div>
+                        </div>
+                        <div class="menu-buttons">
+                            <div class="menuButton small" id="statsButton">View All Stats</div>
+                            <div class="menuButton small" id="skinsButton">Customize Car</div>
+                        </div>
+                    </div>
 
-    <script>
-        ;(function () {
-    var src = '//cdn.jsdelivr.net/npm/eruda';
-    if (!/eruda=true/.test(window.location) && localStorage.getItem('active-eruda') != 'true') return;
-    document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
-    document.write('<scr' + 'ipt>eruda.init();</scr' + 'ipt>');
-})();
-</script>
+                    <!-- Play Card -->
+                    <div class="joinCard menuCard panel">
+                        <div class="menuHeader">
+                            <span class="material-icons">sports_soccer</span>
+                            Join Game
+                        </div>
+                        <div class="joinCardInput">
+                            <input type="text" id="nameInput" placeholder="Enter Your Name" maxlength="16" autocomplete="off">
+                            <div id="playButton" class="menuButton big">
+                                <span class="material-icons">play_arrow</span>
+                                PLAY NOW!
+                            </div>
+                            <select id="serverSelect">
+                                <option value="loading">Loading servers...</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Server Info Card -->
+                    <div class="serverCard menuCard panel">
+                        <div id="serverInfo">
+                            <span class="material-icons">dns</span>
+                            <div class="server-details">
+                                <span id="currentServer-name" class="menuSubheader">Server</span>
+                                <span id="currentServer-players">0 players online</span>
+                            </div>
+                        </div>
+                        <div class="menuHeader">
+                            <span class="material-icons">settings</span>
+                            Controls
+                        </div>
+                        <div class="control-options">
+                            <label class="control-option">
+                                <input type="radio" name="controls" id="controls2" value="mouse" checked>
+                                <span class="material-icons">mouse</span>
+                                <span>Mouse</span>
+                            </label>
+                            <label class="control-option">
+                                <input type="radio" name="controls" id="controls" value="keys">
+                                <span class="material-icons">keyboard</span>
+                                <span>Keyboard</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <button id="skinsButton" class="skins-btn">Customize Car</button>
-<!-- HTML -->
-<div id="ball" style="position: absolute; top: 0; left: 0;">
-    <img src="./ball.png" alt="ball" width="50" height="50" />
-  </div>
-    <!-- The Modal -->
-    <div id="skinsModal" class="modal" style="display: none;">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <center>
-                <h1 style="color: white; margin: 0; padding: 0;">Skins!!</h1>
-                <h2 style="color: white; margin: 0; padding: 0;">More coming soon.</p>
-                </center>
-            <div id="skins">
-                <ul class="cards" id="cards">
+        <!-- SETTINGS BUTTON -->
+        <div id="settingsButton" class="altLink panel">
+            <i class="material-icons ui-icon">settings</i>
+        </div>
 
+        <!-- LINKS CONTAINER -->
+        <div id="linksContainer" class="panel">
+            <a href="https://github.com/codergautam/carball.io" target="_blank">GitHub</a> |
+            <a href="https://discord.gg/7BMEHg5nrz" target="_blank">Discord</a> |
+            <a href="https://iogames.forum/carball" target="_blank">Forum</a>
+        </div>
+    </div>
 
-
-                </ul>
+    <!-- CUSTOMIZE CAR MODAL -->
+    <div class="modal" id="skinsModal" style="display: none">
+        <div class="modal__overlay">
+            <div class="modal__container panel">
+                <header class="modal__header">
+                    <h2 class="modal__title">
+                        <span class="material-icons">directions_car</span>
+                        Customize Car
+                    </h2>
+                    <button class="modal__close" id="skinsClose">&times;</button>
+                </header>
+                <main class="modal__content">
+                    <div class="goals-display">
+                        <span class="material-icons">sports_score</span>
+                        <span>Goals: <strong id="goals">0</strong></span>
+                    </div>
+                    <div id="skins">
+                        <ul class="cards" id="cards"></ul>
+                    </div>
+                </main>
             </div>
         </div>
     </div>
 
-  <span id="playerCountTotal" class="toprightcount">... players online</span>
-  <span id="playerCount" class="toprightcount" style="display: none;">... players</span>
-    <div class="container">
-        <!-- <h1 class="title">Carball.io</h1> -->
-        <img src="/logo.png" id="nameplate"/>
-        <label for="serverSelect">Server:</label>
-        <select name="serverSelect" id="serverSelect">
-            <option value="loading">Loading...</option>
-        </select>
-        <div class="row">
-            <input type="text" id="nameInput" placeholder="Enter Your Name">
-            <button id="playButton">Play</button>
-        </div>
-        <div class="controls" id="controlsDiv">
-            <p ><b>Control Mode:</b></p>
-            <input type="radio" name="controls" id="controls2" value="mouse" checked/>
-            <label for="controls2">Mouse</label>
-            <input type="radio" name="controls" id="controls" value="keys"/>
-            <label for="controls">Keyboard</label>
-        </div>
-
-        <h2 class="totalGoals">Total Goals Scored: <z id="goals">0</z></h2>
-
-    </div>
-
-    <div id="forcelandscapemobile" style="display: none;">
-        <h1>Rotate your device to landscape mode to play!</h1>
-    </div>
-
-    <div id="footer">
-        <h2><a href="https://github.com/codergautam/carball.io">About</a></h2>
-        <h2><a href="https://discord.gg/7BMEHg5nrz">Discord</a></h2>
-        <h2><a href="https://iogames.forum/carball">Forum</a></h2>
-        </div>
-
-        <div id="gameGUI">
-            <p id="score"><z id="blue">0</z> - <z id="red">0</z></p>
-            <p id="time">0:00</p>
-
-            <p id="speedometer">0mph</p>
-            <p id="goal">AAAA</p>
-            <p id="countdown">3</p>
-
-            <div class="boostBar">
-                <div id="boostBarPercent"></div>
+    <!-- STATISTICS MODAL -->
+    <div class="modal" id="statsModal" style="display: none">
+        <div class="modal__overlay">
+            <div class="modal__container panel">
+                <header class="modal__header">
+                    <h2 class="modal__title">
+                        <span class="material-icons">bar_chart</span>
+                        Player Statistics
+                    </h2>
+                    <button class="modal__close" id="statsClose">&times;</button>
+                </header>
+                <main class="modal__content">
+                    <div class="stats-grid" id="statsGrid">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
+                    <div class="stats-actions">
+                        <div class="menuButton small" onclick="resetStats()">Reset Stats</div>
+                        <div class="menuButton small" onclick="exportStats()">Export Data</div>
+                    </div>
+                </main>
             </div>
-
-            <div id="mobile" style="visibility: hidden;">
-                <div>
-                    <div class="mobilebig" style="background: rgba(0, 0, 0, 0); border: none;"></div>
-                    <div class="mobilebig mobileControlUp" style="visibility: hidden;" z="up">Gas</div>
-                </div>
-                <div style="justify-content: flex-end;">
-                    <div class="mobilebig mobileControlLeft" style="visibility: hidden;" z="left">Left</div>
-
-                    <div class="mobilebig mobileControlRight" style="visibility: hidden;" z="right">Right</div>
-
-                    <div class="mobilesmall mobileControlAttack" z="chat" onclick="openMobileChat()">Chat</div>
-                </div>
-                <div>
-                    <div class="mobilebig mobileControlLeft" style="visibility: hidden;" z="left"></div>
-                    <div class="mobilebig mobileControlDown" style="visibility: hidden;" z="down">Reverse</div>
-                </div>
-                <div style="justify-content: flex-end;">
-                    <div class="mobilesmall mobileControlDash" z="boost">Boost</div>
-                </div>
-            </div>
-
         </div>
-
-  <div id="joystickZone">
-  </div>
-  <input type="text" id="chatInput" placeholder="Type here to chat..." style="position: absolute; top: 20%; left: 50%; display: none; z-index: 150; transform: translateX(-50%); font-size: max(min(30px, 3vw), 16px); pointer-events: auto" />
-    <div id="matchInfo">
-        <h1 id="winlose">You lost - [] team wins! </h1>
-        <hr />
-        <p>Blue Team Goals: <z id="blueFinal">0</z> </p>
-        <p>Red Team Goals: <z id="redFinal">0</z></p>
-
-        <button class="leavebtn" onclick="rematch()"><b>Play Again</b></button>
-
-        <button class="leavebtn" onclick="exit()">Main Menu</button>
     </div>
 
+    <!-- SETTINGS MODAL -->
+    <div class="modal" id="settingsModal" style="display: none">
+        <div class="modal__overlay">
+            <div class="modal__container panel">
+                <header class="modal__header">
+                    <h2 class="modal__title">
+                        <span class="material-icons">settings</span>
+                        Game Settings
+                    </h2>
+                    <button class="modal__close" id="settingsClose">&times;</button>
+                </header>
+                <main class="modal__content">
+                    <div class="menuHeader">Controls</div>
+                    <div class="settings-controls">
+                        <div class="control-mapping">
+                            <span>Move: WASD / Arrow Keys</span>
+                        </div>
+                        <div class="control-mapping">
+                            <span>Boost: Space / Mouse Click</span>
+                        </div>
+                        <div class="control-mapping">
+                            <span>Chat: Enter</span>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME GUI (Hidden by default) -->
+    <div id="gameGUI" style="display: none">
+        <div id="score"><span id="blue">0</span> - <span id="red">0</span></div>
+        <div id="time">0:00</div>
+        <div id="speedometer">0mph</div>
+        <div id="goal">GOAL!</div>
+        <div id="countdown">3</div>
+        
+        <div class="boostBar">
+            <div id="boostBarPercent"></div>
+        </div>
+
+        <!-- Mobile Controls -->
+        <div id="mobile" style="visibility: hidden">
+            <div class="mobile-controls">
+                <div class="mobilebig mobileControlUp" data-control="up">⬆</div>
+                <div class="mobile-row">
+                    <div class="mobilebig mobileControlLeft" data-control="left">⬅</div>
+                    <div class="mobilebig mobileControlRight" data-control="right">➡</div>
+                </div>
+                <div class="mobilebig mobileControlDown" data-control="down">⬇</div>
+                <div class="mobilesmall mobileControlDash" data-control="boost">BOOST</div>
+                <div class="mobilesmall mobileControlAttack" onclick="openMobileChat()">CHAT</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Input -->
+    <input type="text" id="chatInput" placeholder="Type here to chat..." style="display: none;">
+
+    <!-- Match Info (End Game) -->
+    <div id="matchInfo" style="display: none">
+        <div class="panel">
+            <h1 id="winlose">Match Over!</h1>
+            <hr>
+            <p>Blue Team Goals: <span id="blueFinal">0</span></p>
+            <p>Red Team Goals: <span id="redFinal">0</span></p>
+            <div class="match-buttons">
+                <button class="menuButton" onclick="rematch()">Play Again</button>
+                <button class="menuButton secondary" onclick="exit()">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Force Landscape Mobile -->
+    <div id="forcelandscapemobile" style="display: none">
+        <div class="landscape-message">
+            <span class="material-icons">screen_rotation</span>
+            <h2>Rotate your device to landscape mode to play!</h2>
+        </div>
+    </div>
+
+    <!-- Joystick Zone for Mobile -->
+    <div id="joystickZone"></div>
+
+    <!-- Player Count Display -->
+    <div id="playerCountTotal" class="player-count">... players online</div>
+    <div id="playerCount" class="player-count" style="display: none">... players</div>
+
+    <!-- Ball Animation -->
+    <div id="ball" style="position: absolute; top: 0; left: 0;">
+        <img src="./ball.png" alt="ball" width="50" height="50">
+    </div>
+
+    <!-- Load Main Script -->
     <script src="script.js"></script>
 </body>
 </html>
